@@ -50,7 +50,13 @@ public class Topic {
         return votes;
     }
 
-    public void setVotes(int votes) {
-        this.votes = votes;
+    public void AddVote() {
+        this.votes += 1;
+    }
+
+    public void SubVote() {
+        if (votes > 0) {
+            this.votes -= 1;
+        }
     }
 }

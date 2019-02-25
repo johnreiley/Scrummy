@@ -17,6 +17,7 @@ public class VoteActivity extends AppCompatActivity {
      * Starts the SprintActivity activity
      */
     public void onClickStart() {
+        newSession.sortByVote();
         // start the sprint activity
     }
 
