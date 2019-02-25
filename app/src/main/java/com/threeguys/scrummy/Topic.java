@@ -8,11 +8,7 @@ public class Topic {
     private Category category;
     private int votes;
 
-    public enum Category {
-        GOOD,
-        NEUTRAL,
-        BAD
-    }
+    public enum Category {GOOD, NEUTRAL, BAD}
 
     Topic() {
         votes = 0;
