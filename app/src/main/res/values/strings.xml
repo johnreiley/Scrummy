@@ -2,4 +2,6 @@
     <string name="app_name">Scrummy</string>
     <string name="view_session">View Session</string>
     <string name="load_session">Load Session</string>
+    <string name="start">Start</string>
+    <string name="vote">Vote</string>
 </resources>

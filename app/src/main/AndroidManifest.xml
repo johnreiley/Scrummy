@@ -11,6 +11,7 @@
         android:theme="@style/AppTheme">
         <activity android:name=".LoadActivity"></activity>
         <activity android:name=".ViewSessionActivity" />
+        <activity android:name=".VoteActivity"></activity>
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
