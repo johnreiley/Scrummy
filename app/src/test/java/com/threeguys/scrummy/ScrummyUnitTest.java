@@ -23,13 +23,16 @@ public class ScrummyUnitTest {
         t.addVote();
         topics.add(t);
 
+        t = new Topic();
         t.setTitle("Creating Second Topic for Unit Tests");
         t.setCategory(Topic.Category.BAD);
         t.setUsername("You Don't Know Me");
         t.addVote();
         t.addVote();
+        t.addVote();
         topics.add(t);
 
+        t = new Topic();
         t.setTitle("Creating Last Topic for Unit Tests");
         t.setCategory(Topic.Category.GOOD);
         t.setUsername("Zielke");
@@ -46,16 +49,19 @@ public class ScrummyUnitTest {
 
         //*** Initialized Data Tests ***//
         //Check each topic for correct starting values
+        assert(activityTopics.get(0) != null);
         assert(activityTopics.get(0).getTitle().equals("Creating Unit Tests for Scrummy"));
         assert(activityTopics.get(0).getCategory() == Topic.Category.NEUTRAL);
         assert(activityTopics.get(0).getUsername().equals("Mr. Awesome Coder"));
         assert(activityTopics.get(0).getVotes() == 1);
 
+        assert(activityTopics.get(1) != null);
         assert(activityTopics.get(1).getTitle().equals("Creating Second Topic for Unit Tests"));
         assert(activityTopics.get(1).getCategory() == Topic.Category.BAD);
         assert(activityTopics.get(1).getUsername().equals("You Don't Know Me"));
         assert(activityTopics.get(1).getVotes() == 3);
 
+        assert(activityTopics.get(2) != null);
         assert(activityTopics.get(2).getTitle().equals("Creating Last Topic for Unit Tests"));
         assert(activityTopics.get(2).getCategory() == Topic.Category.GOOD);
         assert(activityTopics.get(2).getUsername().equals("Zielke"));
