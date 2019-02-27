@@ -12,6 +12,7 @@ public class Topic {
 
     Topic() {
         votes = 0;
+        actions = "No actions";
     }
 
     public String getTitle() {
@@ -48,6 +49,10 @@ public class Topic {
 
     public int getVotes() {
         return votes;
+    }
+
+    public void setVotes(int votes) {
+        this.votes = votes;
     }
 
     public void addVote() {
