@@ -56,4 +56,12 @@ public class TopicActivity extends AppCompatActivity {
         LinearLayout linearLayout = (LinearLayout)findViewById(R.id._snackbarLayout);
         linearLayout.setVisibility(View.INVISIBLE);
     }
+
+    public Session getSession() {
+        return session;
+    }
+
+    public void setSession(Session session) {
+        this.session = session;
+    }
 }
