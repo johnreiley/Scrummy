@@ -1,6 +1,7 @@
 package com.threeguys.scrummy;
 
 import org.junit.Test;
+import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,7 +9,7 @@ import java.util.List;
 public class ScrummyUnitTest {
 
     @Test
-    public void VoteActivityText() {
+    public void VoteActivityTest() {
         System.out.println("*** Begin VoteActivity Tests ***");
 
         VoteActivity activity = new VoteActivity();
