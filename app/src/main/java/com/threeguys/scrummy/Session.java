@@ -28,4 +28,8 @@ public class Session {
     public void setTopics(List<Topic> topics) {
         this.topics = topics;
     }
+
+    public void addTopic(Topic t) {
+        topics.add(t);
+    }
 }

@@ -2,13 +2,18 @@
     <string name="app_name">Scrummy</string>
     <string name="view_session">View Session</string>
     <string name="load_session">Load Session</string>
-    <string name="start_title">Start</string>
-    <string name="vote_title">Vote</string>
+    <string name="start">Start</string>
+    <string name="vote">Vote</string>
     <string name="topic_entry">Topic Entry</string>
     <string name="start_voting">Start Voting</string>
     <string name="topic">Topic</string>
     <string name="name">Name</string>
     <string name="add">Add</string>
+    <string-array name="categories_array">
+        <item>Bad</item>
+        <item>Neutral</item>
+        <item>Good</item>
+    </string-array>
     <string name="topic_title">Title</string>
     <string name="topic_votes">0</string>
     <string name="add_votes">+</string>
