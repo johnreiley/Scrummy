@@ -33,7 +33,6 @@
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/_addTopicFloatingActionButton"
-        android:src="@android:drawable/ic_input_add"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
@@ -41,11 +40,13 @@
         android:clickable="true"
         android:focusable="true"
         android:onClick="onClickAddTopic"
+        android:src="@android:drawable/ic_input_add"
         app:backgroundTint="?attr/actionMenuTextColor"
         app:layout_anchorGravity="bottom|right|end"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:src="@drawable/ic_done" />
+        app:layout_constraintEnd_toEndOf="parent"/>
+        <!--app:src="@drawable/ic_done" -->
+
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/_topicEntryRecyclerView"

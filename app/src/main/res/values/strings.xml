@@ -14,4 +14,11 @@
     <string name="add_votes">+</string>
     <string name="sub_votes">-</string>
     <string name="topic_username">Username</string>
+    <string name="new_session">New Session</string>
+    <string name="scrummy">Scrummy</string>
+    <string name="continue_session">Continue Session</string>
+    <string name="current_topic">Current Topic</string>
+    <string name="clock_goes_here">Clock Goes Here</string>
+    <string name="actions">Actions</string>
+    <string name="next_topic">Next Topic</string>
 </resources>
