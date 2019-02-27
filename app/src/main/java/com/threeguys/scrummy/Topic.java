@@ -50,11 +50,11 @@ public class Topic {
         return votes;
     }
 
-    public void AddVote() {
+    public void addVote() {
         this.votes += 1;
     }
 
-    public void SubVote() {
+    public void subVote() {
         if (votes > 0) {
             this.votes -= 1;
         }

@@ -35,7 +35,7 @@ public class VoteActivity extends AppCompatActivity {
      * Adds a vote to specified Topic upon clicking
      * the plus button
      */
-    public void onClickAddVote() {
+    public void onClickAddVote(int index) {
         // add a vote
     }
 
@@ -43,7 +43,15 @@ public class VoteActivity extends AppCompatActivity {
      * Subtracts a vote from specified Topic upon clicking
      * the minus button
      */
-    public void onClickSubVote() {
+    public void onClickSubVote(int index) {
         // subtract a vote
+    }
+
+    public Session getNewSession() {
+        return newSession;
+    }
+
+    public void setNewSession(Session newSession) {
+        this.newSession = newSession;
     }
 }
