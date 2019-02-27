@@ -2,15 +2,25 @@ package com.threeguys.scrummy;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 
 public class VoteActivity extends AppCompatActivity {
 
     private Session newSession;
+    private RecyclerView recyclerView;
+    private VoteItemAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_vote);
+
+        adapter = new VoteItemAdapter(newSession.getTopics());
+
+        recyclerView = findViewById(R.id._voteItemRecyclerView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(adapter);
     }
 
     /**

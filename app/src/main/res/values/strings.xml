@@ -9,4 +9,9 @@
     <string name="topic">Topic</string>
     <string name="name">Name</string>
     <string name="add">Add</string>
+    <string name="topic_title">Title</string>
+    <string name="topic_votes">0</string>
+    <string name="add_votes">+</string>
+    <string name="sub_votes">-</string>
+    <string name="topic_username">Username</string>
 </resources>
