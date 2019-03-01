@@ -20,7 +20,9 @@ public class TopicActivity extends AppCompatActivity {
         setContentView(R.layout.activity_topic);
 
         LinearLayout linearLayout = (LinearLayout)findViewById(R.id._snackbarLayout);
-        linearLayout.setVisibility(View.INVISIBLE);
+        linearLayout.setVisibility(View.GONE);
+
+        session = new Session();
     }
 
     public void onClickVote(View view) {
@@ -30,9 +32,9 @@ public class TopicActivity extends AppCompatActivity {
         LinearLayout linearLayout = (LinearLayout)findViewById(R.id._snackbarLayout);
         if(linearLayout.getVisibility() == View.VISIBLE)
         {
-            linearLayout.setVisibility(View.INVISIBLE);
+            linearLayout.setVisibility(View.GONE);
         }
-        if(linearLayout.getVisibility() == View.INVISIBLE)
+        else
         {
             linearLayout.setVisibility(View.VISIBLE);
         }
@@ -46,15 +48,26 @@ public class TopicActivity extends AppCompatActivity {
         Topic topic = new Topic();
         topic.setTitle(topicET.getText().toString());
         topic.setUsername(nameET.getText().toString());
-        categoryS.getSelectedItemPosition();
-        //TODO get the selected category
+
         Topic.Category c = Topic.Category.NEUTRAL;
+        if (categoryS.getSelectedItemPosition() == 0)
+        {
+            c = Topic.Category.BAD;
+        }
+        else if (categoryS.getSelectedItemPosition() == 1)
+        {
+            c = Topic.Category.NEUTRAL;
+        }
+        else if (categoryS.getSelectedItemPosition() == 2)
+        {
+            c = Topic.Category.GOOD;
+        }
         topic.setCategory(c);
 
         session.addTopic(topic);
 
         LinearLayout linearLayout = (LinearLayout)findViewById(R.id._snackbarLayout);
-        linearLayout.setVisibility(View.INVISIBLE);
+        linearLayout.setVisibility(View.GONE);
     }
 
     public Session getSession() {

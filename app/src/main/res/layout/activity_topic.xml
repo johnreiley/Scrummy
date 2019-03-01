@@ -77,6 +77,7 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:hint="@string/topic"
+            android:text=""
             android:importantForAutofill="no"
             android:inputType="textPersonName" />
 
@@ -86,6 +87,7 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:hint="@string/name"
+            android:text=""
             android:importantForAutofill="no"
             android:inputType="textPersonName" />
 
@@ -93,6 +95,7 @@
             android:id="@+id/_categoryInputSpinner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:entries="@array/categories_array"
             android:spinnerMode="dropdown" />
 
         <Button
