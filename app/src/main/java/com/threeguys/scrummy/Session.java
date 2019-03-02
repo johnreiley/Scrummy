@@ -8,6 +8,7 @@ import java.util.List;
 public class Session {
 
     private List<Topic> topics;
+    private String Date;
 
     Session(){
         topics = new ArrayList<>();
@@ -31,5 +32,13 @@ public class Session {
 
     public void addTopic(Topic t) {
         topics.add(t);
+    }
+
+    public String getDate() {
+        return Date;
+    }
+
+    public void setDate(String date) {
+        Date = date;
     }
 }
