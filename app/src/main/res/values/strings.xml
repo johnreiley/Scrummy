@@ -26,4 +26,7 @@
     <string name="clock_goes_here">Clock Goes Here</string>
     <string name="actions">Actions</string>
     <string name="next_topic">Next Topic</string>
+    <string name="date">Date</string>
+    <string name="colon">:</string>
+    <string name="category">Category</string>
 </resources>
