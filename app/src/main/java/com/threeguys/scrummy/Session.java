@@ -41,4 +41,46 @@ public class Session {
     public void setDate(String date) {
         Date = date;
     }
+
+    /**
+     * finds all of the good topics in the topics list
+     * @return tl, a list of good topics
+     */
+    public List<Topic> getGoodTopics() {
+        List<Topic> tl = new ArrayList<>();
+        for (Topic t : topics ) {
+            if (t.getCategory().equals(Topic.Category.GOOD)) {
+                tl.add(t);
+            }
+        }
+        return tl;
+    }
+
+    /**
+     * finds all of the neutral topics in the topics list
+     * @return tl, a list of neutral topics
+     */
+    public List<Topic> getNeutralTopics() {
+        List<Topic> tl = new ArrayList<>();
+        for (Topic t : topics ) {
+            if (t.getCategory().equals(Topic.Category.NEUTRAL)) {
+                tl.add(t);
+            }
+        }
+        return tl;
+    }
+
+    /**
+     * finds all of the bad topics in the topics list
+     * @return tl, a list of bad topics
+     */
+    public List<Topic> getBadTopics() {
+        List<Topic> tl = new ArrayList<>();
+        for (Topic t : topics ) {
+            if (t.getCategory().equals(Topic.Category.BAD)) {
+                tl.add(t);
+            }
+        }
+        return tl;
+    }
 }
