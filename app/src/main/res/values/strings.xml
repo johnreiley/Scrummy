@@ -10,9 +10,9 @@
     <string name="name">Name</string>
     <string name="add">Add</string>
     <string-array name="categories_array">
-        <item>Bad</item>
-        <item>Neutral</item>
         <item>Good</item>
+        <item>Neutral</item>
+        <item>Bad</item>
     </string-array>
     <string name="topic_title">Title</string>
     <string name="topic_votes">0</string>

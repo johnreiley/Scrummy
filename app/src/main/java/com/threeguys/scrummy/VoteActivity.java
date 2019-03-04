@@ -20,6 +20,8 @@ public class VoteActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_vote);
 
+        //newSession = (Session)getIntent().getExtras().get(MainActivity.SESSION_KEY);
+
         groupData.add("Good");
         groupData.add("Neutral");
         groupData.add("Bad");

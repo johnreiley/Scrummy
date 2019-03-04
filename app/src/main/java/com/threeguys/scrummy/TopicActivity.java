@@ -1,17 +1,21 @@
 package com.threeguys.scrummy;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 public class TopicActivity extends AppCompatActivity {
 
+    public static final String TOPIC_TAG = TopicActivity.class.getSimpleName();
     private Session session;
 
     @Override
@@ -26,6 +30,17 @@ public class TopicActivity extends AppCompatActivity {
     }
 
     public void onClickVote(View view) {
+
+        //Log.d(TOPIC_TAG, "session.getTopics().size() == " + session.getTopics().size());
+
+        if (session.getTopics() == null) {
+            Intent voteIntent = new Intent(this, VoteActivity.class);
+            startActivity(voteIntent);
+
+        } else {
+            Toast.makeText(this,
+                    "Please enter at least one topic before voting", Toast.LENGTH_SHORT).show();
+        }
     }
 
     public void onClickAddTopic(View view) {
