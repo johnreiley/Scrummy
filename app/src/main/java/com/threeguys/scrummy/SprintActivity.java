@@ -7,6 +7,8 @@ import android.widget.Button;
 import android.widget.MultiAutoCompleteTextView;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+
 public class SprintActivity extends AppCompatActivity {
 
     Session session;
@@ -18,8 +20,9 @@ public class SprintActivity extends AppCompatActivity {
         setContentView(R.layout.activity_sprint);
 
         // Initialize Member Data
-
-        session = (Session)getIntent().getExtras().get(MainActivity.SESSION_KEY);
+        Gson gson = new Gson();
+        String gsonSession = (String)getIntent().getExtras().get(MainActivity.SESSION_KEY);
+        session = gson.fromJson(gsonSession, Session.class);
         topicNumber = 0;
 
         TextView currentTopic = findViewById(R.id._currentTopicTextView);
