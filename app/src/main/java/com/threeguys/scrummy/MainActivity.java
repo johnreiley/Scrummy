@@ -6,6 +6,8 @@ import android.view.View;
 
 public class MainActivity extends AppCompatActivity {
 
+    static final String SESSION_KEY =  "SESSION_KEY";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
