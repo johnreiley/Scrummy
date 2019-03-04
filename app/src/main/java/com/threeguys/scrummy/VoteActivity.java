@@ -1,8 +1,11 @@
 package com.threeguys.scrummy;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.ExpandableListView;
+
+import com.google.gson.Gson;
 
 import java.util.HashMap;
 import java.util.List;
@@ -20,7 +23,9 @@ public class VoteActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_vote);
 
-        //newSession = (Session)getIntent().getExtras().get(MainActivity.SESSION_KEY);
+        String sessionJson = (String)getIntent().getExtras().get(MainActivity.SESSION_KEY);
+        Gson gson = new Gson();
+        newSession = gson.fromJson(sessionJson, Session.class);
 
         groupData.add("Good");
         groupData.add("Neutral");
@@ -42,6 +47,14 @@ public class VoteActivity extends AppCompatActivity {
     public void onClickStart() {
         newSession.sortByVote();
         // start the sprint activity
+        Intent sprintIntent = new Intent(this, SprintActivity.class);
+        // turn the session into a string
+        Gson gson = new Gson();
+        String sessionJson = gson.toJson(newSession);
+
+        // add the session string to the intent
+        sprintIntent.putExtra(MainActivity.SESSION_KEY, sessionJson);
+        startActivity(sprintIntent);
     }
 
     /**

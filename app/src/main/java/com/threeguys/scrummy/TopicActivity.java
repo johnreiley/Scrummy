@@ -14,6 +14,8 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+
 import java.util.HashMap;
 import java.util.List;
 
@@ -45,10 +47,17 @@ public class TopicActivity extends AppCompatActivity {
 
     public void onClickVote(View view) {
 
-        //Log.d(TOPIC_TAG, "session.getTopics().size() == " + session.getTopics().size());
+        Log.d(TOPIC_TAG, "session.getTopics().size() == " + session.getTopics().size());
 
-        if (session.getTopics() == null) {
+        if (session.getTopics() != null && session.getTopics().size() >= 0) {
             Intent voteIntent = new Intent(this, VoteActivity.class);
+
+            // turn the session into a string
+            Gson gson = new Gson();
+            String sessionJson = gson.toJson(session);
+
+            // add the session string to the intent
+            voteIntent.putExtra(MainActivity.SESSION_KEY, sessionJson);
             startActivity(voteIntent);
 
         } else {
