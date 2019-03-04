@@ -2,25 +2,36 @@ package com.threeguys.scrummy;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import android.widget.ExpandableListView;
+
+import java.util.HashMap;
+import java.util.List;
 
 public class VoteActivity extends AppCompatActivity {
 
     private Session newSession;
-    private RecyclerView recyclerView;
+    private ExpandableListView expandableListView;
     private VoteItemAdapter adapter;
+    private HashMap<String, List<Topic>> childData;
+    private List<String> groupData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_vote);
 
-        adapter = new VoteItemAdapter(newSession.getTopics());
+        groupData.add("Good");
+        groupData.add("Neutral");
+        groupData.add("Bad");
 
-        recyclerView = findViewById(R.id._voteItemRecyclerView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(adapter);
+        childData.put(groupData.get(0),newSession.getGoodTopics());
+        childData.put(groupData.get(1),newSession.getNeutralTopics());
+        childData.put(groupData.get(2),newSession.getBadTopics());
+
+        adapter = new VoteItemAdapter(this, childData, groupData);
+
+        expandableListView = findViewById(R.id._voteCategoryExpandableListView);
+        expandableListView.setAdapter(adapter);
     }
 
     /**

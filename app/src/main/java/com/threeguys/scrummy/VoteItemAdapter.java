@@ -1,69 +1,102 @@
 package com.threeguys.scrummy;
 
-import android.support.v7.widget.RecyclerView;
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseExpandableListAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.util.HashMap;
 import java.util.List;
 
-public class VoteItemAdapter extends RecyclerView.Adapter<VoteItemAdapter.VoteItemsViewHolder> {
+public class VoteItemAdapter extends BaseExpandableListAdapter {
 
-    private List<Topic> topics;
+    private Context context;
 
-    public VoteItemAdapter(List<Topic> topics) {
+    // group titles
+    private List<String> categories;
+
+    // child data
+    private HashMap<String, List<Topic>> topics;
+
+    public VoteItemAdapter(Context context, HashMap<String, List<Topic>> topics, List<String> categories) {
+        this.context = context;
         this.topics = topics;
+        this.categories = categories;
     }
 
     @Override
-    public VoteItemsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.vote_item, parent, false);
-        return new VoteItemsViewHolder(view);
+    public int getGroupCount() {
+        return categories.size();
     }
 
     @Override
-    public void onBindViewHolder(VoteItemsViewHolder holder, int position) {
-        holder.topicTitle.setText(topics.get(position).getTitle());
-        holder.topicUsername.setText(topics.get(position).getUsername());
-        holder.topicVotes.setText(topics.get(position).getVotes());
-        holder.addVote.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //Call AddVote in VoteActivity.java
-                //Send it "position" data
-            }
-        });
-        holder.subVote.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //Call SubVote in VoteActivity.java
-                //Send it "position" data
-            }
-        });
-    }
-
-    @Override
-    public int getItemCount() {
+    public int getChildrenCount(int groupPosition) {
         return topics.size();
     }
 
-    class VoteItemsViewHolder extends RecyclerView.ViewHolder {
+    @Override
+    public Object getGroup(int groupPosition) {
+        return categories.get(groupPosition);
+    }
 
-        TextView topicTitle;
-        TextView topicUsername;
-        TextView topicVotes;
-        Button addVote;
-        Button subVote;
+    @Override
+    public Object getChild(int groupPosition, int childPosition) {
+        return this.topics.get(this.categories.get(groupPosition)).get(childPosition);
+    }
 
-        public VoteItemsViewHolder(View itemView) {
-            super(itemView);
-            topicTitle = itemView.findViewById(R.id._topicTitleTextView);
-            topicUsername = itemView.findViewById(R.id._topicUsernameTextView);
-            topicVotes = itemView.findViewById(R.id._topicVotesTextView);
-            addVote = itemView.findViewById(R.id._addVoteButton);
-            subVote = itemView.findViewById(R.id._subVoteButton);
+    @Override
+    public long getGroupId(int groupPosition) {
+        return groupPosition;
+    }
+
+    @Override
+    public long getChildId(int groupPosition, int childPosition) {
+        return childPosition;
+    }
+
+    @Override
+    public boolean hasStableIds() {
+        return false;
+    }
+
+    @Override
+    public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
+        String headerTitle = (String) getGroup(groupPosition);
+        if (convertView == null) {
+            LayoutInflater layoutInflater = (LayoutInflater) this.context
+                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            convertView = layoutInflater.inflate(R.layout.category_item, null);
         }
+
+        TextView textViewGroup = convertView
+                .findViewById(R.id._categoryTextView);
+        textViewGroup.setText(headerTitle);
+
+        return convertView;
+    }
+
+    @Override
+    public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
+        final String childText = (String) getChild(groupPosition, childPosition);
+
+        if (convertView == null) {
+            LayoutInflater layoutInflater = (LayoutInflater) this.context
+                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            convertView = layoutInflater.inflate(R.layout.vote_item, null);
+        }
+
+        TextView textViewChild = convertView
+                .findViewById(R.id._topicTitleTextView);
+
+        textViewChild.setText(childText);
+        return convertView;
+    }
+
+    @Override
+    public boolean isChildSelectable(int groupPosition, int childPosition) {
+        return true;
     }
 }
