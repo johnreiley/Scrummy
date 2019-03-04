@@ -9,14 +9,22 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ExpandableListView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
+
+import java.util.HashMap;
+import java.util.List;
 
 public class TopicActivity extends AppCompatActivity {
 
     public static final String TOPIC_TAG = TopicActivity.class.getSimpleName();
     private Session session;
+    private ExpandableListView expandableListView;
+    private TopicItemAdapter adapter;
+    private HashMap<String, List<Topic>> childData;
+    private List<String> groupData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +35,12 @@ public class TopicActivity extends AppCompatActivity {
         linearLayout.setVisibility(View.GONE);
 
         session = new Session();
+
+        groupData.add("Good");
+        groupData.add("Neutral");
+        groupData.add("Bad");
+
+        refreshAdapter();
     }
 
     public void onClickVote(View view) {
@@ -83,6 +97,21 @@ public class TopicActivity extends AppCompatActivity {
 
         LinearLayout linearLayout = (LinearLayout)findViewById(R.id._snackbarLayout);
         linearLayout.setVisibility(View.GONE);
+
+        refreshAdapter();
+    }
+
+    private void refreshAdapter() {
+        childData = new HashMap<>();
+
+        childData.put(groupData.get(0),session.getGoodTopics());
+        childData.put(groupData.get(1),session.getNeutralTopics());
+        childData.put(groupData.get(2),session.getBadTopics());
+
+        adapter = new TopicItemAdapter(this, childData, groupData);
+
+        expandableListView = findViewById(R.id._topicCategoryExpandableListView);
+        expandableListView.setAdapter(adapter);
     }
 
     public Session getSession() {
