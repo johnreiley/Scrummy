@@ -5,7 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.TextView;
+import android.widget.ImageButton;
 
 import java.util.List;
 
@@ -26,11 +26,17 @@ public class LoadSessionItemAdapter extends RecyclerView.Adapter<LoadSessionItem
     @Override
     public void onBindViewHolder(LoadSessionItemAdapter.LoadSessionItemsViewHolder holder, int position) {
         holder.sessionDate.setText(sessions.get(position).getDate());
-        holder.sessionView.setOnClickListener(new View.OnClickListener() {
+        holder.sessionDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //Call onClickSession in LoadActivity.java
                 //Send it "position" data
+            }
+        });
+        holder.popUpMenu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Open the pop up menu
             }
         });
     }
@@ -42,13 +48,13 @@ public class LoadSessionItemAdapter extends RecyclerView.Adapter<LoadSessionItem
 
     class LoadSessionItemsViewHolder extends RecyclerView.ViewHolder {
 
-        TextView sessionDate;
-        Button sessionView;
+        Button sessionDate;
+        ImageButton popUpMenu;
 
         public LoadSessionItemsViewHolder(View itemView) {
             super(itemView);
-            sessionDate = itemView.findViewById(R.id._sessionDateTextView);
-            sessionView = itemView.findViewById(R.id._viewSessionButton);
+            sessionDate = itemView.findViewById(R.id._viewSessionButton);
+            popUpMenu = itemView.findViewById(R.id._sessionItemPopupImageButton);
         }
     }
 }

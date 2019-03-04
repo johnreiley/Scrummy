@@ -43,7 +43,7 @@ public class VoteItemAdapter extends BaseExpandableListAdapter {
     }
 
     @Override
-    public Object getChild(int groupPosition, int childPosition) {
+    public Topic getChild(int groupPosition, int childPosition) {
         return this.topics.get(this.categories.get(groupPosition)).get(childPosition);
     }
 
@@ -80,7 +80,8 @@ public class VoteItemAdapter extends BaseExpandableListAdapter {
 
     @Override
     public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
-        final String childText = (String) getChild(groupPosition, childPosition);
+
+        Topic topic = getChild(groupPosition, childPosition);
 
         if (convertView == null) {
             LayoutInflater layoutInflater = (LayoutInflater) this.context
@@ -88,10 +89,30 @@ public class VoteItemAdapter extends BaseExpandableListAdapter {
             convertView = layoutInflater.inflate(R.layout.vote_item, null);
         }
 
-        TextView textViewChild = convertView
-                .findViewById(R.id._topicTitleTextView);
+        TextView titleTextView = convertView.findViewById(R.id._topicTitleTextView);
+        TextView usernameTextView = convertView.findViewById(R.id._topicUsernameTextView);
+        TextView votesTextView = convertView.findViewById(R.id._topicVotesTextView);
+        Button addVoteButton = convertView.findViewById(R.id._addVoteButton);
+        Button subVoteButton = convertView.findViewById(R.id._subVoteButton);
 
-        textViewChild.setText(childText);
+        titleTextView.setText(topic.getTitle());
+        usernameTextView.setText(topic.getUsername());
+        votesTextView.setText(topic.getVotes());
+        addVoteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Call addVote method in VoteActivity.java
+                //Send it "position" data
+            }
+        });
+        subVoteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Call subVote method in VoteActivity.java
+                //Send it "position" data
+            }
+        });
+
         return convertView;
     }
 
