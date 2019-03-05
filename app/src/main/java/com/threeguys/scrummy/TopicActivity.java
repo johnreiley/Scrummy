@@ -49,7 +49,7 @@ public class TopicActivity extends AppCompatActivity {
 
         Log.d(TOPIC_TAG, "session.getTopics().size() == " + session.getTopics().size());
 
-        if (session.getTopics() != null && session.getTopics().size() >= 0) {
+        if (session.getTopics() != null && session.getTopics().size() > 0) {
             Intent voteIntent = new Intent(this, VoteActivity.class);
 
             // turn the session into a string
