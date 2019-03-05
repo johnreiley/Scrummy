@@ -8,7 +8,7 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
-public class ScrummyUnitTest {
+public class ClassesUnitTest {
 
 
     @Test
@@ -55,4 +55,6 @@ public class ScrummyUnitTest {
         assertEquals(2, s.getTopics().get(1).getVotes());
         assertEquals(3, s.getTopics().get(2).getVotes());
     }
+
+
 }

@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -38,9 +39,38 @@ public class TopicActivity extends AppCompatActivity {
 
         session = new Session();
 
+        groupData = new ArrayList<>(); // new change
         groupData.add("Good");
         groupData.add("Neutral");
         groupData.add("Bad");
+
+//        // ------------ TEST CODE ----------------//
+//        Topic t = new Topic();
+//        t.setTitle("Creating Unit Tests for Scrummy");
+//        t.setCategory(Topic.Category.NEUTRAL);
+//        t.setUsername("Mr. Awesome Coder");
+//        t.addVote();
+//        session.addTopic(t);
+//
+//        t = new Topic();
+//        t.setTitle("Creating Second Topic for Unit Tests");
+//        t.setCategory(Topic.Category.BAD);
+//        t.setUsername("You Don't Know Me");
+//        t.addVote();
+//        t.addVote();
+//        t.addVote();
+//        session.addTopic(t);
+//
+//        t = new Topic();
+//        t.setTitle("Creating Last Topic for Unit Tests");
+//        t.setCategory(Topic.Category.GOOD);
+//        t.setUsername("Zielke");
+//        t.subVote();
+//        t.subVote();
+//        t.subVote();
+//        session.addTopic(t);
+//        // ---------------------------------------//
+
 
         refreshAdapter();
     }
@@ -88,16 +118,13 @@ public class TopicActivity extends AppCompatActivity {
         topic.setUsername(nameET.getText().toString());
 
         Topic.Category c = Topic.Category.NEUTRAL;
-        if (categoryS.getSelectedItemPosition() == 0)
-        {
+        if (categoryS.getSelectedItemPosition() == 0) {
             c = Topic.Category.BAD;
         }
-        else if (categoryS.getSelectedItemPosition() == 1)
-        {
+        else if (categoryS.getSelectedItemPosition() == 1) {
             c = Topic.Category.NEUTRAL;
         }
-        else if (categoryS.getSelectedItemPosition() == 2)
-        {
+        else if (categoryS.getSelectedItemPosition() == 2) {
             c = Topic.Category.GOOD;
         }
         topic.setCategory(c);

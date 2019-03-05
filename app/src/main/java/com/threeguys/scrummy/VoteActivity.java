@@ -7,6 +7,7 @@ import android.widget.ExpandableListView;
 
 import com.google.gson.Gson;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -27,10 +28,12 @@ public class VoteActivity extends AppCompatActivity {
         Gson gson = new Gson();
         newSession = gson.fromJson(sessionJson, Session.class);
 
+        groupData = new ArrayList<>();
         groupData.add("Good");
         groupData.add("Neutral");
         groupData.add("Bad");
 
+        childData = new HashMap<>();
         childData.put(groupData.get(0),newSession.getGoodTopics());
         childData.put(groupData.get(1),newSession.getNeutralTopics());
         childData.put(groupData.get(2),newSession.getBadTopics());
