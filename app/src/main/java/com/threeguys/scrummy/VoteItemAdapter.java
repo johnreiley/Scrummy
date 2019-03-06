@@ -101,6 +101,7 @@ public class VoteItemAdapter extends BaseExpandableListAdapter {
         addVoteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 //Call addVote method in VoteActivity.java
                 //Send it "position" data
             }

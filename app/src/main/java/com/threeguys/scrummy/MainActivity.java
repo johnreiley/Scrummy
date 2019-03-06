@@ -15,6 +15,7 @@ public class MainActivity extends AppCompatActivity {
     static final String SESSION_KEY =  "SESSION_KEY"; // used for passing sessions between activities
     static final String SP_FILE_NAME = "CONTINUE_SESSION";
     static final String CONTINUE_KEY = "CONTINUE_KEY";
+    static final String ACTIVITY_KEY = "ACTIVITY_KEY";
     public static final String MAIN_TAG = MainActivity.class.getSimpleName();
 
     @Override
@@ -49,14 +50,37 @@ public class MainActivity extends AppCompatActivity {
             Session continueSession = gson.fromJson(sessionJson, Session.class);
             // check to make sure there is data
             if (continueSession.getTopics().size() > 0) {
-                // if there is data, call the Sprint activity and pass the session string
-                Intent sprintIntent = new Intent(this, SprintActivity.class);
-                sprintIntent.putExtra(SESSION_KEY, sessionJson);
-                startActivity(sprintIntent);
+
+                //Which activity?
+                switch (sessionSaveFile.getString(ACTIVITY_KEY,"")) {
+                    case "TopicActivity":
+                        // if there is data, call the Sprint activity and pass the session string
+                        Intent topicIntent = new Intent(this, TopicActivity.class);
+                        topicIntent.putExtra(SESSION_KEY, sessionJson);
+                        startActivity(topicIntent);
+                        break;
+                    case "VoteActivity":
+                        // if there is data, call the Sprint activity and pass the session string
+                        Intent voteIntent = new Intent(this, VoteActivity.class);
+                        voteIntent.putExtra(SESSION_KEY, sessionJson);
+                        startActivity(voteIntent);
+                        break;
+                    case "SprintActivity":
+                        // if there is data, call the Sprint activity and pass the session string
+                        Intent sprintIntent = new Intent(this, SprintActivity.class);
+                        sprintIntent.putExtra(SESSION_KEY, sessionJson);
+                        startActivity(sprintIntent);
+                        break;
+                    default:
+                        Toast.makeText(this,
+                                "No active session", Toast.LENGTH_SHORT).show();
+                        break;
+                }
+
             } else {
                 // if not, display text
                 Toast.makeText(this,
-                        "There are no sessions to continue", Toast.LENGTH_SHORT).show();
+                        "There are no topics in the session to continue", Toast.LENGTH_SHORT).show();
             }
         } else {
             Toast.makeText(this,

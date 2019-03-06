@@ -2,6 +2,7 @@ package com.threeguys.scrummy;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -19,6 +20,10 @@ import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import static com.threeguys.scrummy.MainActivity.ACTIVITY_KEY;
+import static com.threeguys.scrummy.MainActivity.CONTINUE_KEY;
+import static com.threeguys.scrummy.MainActivity.SP_FILE_NAME;
 
 public class TopicActivity extends AppCompatActivity {
 
@@ -73,6 +78,22 @@ public class TopicActivity extends AppCompatActivity {
 
 
         refreshAdapter();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        SharedPreferences sp = this.getSharedPreferences(SP_FILE_NAME, MODE_PRIVATE);
+        Gson gson = new Gson();
+
+        String sessionJson = gson.toJson(session, Session.class);
+        String activityJson = "TopicActivity";
+
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putString(CONTINUE_KEY, sessionJson);
+        editor.putString(ACTIVITY_KEY, activityJson);
+        editor.commit();
     }
 
     public void onClickVote(View view) {

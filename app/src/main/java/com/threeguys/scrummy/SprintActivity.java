@@ -1,5 +1,6 @@
 package com.threeguys.scrummy;
 
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -8,6 +9,10 @@ import android.widget.MultiAutoCompleteTextView;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
+
+import static com.threeguys.scrummy.MainActivity.ACTIVITY_KEY;
+import static com.threeguys.scrummy.MainActivity.CONTINUE_KEY;
+import static com.threeguys.scrummy.MainActivity.SP_FILE_NAME;
 
 public class SprintActivity extends AppCompatActivity {
 
@@ -35,6 +40,22 @@ public class SprintActivity extends AppCompatActivity {
         } else {
             nextTopic.setText("Save and Quit");
         }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        SharedPreferences sp = this.getSharedPreferences(SP_FILE_NAME, MODE_PRIVATE);
+        Gson gson = new Gson();
+
+        String sessionJson = gson.toJson(session, Session.class);
+        String activityJson = "SprintActivity";
+
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putString(CONTINUE_KEY, sessionJson);
+        editor.putString(ACTIVITY_KEY, activityJson);
+        editor.commit();
     }
 
     public void onClickNextTopic(View view) {
