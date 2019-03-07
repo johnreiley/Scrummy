@@ -12,7 +12,7 @@ import com.google.gson.Gson;
 
 import static com.threeguys.scrummy.MainActivity.ACTIVITY_KEY;
 import static com.threeguys.scrummy.MainActivity.CONTINUE_KEY;
-import static com.threeguys.scrummy.MainActivity.SP_FILE_NAME;
+import static com.threeguys.scrummy.MainActivity.TEMP_SAVE_PREF;
 
 public class SprintActivity extends AppCompatActivity {
 
@@ -38,7 +38,7 @@ public class SprintActivity extends AppCompatActivity {
         if (session.getTopics().size() > 1) {
             nextTopic.setText(session.getTopics().get(1).getTitle());
         } else {
-            nextTopic.setText("Save and Quit");
+            nextTopic.setText(R.string.save_and_quit_button);
         }
     }
 
@@ -46,7 +46,7 @@ public class SprintActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
 
-        SharedPreferences sp = this.getSharedPreferences(SP_FILE_NAME, MODE_PRIVATE);
+        SharedPreferences sp = this.getSharedPreferences(TEMP_SAVE_PREF, MODE_PRIVATE);
         Gson gson = new Gson();
 
         String sessionJson = gson.toJson(session, Session.class);
@@ -55,7 +55,7 @@ public class SprintActivity extends AppCompatActivity {
         SharedPreferences.Editor editor = sp.edit();
         editor.putString(CONTINUE_KEY, sessionJson);
         editor.putString(ACTIVITY_KEY, activityJson);
-        editor.commit();
+        editor.apply();
     }
 
     public void onClickNextTopic(View view) {
@@ -77,11 +77,11 @@ public class SprintActivity extends AppCompatActivity {
         // Go to next Topic
         currentTopic.setText(session.getTopics().get(topicNumber).getTitle());
 
-        // Check if there is a nex topic
+        // Check if there is a next topic
         if (topicNumber + 1 > session.getTopics().size()) {
             nextTopic.setText(session.getTopics().get(topicNumber + 1).getTitle());
         } else {
-            nextTopic.setText("Save and Quit");
+            nextTopic.setText(R.string.save_and_quit_button);
         }
     }
 }

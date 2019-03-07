@@ -1,13 +1,10 @@
 package com.threeguys.scrummy;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
@@ -23,7 +20,7 @@ import java.util.List;
 
 import static com.threeguys.scrummy.MainActivity.ACTIVITY_KEY;
 import static com.threeguys.scrummy.MainActivity.CONTINUE_KEY;
-import static com.threeguys.scrummy.MainActivity.SP_FILE_NAME;
+import static com.threeguys.scrummy.MainActivity.TEMP_SAVE_PREF;
 
 public class TopicActivity extends AppCompatActivity {
 
@@ -34,6 +31,10 @@ public class TopicActivity extends AppCompatActivity {
     private HashMap<String, List<Topic>> childData;
     private List<String> groupData;
 
+    private EditText topicET;
+    private EditText nameET;
+    private Spinner categoryS;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,6 +43,10 @@ public class TopicActivity extends AppCompatActivity {
         LinearLayout linearLayout = (LinearLayout)findViewById(R.id._snackbarLayout);
         linearLayout.setVisibility(View.GONE);
 
+        topicET = findViewById(R.id._topicInputEditText);
+        nameET = findViewById(R.id._nameInputEditText);
+        categoryS = findViewById(R.id._categoryInputSpinner);
+
         session = new Session();
 
         groupData = new ArrayList<>(); // new change
@@ -49,51 +54,24 @@ public class TopicActivity extends AppCompatActivity {
         groupData.add("Neutral");
         groupData.add("Bad");
 
-//        // ------------ TEST CODE ----------------//
-//        Topic t = new Topic();
-//        t.setTitle("Creating Unit Tests for Scrummy");
-//        t.setCategory(Topic.Category.NEUTRAL);
-//        t.setUsername("Mr. Awesome Coder");
-//        t.addVote();
-//        session.addTopic(t);
-//
-//        t = new Topic();
-//        t.setTitle("Creating Second Topic for Unit Tests");
-//        t.setCategory(Topic.Category.BAD);
-//        t.setUsername("You Don't Know Me");
-//        t.addVote();
-//        t.addVote();
-//        t.addVote();
-//        session.addTopic(t);
-//
-//        t = new Topic();
-//        t.setTitle("Creating Last Topic for Unit Tests");
-//        t.setCategory(Topic.Category.GOOD);
-//        t.setUsername("Zielke");
-//        t.subVote();
-//        t.subVote();
-//        t.subVote();
-//        session.addTopic(t);
-//        // ---------------------------------------//
-
-
         refreshAdapter();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
+        if (session.getTopics().size() > 0) {
+            SharedPreferences sp = this.getSharedPreferences(TEMP_SAVE_PREF, MODE_PRIVATE);
+            Gson gson = new Gson();
 
-        SharedPreferences sp = this.getSharedPreferences(SP_FILE_NAME, MODE_PRIVATE);
-        Gson gson = new Gson();
+            String sessionJson = gson.toJson(session, Session.class);
+            String activityJson = "TopicActivity";
 
-        String sessionJson = gson.toJson(session, Session.class);
-        String activityJson = "TopicActivity";
-
-        SharedPreferences.Editor editor = sp.edit();
-        editor.putString(CONTINUE_KEY, sessionJson);
-        editor.putString(ACTIVITY_KEY, activityJson);
-        editor.commit();
+            SharedPreferences.Editor editor = sp.edit();
+            editor.putString(CONTINUE_KEY, sessionJson);
+            editor.putString(ACTIVITY_KEY, activityJson);
+            editor.apply();
+        }
     }
 
     public void onClickVote(View view) {
@@ -118,44 +96,53 @@ public class TopicActivity extends AppCompatActivity {
     }
 
     public void onClickAddTopic(View view) {
-        LinearLayout linearLayout = (LinearLayout)findViewById(R.id._snackbarLayout);
-        if(linearLayout.getVisibility() == View.VISIBLE)
-        {
+        LinearLayout linearLayout = findViewById(R.id._snackbarLayout);
+        if (linearLayout.getVisibility() == View.VISIBLE) {
             linearLayout.setVisibility(View.GONE);
-        }
-        else
-        {
+            // reset the text input values to default
+            topicET.setText("");
+            nameET.setText("");
+            categoryS.setSelection(0);
+        } else {
             linearLayout.setVisibility(View.VISIBLE);
         }
     }
 
     public void onClickFinishInput(View view) {
-        EditText topicET = findViewById(R.id._topicInputEditText);
-        EditText nameET = findViewById(R.id._nameInputEditText);
-        Spinner categoryS = findViewById(R.id._categoryInputSpinner);
 
-        Topic topic = new Topic();
-        topic.setTitle(topicET.getText().toString());
-        topic.setUsername(nameET.getText().toString());
+        // first make sure the text inputs aren't empty
+        if (topicET.getText().toString().equals("") || nameET.getText().toString().equals("")) {
+            Toast.makeText(this,
+                    "Enter both a title and name before adding a new topic",
+                    Toast.LENGTH_SHORT).show();
+        } else {
+            // populate the topic with the text input values
+            Topic topic = new Topic();
+            topic.setTitle(topicET.getText().toString());
+            topic.setUsername(nameET.getText().toString());
 
-        Topic.Category c = Topic.Category.NEUTRAL;
-        if (categoryS.getSelectedItemPosition() == 0) {
-            c = Topic.Category.BAD;
+            Topic.Category c = Topic.Category.NEUTRAL;
+            if (categoryS.getSelectedItemPosition() == 0) {
+                c = Topic.Category.GOOD;
+            } else if (categoryS.getSelectedItemPosition() == 1) {
+                c = Topic.Category.NEUTRAL;
+            } else if (categoryS.getSelectedItemPosition() == 2) {
+                c = Topic.Category.BAD;
+            }
+            topic.setCategory(c);
+
+            session.addTopic(topic);
+
+            LinearLayout linearLayout = findViewById(R.id._snackbarLayout);
+            linearLayout.setVisibility(View.GONE);
+
+            // reset the text input values to default
+            topicET.setText("");
+            nameET.setText("");
+            categoryS.setSelection(0);
+
+            refreshAdapter();
         }
-        else if (categoryS.getSelectedItemPosition() == 1) {
-            c = Topic.Category.NEUTRAL;
-        }
-        else if (categoryS.getSelectedItemPosition() == 2) {
-            c = Topic.Category.GOOD;
-        }
-        topic.setCategory(c);
-
-        session.addTopic(topic);
-
-        LinearLayout linearLayout = (LinearLayout)findViewById(R.id._snackbarLayout);
-        linearLayout.setVisibility(View.GONE);
-
-        refreshAdapter();
     }
 
     private void refreshAdapter() {

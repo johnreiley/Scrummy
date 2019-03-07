@@ -13,9 +13,10 @@ import com.google.gson.Gson;
 public class MainActivity extends AppCompatActivity {
 
     static final String SESSION_KEY =  "SESSION_KEY"; // used for passing sessions between activities
-    static final String SP_FILE_NAME = "CONTINUE_SESSION";
-    static final String CONTINUE_KEY = "CONTINUE_KEY";
-    static final String ACTIVITY_KEY = "ACTIVITY_KEY";
+    static final String TEMP_SAVE_PREF = "continue_session";
+    static final String SAVE_PREF = "saved_sessions";
+    static final String CONTINUE_KEY = "continue_key";
+    static final String ACTIVITY_KEY = "activity_key";
     public static final String MAIN_TAG = MainActivity.class.getSimpleName();
 
     @Override
@@ -41,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
      */
     public void onClickContinue(View view) {
         // access the session string in shared preferences
-        SharedPreferences sessionSaveFile = this.getSharedPreferences(SP_FILE_NAME, Context.MODE_PRIVATE);
+        SharedPreferences sessionSaveFile = this.getSharedPreferences(TEMP_SAVE_PREF, Context.MODE_PRIVATE);
         String sessionJson = sessionSaveFile.getString(CONTINUE_KEY, "no session");
 
         if (!sessionJson.equals("no session")) {

@@ -14,7 +14,7 @@ import java.util.List;
 
 import static com.threeguys.scrummy.MainActivity.ACTIVITY_KEY;
 import static com.threeguys.scrummy.MainActivity.CONTINUE_KEY;
-import static com.threeguys.scrummy.MainActivity.SP_FILE_NAME;
+import static com.threeguys.scrummy.MainActivity.TEMP_SAVE_PREF;
 
 public class VoteActivity extends AppCompatActivity {
 
@@ -53,7 +53,7 @@ public class VoteActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
 
-        SharedPreferences sp = this.getSharedPreferences(SP_FILE_NAME, MODE_PRIVATE);
+        SharedPreferences sp = this.getSharedPreferences(TEMP_SAVE_PREF, MODE_PRIVATE);
         Gson gson = new Gson();
 
         String sessionJson = gson.toJson(session, Session.class);
@@ -62,7 +62,7 @@ public class VoteActivity extends AppCompatActivity {
         SharedPreferences.Editor editor = sp.edit();
         editor.putString(CONTINUE_KEY, sessionJson);
         editor.putString(ACTIVITY_KEY, activityJson);
-        editor.commit();
+        editor.apply();
     }
 
     /**
