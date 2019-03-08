@@ -26,6 +26,7 @@ public class TopicActivity extends AppCompatActivity {
 
     public static final String TOPIC_TAG = TopicActivity.class.getSimpleName();
     private Session session;
+
     private ExpandableListView expandableListView;
     private TopicItemAdapter adapter;
     private HashMap<String, List<Topic>> childData;
@@ -54,6 +55,7 @@ public class TopicActivity extends AppCompatActivity {
         groupData.add("Neutral");
         groupData.add("Bad");
 
+        // ------------ TEST CODE ------------ //
         Topic t1 = new Topic();
         t1.setTitle("Good Test");
         t1.setUsername("Bretton");
@@ -74,6 +76,8 @@ public class TopicActivity extends AppCompatActivity {
         session.addTopic(t3);
 
         Log.i("Topic Count","Size: " + session.getTopics().size());
+
+        // ------------------------------------ //
 
         expandableListView = findViewById(R.id._topicCategoryExpandableListView);
 
