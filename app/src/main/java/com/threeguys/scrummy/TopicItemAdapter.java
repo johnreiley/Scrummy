@@ -15,6 +15,14 @@ public class TopicItemAdapter extends BaseExpandableListAdapter{
 
     private Context context;
 
+    public void setCategories(List<String> categories) {
+        this.categories = categories;
+    }
+
+    public void setTopics(HashMap<String, List<Topic>> topics) {
+        this.topics = topics;
+    }
+
     // group titles
     private List<String> categories;
 

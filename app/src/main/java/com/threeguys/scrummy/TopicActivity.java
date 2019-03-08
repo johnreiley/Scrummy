@@ -76,6 +76,7 @@ public class TopicActivity extends AppCompatActivity {
         Log.i("Topic Count","Size: " + session.getTopics().size());
 
         expandableListView = findViewById(R.id._topicCategoryExpandableListView);
+
         refreshAdapter();
     }
 
@@ -174,9 +175,29 @@ public class TopicActivity extends AppCompatActivity {
         childData.put(groupData.get(1),session.getNeutralTopics());
         childData.put(groupData.get(2),session.getBadTopics());
 
-        adapter = new TopicItemAdapter(this, childData, groupData);
+        if(adapter == null) {
+            adapter = new TopicItemAdapter(this, childData, groupData);
+            expandableListView.setAdapter(adapter);
+        }
+        else
+        {
+            adapter.setCategories(groupData);
+            adapter.setTopics(childData);
 
-        expandableListView.setAdapter(adapter);
+            boolean exp0 = expandableListView.isGroupExpanded(0);
+            boolean exp1 = expandableListView.isGroupExpanded(1);
+            boolean exp2 = expandableListView.isGroupExpanded(2);
+
+            expandableListView.setAdapter(adapter);
+            if (exp0)
+                expandableListView.expandGroup(0);
+
+            if (exp1)
+                expandableListView.expandGroup(1);
+
+            if (exp2)
+                expandableListView.expandGroup(2);
+        }
     }
 
     public Session getSession() {
