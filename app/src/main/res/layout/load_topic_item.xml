@@ -7,7 +7,7 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/_topicTitleTextView"
+        android:id="@+id/_loadtopicTitleTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -24,11 +24,11 @@
         android:layout_marginStart="8dp"
         android:text="@string/colon"
         android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-        app:layout_constraintStart_toEndOf="@+id/_topicTitleTextView"
-        app:layout_constraintTop_toTopOf="@+id/_topicTitleTextView" />
+        app:layout_constraintStart_toEndOf="@+id/_loadtopicTitleTextView"
+        app:layout_constraintTop_toTopOf="@+id/_loadtopicTitleTextView" />
 
     <TextView
-        android:id="@+id/_topicCategoryTextView"
+        android:id="@+id/_loadtopicCategoryTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -40,7 +40,7 @@
         app:layout_constraintTop_toTopOf="@+id/_colonTextView" />
 
     <TextView
-        android:id="@+id/_topicActionsTextView"
+        android:id="@+id/_loadtopicActionsTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -48,7 +48,7 @@
         android:text="@string/actions"
         android:textAppearance="@style/TextAppearance.AppCompat.Small"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/_topicTitleTextView"
-        app:layout_constraintTop_toBottomOf="@+id/_topicTitleTextView" />
+        app:layout_constraintStart_toStartOf="@+id/_loadtopicTitleTextView"
+        app:layout_constraintTop_toBottomOf="@+id/_loadtopicTitleTextView" />
 
 </android.support.constraint.ConstraintLayout>

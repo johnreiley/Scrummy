@@ -11,8 +11,11 @@ public class Topic {
     public enum Category {GOOD, NEUTRAL, BAD}
 
     Topic() {
+        title = "";
+        username = "";
         votes = 0;
         actions = "No actions";
+        category = Category.NEUTRAL;
     }
 
     public String getTitle() {

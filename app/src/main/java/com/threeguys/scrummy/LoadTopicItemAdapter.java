@@ -58,8 +58,8 @@ public class LoadTopicItemAdapter extends RecyclerView.Adapter<LoadTopicItemAdap
         public LoadTopicItemsViewHolder(View itemView) {
             super(itemView);
             topicTitle = itemView.findViewById(R.id._topicTitleTextView);
-            topicCategory = itemView.findViewById(R.id._topicCategoryTextView);
-            topicActions = itemView.findViewById(R.id._topicActionsTextView);
+            topicCategory = itemView.findViewById(R.id._loadtopicCategoryTextView);
+            topicActions = itemView.findViewById(R.id._loadtopicActionsTextView);
         }
     }
 }

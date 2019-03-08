@@ -1,7 +1,6 @@
 package com.threeguys.scrummy;
 
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,9 +45,9 @@ public class VoteActivityUnitTest {
         topics.add(t);
 
         session.setTopics(topics);
-        activity.setNewSession(session);
+        activity.setSession(session);
 
-        Session activitySession = activity.getNewSession();
+        Session activitySession = activity.getSession();
         List<Topic> activityTopics = activitySession.getTopics();
 
         //*** Initialized Data Tests ***//
@@ -104,7 +103,7 @@ public class VoteActivityUnitTest {
         topics.add(t);
 
         session.setTopics(topics);
-        activity.setNewSession(session);
+        activity.setSession(session);
 
         //Add votes to each topic
         activity.onClickAddVote(0);
@@ -112,7 +111,7 @@ public class VoteActivityUnitTest {
         activity.onClickAddVote(2);
         activity.onClickAddVote(2);
 
-        Session activitySession = activity.getNewSession();
+        Session activitySession = activity.getSession();
         List<Topic> activityTopics = activitySession.getTopics();
 
         assert(activityTopics.get(0).getVotes() == 2);
@@ -156,7 +155,7 @@ public class VoteActivityUnitTest {
         topics.add(t);
 
         session.setTopics(topics);
-        activity.setNewSession(session);
+        activity.setSession(session);
 
         //Subtract votes from each topic
         activity.onClickSubVote(0);
@@ -167,7 +166,7 @@ public class VoteActivityUnitTest {
         activity.onClickSubVote(1);
         activity.onClickSubVote(2);
 
-        Session activitySession = activity.getNewSession();
+        Session activitySession = activity.getSession();
         List<Topic> activityTopics = activitySession.getTopics();
 
         assert(activityTopics.get(0).getVotes() == 0);
@@ -206,7 +205,7 @@ public class VoteActivityUnitTest {
         //And sort the list in order by highest vote
         activity.onClickStart();
 
-        Session activitySession = activity.getNewSession();
+        Session activitySession = activity.getSession();
         List<Topic> activityTopics = activitySession.getTopics();
 
         //Check each topic for correct order and values

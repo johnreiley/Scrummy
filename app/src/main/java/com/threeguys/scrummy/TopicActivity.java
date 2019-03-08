@@ -54,6 +54,28 @@ public class TopicActivity extends AppCompatActivity {
         groupData.add("Neutral");
         groupData.add("Bad");
 
+        Topic t1 = new Topic();
+        t1.setTitle("Good Test");
+        t1.setUsername("Bretton");
+        t1.setCategory(Topic.Category.GOOD);
+
+        Topic t2 = new Topic();
+        t2.setTitle("Neutral Test");
+        t2.setUsername("Bretton");
+        t2.setCategory(Topic.Category.NEUTRAL);
+
+        Topic t3 = new Topic();
+        t3.setTitle("Bad Test");
+        t3.setUsername("Bretton");
+        t3.setCategory(Topic.Category.BAD);
+
+        session.addTopic(t1);
+        session.addTopic(t2);
+        session.addTopic(t3);
+
+        Log.i("Topic Count","Size: " + session.getTopics().size());
+
+        expandableListView = findViewById(R.id._topicCategoryExpandableListView);
         refreshAdapter();
     }
 
@@ -154,7 +176,6 @@ public class TopicActivity extends AppCompatActivity {
 
         adapter = new TopicItemAdapter(this, childData, groupData);
 
-        expandableListView = findViewById(R.id._topicCategoryExpandableListView);
         expandableListView.setAdapter(adapter);
     }
 

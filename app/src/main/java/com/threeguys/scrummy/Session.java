@@ -1,5 +1,7 @@
 package com.threeguys.scrummy;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -47,9 +49,11 @@ public class Session {
      * @return tl, a list of good topics
      */
     public List<Topic> getGoodTopics() {
+
         List<Topic> tl = new ArrayList<>();
         for (Topic t : topics ) {
-            if (t.getCategory().equals(Topic.Category.GOOD)) {
+            if (t.getCategory() == Topic.Category.GOOD) {
+                Log.i("Good Topic Loop", "Found a good one: " + t.getTitle());
                 tl.add(t);
             }
         }
@@ -61,9 +65,11 @@ public class Session {
      * @return tl, a list of neutral topics
      */
     public List<Topic> getNeutralTopics() {
+
         List<Topic> tl = new ArrayList<>();
         for (Topic t : topics ) {
-            if (t.getCategory().equals(Topic.Category.NEUTRAL)) {
+            if (t.getCategory() == Topic.Category.NEUTRAL) {
+                Log.i("Neutral Topic Loop", "Found a neutral one: " + t.getTitle());
                 tl.add(t);
             }
         }
@@ -75,9 +81,11 @@ public class Session {
      * @return tl, a list of bad topics
      */
     public List<Topic> getBadTopics() {
+
         List<Topic> tl = new ArrayList<>();
         for (Topic t : topics ) {
-            if (t.getCategory().equals(Topic.Category.BAD)) {
+            if (t.getCategory() == Topic.Category.BAD) {
+                Log.i("Bad Topic Loop", "Found a bad one: " + t.getTitle());
                 tl.add(t);
             }
         }

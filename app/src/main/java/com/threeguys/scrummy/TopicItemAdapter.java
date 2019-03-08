@@ -1,6 +1,7 @@
 package com.threeguys.scrummy;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,7 +34,7 @@ public class TopicItemAdapter extends BaseExpandableListAdapter{
 
     @Override
     public int getChildrenCount(int groupPosition) {
-        return topics.size();
+        return topics.get(categories.get(groupPosition)).size();
     }
 
     @Override
@@ -43,7 +44,7 @@ public class TopicItemAdapter extends BaseExpandableListAdapter{
 
     @Override
     public Topic getChild(int groupPosition, int childPosition) {
-        return this.topics.get(this.categories.get(groupPosition)).get(childPosition);
+        return topics.get(categories.get(groupPosition)).get(childPosition);
     }
 
     @Override
@@ -81,11 +82,15 @@ public class TopicItemAdapter extends BaseExpandableListAdapter{
     public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
 
         Topic topic = getChild(groupPosition, childPosition);
+        if (topic == null)
+            Log.i("getChildView", "Uh oh, this is a NULL OBJECT!! WHAT DO I DO????????????????");
+        else
+            Log.i("getChildView","Found Object: " + topic.getTitle());
 
         if (convertView == null) {
             LayoutInflater layoutInflater = (LayoutInflater) this.context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = layoutInflater.inflate(R.layout.vote_item, null);
+            convertView = layoutInflater.inflate(R.layout.topic_item, null);
         }
 
         TextView titleTextView = convertView.findViewById(R.id._topicItemTitleTextView);
