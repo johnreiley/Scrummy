@@ -15,6 +15,14 @@ public class VoteItemAdapter extends BaseExpandableListAdapter {
 
     private Context context;
 
+    public void setCategories(List<String> categories) {
+        this.categories = categories;
+    }
+
+    public void setTopics(HashMap<String, List<Topic>> topics) {
+        this.topics = topics;
+    }
+
     // group titles
     private List<String> categories;
 
@@ -80,7 +88,7 @@ public class VoteItemAdapter extends BaseExpandableListAdapter {
     }
 
     @Override
-    public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
+    public View getChildView(final int groupPosition, final int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
         Topic topic = (Topic) getChild(groupPosition, childPosition);
 
         if (convertView == null) {
@@ -101,16 +109,17 @@ public class VoteItemAdapter extends BaseExpandableListAdapter {
         addVoteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 //Call addVote method in VoteActivity.java
-                //Send it "position" data
+                if(context instanceof VoteActivity)
+                    ((VoteActivity)context).onClickAddVote(groupPosition, childPosition);
             }
         });
         subVoteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //Call subVote method in VoteActivity.java
-                //Send it "position" data
+                if(context instanceof VoteActivity)
+                    ((VoteActivity)context).onClickSubVote(groupPosition, childPosition);
             }
         });
 

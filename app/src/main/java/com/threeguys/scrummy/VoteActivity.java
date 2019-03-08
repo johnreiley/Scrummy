@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ExpandableListView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 
@@ -39,15 +40,8 @@ public class VoteActivity extends AppCompatActivity {
         groupData.add("Neutral");
         groupData.add("Bad");
 
-        childData = new HashMap<>();
-        childData.put(groupData.get(0), session.getGoodTopics());
-        childData.put(groupData.get(1), session.getNeutralTopics());
-        childData.put(groupData.get(2), session.getBadTopics());
-
-        adapter = new VoteItemAdapter(this, childData, groupData);
-
         expandableListView = findViewById(R.id._voteCategoryExpandableListView);
-        expandableListView.setAdapter(adapter);
+        refreshAdapter();
     }
 
     @Override
@@ -86,16 +80,78 @@ public class VoteActivity extends AppCompatActivity {
      * Adds a vote to specified Topic upon clicking
      * the plus button
      */
-    public void onClickAddVote(int index) {
-        // add a vote
+    public void onClickAddVote(int category, int index) {
+        List<Topic> tl;
+        switch(category) {
+            case 0:
+                tl = session.getGoodTopics();
+                break;
+            case 1:
+                tl = session.getNeutralTopics();
+                break;
+            case 2:
+                tl = session.getBadTopics();
+                break;
+            default:
+                tl = new ArrayList<>();
+                Toast.makeText(this,
+                        "Can't find the Category this topic is in.", Toast.LENGTH_SHORT).show();
+                break;
+        }
+
+        if (tl.size() <= index) {
+            Toast.makeText(this,
+                    "Can't find the Topic to add a vote to.", Toast.LENGTH_SHORT).show();
+        }
+        else {
+            Log.i("Subtract Vote", "Found correct topic: " + tl.get(index).getTitle());
+            //Topic topic = tl.get(index);
+            //tl.remove(index);
+
+            //topic.addVote();
+
+            //TODO I will need to greatly change Session.class to implement this
+        }
+
     }
 
     /**
      * Subtracts a vote from specified Topic upon clicking
      * the minus button
      */
-    public void onClickSubVote(int index) {
-        // subtract a vote
+    public void onClickSubVote(int category, int index) {
+        List<Topic> tl;
+        switch(category) {
+            case 0:
+                tl = session.getGoodTopics();
+                break;
+            case 1:
+                tl = session.getNeutralTopics();
+                break;
+            case 2:
+                tl = session.getBadTopics();
+                break;
+            default:
+                tl = new ArrayList<>();
+                Toast.makeText(this,
+                        "Can't find the Category this topic is in.", Toast.LENGTH_SHORT).show();
+                break;
+        }
+
+        if (tl.size() <= index) {
+            Toast.makeText(this,
+                    "Can't find the Topic to subtract a vote from.", Toast.LENGTH_SHORT).show();
+        }
+        else {
+            Log.i("Subtract Vote", "Found correct topic: " + tl.get(index).getTitle());
+            //Topic topic = tl.get(index);
+            //tl.remove(index);
+
+            //topic.addVote();
+
+            //TODO I will need to greatly change Session.class to implement this
+        }
+
     }
 
     public Session getSession() {
@@ -104,5 +160,41 @@ public class VoteActivity extends AppCompatActivity {
 
     public void setSession(Session session) {
         this.session = session;
+    }
+
+    private void refreshAdapter() {
+        childData = new HashMap<>();
+
+        childData.put(groupData.get(0),session.getGoodTopics());
+        childData.put(groupData.get(1),session.getNeutralTopics());
+        childData.put(groupData.get(2),session.getBadTopics());
+
+        if(adapter == null) {
+            adapter = new VoteItemAdapter(this, childData, groupData);
+            expandableListView.setAdapter(adapter);
+            expandableListView.expandGroup(0);
+            expandableListView.expandGroup(1);
+            expandableListView.expandGroup(2);
+        }
+        else
+        {
+
+            adapter.setCategories(groupData);
+            adapter.setTopics(childData);
+
+            boolean exp0 = expandableListView.isGroupExpanded(0);
+            boolean exp1 = expandableListView.isGroupExpanded(1);
+            boolean exp2 = expandableListView.isGroupExpanded(2);
+
+            expandableListView.setAdapter(adapter);
+            if (exp0)
+                expandableListView.expandGroup(0);
+
+            if (exp1)
+                expandableListView.expandGroup(1);
+
+            if (exp2)
+                expandableListView.expandGroup(2);
+        }
     }
 }

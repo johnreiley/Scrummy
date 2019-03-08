@@ -178,9 +178,13 @@ public class TopicActivity extends AppCompatActivity {
         if(adapter == null) {
             adapter = new TopicItemAdapter(this, childData, groupData);
             expandableListView.setAdapter(adapter);
+            expandableListView.expandGroup(0);
+            expandableListView.expandGroup(1);
+            expandableListView.expandGroup(2);
         }
         else
         {
+
             adapter.setCategories(groupData);
             adapter.setTopics(childData);
 
