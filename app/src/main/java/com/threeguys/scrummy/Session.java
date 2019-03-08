@@ -24,6 +24,14 @@ public class Session {
         });
     }
 
+    public void sortByCategory() {
+        List<Topic> temp = new ArrayList<>();
+        temp.addAll(getBadTopics());
+        temp.addAll(getNeutralTopics());
+        temp.addAll(getGoodTopics());
+        topics = temp;
+    }
+
     public List<Topic> getTopics() {
         return topics;
     }
@@ -34,6 +42,7 @@ public class Session {
 
     public void addTopic(Topic t) {
         topics.add(t);
+        sortByCategory();
     }
 
     public String getDate() {
