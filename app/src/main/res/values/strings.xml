@@ -31,4 +31,8 @@
     <string name="category">Category</string>
     <string name="category_type">Category</string>
     <string name="save_and_quit_button">Save and Quit</string>
+    <string name="sessionviewpopupmenu">sessionViewPopupMenu</string>
+    <string name="save">Save</string>
+    <string name="quit">Quit</string>
+    <string name="delete">Delete</string>
 </resources>
