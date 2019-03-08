@@ -26,6 +26,7 @@ public class TopicActivity extends AppCompatActivity {
 
     public static final String TOPIC_TAG = TopicActivity.class.getSimpleName();
     private Session session;
+
     private ExpandableListView expandableListView;
     private TopicItemAdapter adapter;
     private HashMap<String, List<Topic>> childData;
