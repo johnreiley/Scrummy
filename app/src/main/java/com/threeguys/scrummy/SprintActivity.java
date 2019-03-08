@@ -78,7 +78,7 @@ public class SprintActivity extends AppCompatActivity {
         currentTopic.setText(session.getTopics().get(topicNumber).getTitle());
 
         // Check if there is a next topic
-        if (topicNumber + 1 < session.getTopics().size()) {
+        if (topicNumber + 1 <= session.getTopics().size()) {
             nextTopic.setText(session.getTopics().get(topicNumber + 1).getTitle());
         } else {
             nextTopic.setText(R.string.save_and_quit_button);
