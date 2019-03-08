@@ -73,11 +73,22 @@ public class SprintActivity extends AppCompatActivity {
 
         topicNumber++;
 
-        // No more topics, save and quit
-        if (topicNumber >= session.getTopics().size()) {
 
+        if (topicNumber >= session.getTopics().size()) {
+            // No more topics, save and quit
             Log.d(SPRINT_TAG, "Topic # == " + topicNumber +
                     "| getTopics.size() == " + session.getTopics().size());
+
+            // get the date
+
+            // assign date to session date
+
+            // convert session to String
+            Gson gson = new Gson();
+
+
+            // save in SharedPreferences
+
 
             //TODO save
             //return;
@@ -89,7 +100,7 @@ public class SprintActivity extends AppCompatActivity {
             currentTopic.setText(session.getTopics().get(topicNumber).getTitle());
 
             // Check if there is a next topic
-            if (topicNumber + 1 <= session.getTopics().size()) {
+            if (topicNumber + 1 < session.getTopics().size()) {
                 nextTopic.setText(session.getTopics().get(topicNumber + 1).getTitle());
             } else {
                 nextTopic.setText(R.string.save_and_quit_button);
