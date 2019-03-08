@@ -1,8 +1,10 @@
 package com.threeguys.scrummy;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.MultiAutoCompleteTextView;
@@ -15,6 +17,8 @@ import static com.threeguys.scrummy.MainActivity.CONTINUE_KEY;
 import static com.threeguys.scrummy.MainActivity.TEMP_SAVE_PREF;
 
 public class SprintActivity extends AppCompatActivity {
+
+    public static final String SPRINT_TAG = SprintActivity.class.getSimpleName();
 
     Session session;
     private int topicNumber;
@@ -63,25 +67,33 @@ public class SprintActivity extends AppCompatActivity {
         Button nextTopic = findViewById(R.id._nextTopicButton);
         MultiAutoCompleteTextView actionsView = findViewById(R.id._actionsMultiAutoCompleteTextView);
 
+        // add the actions to the session topic
         session.getTopics().get(topicNumber).setActions(actionsView.getText().toString());
         actionsView.setText("");
 
         topicNumber++;
 
         // No more topics, save and quit
-        if (topicNumber > session.getTopics().size()) {
+        if (topicNumber >= session.getTopics().size()) {
+
+            Log.d(SPRINT_TAG, "Topic # == " + topicNumber +
+                    "| getTopics.size() == " + session.getTopics().size());
+
             //TODO save
-            return;
-        }
-
-        // Go to next Topic
-        currentTopic.setText(session.getTopics().get(topicNumber).getTitle());
-
-        // Check if there is a next topic
-        if (topicNumber + 1 <= session.getTopics().size()) {
-            nextTopic.setText(session.getTopics().get(topicNumber + 1).getTitle());
+            //return;
+            Intent mainIntent = new Intent(this, MainActivity.class);
+            startActivity(mainIntent);
         } else {
-            nextTopic.setText(R.string.save_and_quit_button);
+
+            // Go to next Topic
+            currentTopic.setText(session.getTopics().get(topicNumber).getTitle());
+
+            // Check if there is a next topic
+            if (topicNumber + 1 <= session.getTopics().size()) {
+                nextTopic.setText(session.getTopics().get(topicNumber + 1).getTitle());
+            } else {
+                nextTopic.setText(R.string.save_and_quit_button);
+            }
         }
     }
 }

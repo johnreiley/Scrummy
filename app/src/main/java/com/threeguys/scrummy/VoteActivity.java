@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ExpandableListView;
 import android.widget.Toast;
 
@@ -63,7 +64,7 @@ public class VoteActivity extends AppCompatActivity {
     /**
      * Starts the SprintActivity activity
      */
-    public void onClickStart() {
+    public void onClickStart(View view) {
         session.sortByVote();
         // start the sprint activity
         Intent sprintIntent = new Intent(this, SprintActivity.class);
