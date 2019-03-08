@@ -34,7 +34,7 @@ public class VoteItemAdapter extends BaseExpandableListAdapter {
 
     @Override
     public int getChildrenCount(int groupPosition) {
-        return topics.size();
+        return topics.get(categories.get(groupPosition)).size();
     }
 
     @Override
@@ -43,8 +43,9 @@ public class VoteItemAdapter extends BaseExpandableListAdapter {
     }
 
     @Override
-    public Topic getChild(int groupPosition, int childPosition) {
-        return this.topics.get(this.categories.get(groupPosition)).get(childPosition);
+    public Object getChild(int groupPosition, int childPosition) {
+        return topics.get(categories.get(groupPosition))
+                .get(childPosition);
     }
 
     @Override
@@ -80,8 +81,7 @@ public class VoteItemAdapter extends BaseExpandableListAdapter {
 
     @Override
     public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
-
-        Topic topic = getChild(groupPosition, childPosition);
+        Topic topic = (Topic) getChild(groupPosition, childPosition);
 
         if (convertView == null) {
             LayoutInflater layoutInflater = (LayoutInflater) this.context
@@ -97,7 +97,7 @@ public class VoteItemAdapter extends BaseExpandableListAdapter {
 
         titleTextView.setText(topic.getTitle());
         usernameTextView.setText(topic.getUsername());
-        votesTextView.setText(topic.getVotes());
+        votesTextView.setText(String.valueOf(topic.getVotes()));
         addVoteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
