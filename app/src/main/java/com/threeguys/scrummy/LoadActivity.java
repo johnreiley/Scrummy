@@ -1,13 +1,18 @@
 package com.threeguys.scrummy;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
+import com.google.gson.Gson;
+
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.threeguys.scrummy.MainActivity.SESSION_KEY;
 
 public class LoadActivity extends AppCompatActivity {
 
@@ -32,11 +37,13 @@ public class LoadActivity extends AppCompatActivity {
         t2.setTitle("Neutral Test1");
         t2.setUsername("Bretton");
         t2.setCategory(Topic.Category.NEUTRAL);
+        t2.setActions("Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action");
 
         Topic t3 = new Topic();
         t3.setTitle("Bad Test1");
         t3.setUsername("Bretton");
         t3.setCategory(Topic.Category.BAD);
+        t3.setActions("Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action");
 
         Session session1 = new Session();
         session1.setDate("First");
@@ -48,16 +55,19 @@ public class LoadActivity extends AppCompatActivity {
         t4.setTitle("Good Test2");
         t4.setUsername("Bretton");
         t4.setCategory(Topic.Category.GOOD);
+        t4.setActions("Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action");
 
         Topic t5 = new Topic();
         t5.setTitle("Neutral Test2");
         t5.setUsername("Bretton");
         t5.setCategory(Topic.Category.NEUTRAL);
+        t5.setActions("Action Action Action Action Action Action Action Action Action Action Action Action Action Action");
 
         Topic t6 = new Topic();
         t6.setTitle("Bad Test2");
         t6.setUsername("Bretton");
         t6.setCategory(Topic.Category.BAD);
+        t6.setActions("Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action");
 
         Session session2 = new Session();
         session2.setDate("Second");
@@ -78,5 +88,12 @@ public class LoadActivity extends AppCompatActivity {
 
     public void onClickSession(int index) {
         Log.i("onClickSession", "Session clicked: " + sessions.get(index).getDate());
+
+        Gson gson = new Gson();
+        String sessionJson = gson.toJson(sessions.get(index), Session.class);
+
+        Intent viewIntent = new Intent(this, ViewSessionActivity.class);
+        viewIntent.putExtra(SESSION_KEY, sessionJson);
+        startActivity(viewIntent);
     }
 }
