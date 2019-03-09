@@ -20,7 +20,7 @@ public class Session {
     public void sortByVote(){
         Collections.sort(topics, new Comparator<Topic>() {
             @Override public int compare(Topic t1, Topic t2) {
-                return t1.getVotes() - t2.getVotes(); // Ascending
+                return t2.getVotes() - t1.getVotes(); // Descending
             }
         });
     }
@@ -39,6 +39,7 @@ public class Session {
 
     public void setTopics(List<Topic> topics) {
         this.topics = topics;
+        sortByCategory();
     }
 
     public void addTopic(Topic t) {
@@ -63,7 +64,7 @@ public class Session {
         List<Topic> tl = new ArrayList<>();
         for (Topic t : topics ) {
             if (t.getCategory() == Topic.Category.GOOD) {
-                Log.i("Good Topic Loop", "Found a good one: " + t.getTitle());
+                //Log.i("Good Topic Loop", "Found a good one: " + t.getTitle());
                 tl.add(t);
             }
         }
@@ -79,7 +80,7 @@ public class Session {
         List<Topic> tl = new ArrayList<>();
         for (Topic t : topics ) {
             if (t.getCategory() == Topic.Category.NEUTRAL) {
-                Log.i("Neutral Topic Loop", "Found a neutral one: " + t.getTitle());
+                //Log.i("Neutral Topic Loop", "Found a neutral one: " + t.getTitle());
                 tl.add(t);
             }
         }
@@ -95,7 +96,7 @@ public class Session {
         List<Topic> tl = new ArrayList<>();
         for (Topic t : topics ) {
             if (t.getCategory() == Topic.Category.BAD) {
-                Log.i("Bad Topic Loop", "Found a bad one: " + t.getTitle());
+                //Log.i("Bad Topic Loop", "Found a bad one: " + t.getTitle());
                 tl.add(t);
             }
         }

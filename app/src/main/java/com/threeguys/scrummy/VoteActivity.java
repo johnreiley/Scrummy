@@ -105,15 +105,31 @@ public class VoteActivity extends AppCompatActivity {
                     "Can't find the Topic to add a vote to.", Toast.LENGTH_SHORT).show();
         }
         else {
-            Log.i("Subtract Vote", "Found correct topic: " + tl.get(index).getTitle());
-            //Topic topic = tl.get(index);
-            //tl.remove(index);
+            Log.i("Add Vote", "Found correct topic: " + tl.get(index).getTitle());
 
-            //topic.addVote();
+            int position = index;
+            switch (category) {
+                case 0:
+                    position += session.getNeutralTopics().size();
+                case 1:
+                    position += session.getBadTopics().size();
+                    break;
+                case 2:
+                default:
+                    break;
+            }
 
-            //TODO I will need to greatly change Session.class to implement this
+            List<Topic> topics = session.getTopics();
+            Topic topic = topics.get(position);
+            topics.remove(position);
+
+            topic.addVote();
+
+            topics.add(topic);
+            session.setTopics(topics);
+
+            refreshAdapter();
         }
-
     }
 
     /**
@@ -145,12 +161,29 @@ public class VoteActivity extends AppCompatActivity {
         }
         else {
             Log.i("Subtract Vote", "Found correct topic: " + tl.get(index).getTitle());
-            //Topic topic = tl.get(index);
-            //tl.remove(index);
 
-            //topic.addVote();
+            int position = index;
+            switch (category) {
+                case 0:
+                    position += session.getNeutralTopics().size();
+                case 1:
+                    position += session.getBadTopics().size();
+                    break;
+                case 2:
+                default:
+                    break;
+            }
 
-            //TODO I will need to greatly change Session.class to implement this
+            List<Topic> topics = session.getTopics();
+            Topic topic = topics.get(position);
+            topics.remove(position);
+
+            topic.subVote();
+
+            topics.add(topic);
+            session.setTopics(topics);
+
+            refreshAdapter();
         }
 
     }
