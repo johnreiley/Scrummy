@@ -86,23 +86,30 @@ public class SprintActivity extends AppCompatActivity {
                     "| getTopics.size() == " + session.getTopics().size());
 
             // get the date
-
-            // assign date to session date
-
-            // convert session to String
-            Gson gson = new Gson();
-
-
-            // save in SharedPreferences
-
-
             //TODO save
             Date date = new Date();
             String strDateFormat = "yyyy/MM/dd hh:mm:ss";
             DateFormat dateFormat = new SimpleDateFormat(strDateFormat);
             String formattedDate= dateFormat.format(date);
 
-            //return;
+            // DEBUGGING
+            Log.d(SPRINT_TAG, "DATE = " + formattedDate);
+
+            // assign date to session date
+            session.setDate(formattedDate);
+
+            // save in SharedPreferences
+            Save save = new SaveLocal(session, getApplicationContext());
+            save.save();
+
+            SharedPreferences sp = this.getSharedPreferences(TEMP_SAVE_PREF, MODE_PRIVATE);
+            SharedPreferences.Editor editor = sp.edit();
+            editor.clear();
+            editor.remove(CONTINUE_KEY);
+            editor.remove(ACTIVITY_KEY);
+            editor.apply();
+
+            // go back to the main menu
             Intent mainIntent = new Intent(this, MainActivity.class);
             startActivity(mainIntent);
         } else {
