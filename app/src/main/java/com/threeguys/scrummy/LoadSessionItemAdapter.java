@@ -28,7 +28,7 @@ public class LoadSessionItemAdapter extends RecyclerView.Adapter<LoadSessionItem
     }
 
     @Override
-    public void onBindViewHolder(LoadSessionItemAdapter.LoadSessionItemsViewHolder holder, final int position) {
+    public void onBindViewHolder(final LoadSessionItemAdapter.LoadSessionItemsViewHolder holder, final int position) {
 
         holder.sessionDate.setText(sessions.get(position).getDate());
         holder.sessionDate.setOnClickListener(new View.OnClickListener() {
@@ -44,7 +44,8 @@ public class LoadSessionItemAdapter extends RecyclerView.Adapter<LoadSessionItem
             @Override
             public void onClick(View v) {
                 //Open the pop up menu
-                Log.i("onClickPopUpMenu", "Session clicked: " + sessions.get(position).getDate());
+                if(context instanceof LoadActivity)
+                    ((LoadActivity)context).onClickPopup(holder.popUpMenu);
             }
         });
     }
