@@ -69,7 +69,8 @@
         android:layout_marginBottom="16dp"
         android:orientation="vertical"
         app:layout_constraintBottom_toTopOf="@+id/_addTopicFloatingActionButton"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:background="@android:color/background_light">
 
         <EditText
             android:id="@+id/_topicInputEditText"
