@@ -14,6 +14,7 @@ public class Session {
 
     Session(){
         topics = new ArrayList<>();
+        Date = "No Date";
     }
 
     public void sortByVote(){

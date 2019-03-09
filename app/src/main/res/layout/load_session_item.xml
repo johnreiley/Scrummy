@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="64dp">
 
     <Button
         android:id="@+id/_viewSessionButton"
@@ -11,7 +11,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:background="#f0f0f0"
         android:text="@string/date"
         app:layout_constraintEnd_toStartOf="@+id/_sessionItemPopupImageButton"
@@ -22,7 +22,7 @@
         android:id="@+id/_sessionItemPopupImageButton"
         android:layout_width="wrap_content"
         android:layout_height="48dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
         android:background="#f0f0f0"
         android:contentDescription="sessionViewPopupMenu"
