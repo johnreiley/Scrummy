@@ -12,6 +12,12 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
+
 import static com.threeguys.scrummy.MainActivity.ACTIVITY_KEY;
 import static com.threeguys.scrummy.MainActivity.CONTINUE_KEY;
 import static com.threeguys.scrummy.MainActivity.TEMP_SAVE_PREF;
@@ -91,6 +97,11 @@ public class SprintActivity extends AppCompatActivity {
 
 
             //TODO save
+            Date date = new Date();
+            String strDateFormat = "yyyy/mm/dd hh:mm:ss";
+            DateFormat dateFormat = new SimpleDateFormat(strDateFormat);
+            String formattedDate= dateFormat.format(date);
+
             //return;
             Intent mainIntent = new Intent(this, MainActivity.class);
             startActivity(mainIntent);
