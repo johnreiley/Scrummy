@@ -1,6 +1,8 @@
 package com.threeguys.scrummy;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,24 +14,29 @@ import java.util.List;
 public class LoadSessionItemAdapter extends RecyclerView.Adapter<LoadSessionItemAdapter.LoadSessionItemsViewHolder> {
 
     private List<Session> sessions;
+    private Context context;
 
-    public LoadSessionItemAdapter(List<Session> sessions) {
+    public LoadSessionItemAdapter(Context context, List<Session> sessions) {
         this.sessions = sessions;
+        this.context = context;
     }
 
     @Override
     public LoadSessionItemAdapter.LoadSessionItemsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.vote_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.load_session_item, parent, false);
         return new LoadSessionItemAdapter.LoadSessionItemsViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(LoadSessionItemAdapter.LoadSessionItemsViewHolder holder, int position) {
+    public void onBindViewHolder(final LoadSessionItemAdapter.LoadSessionItemsViewHolder holder, final int position) {
+
         holder.sessionDate.setText(sessions.get(position).getDate());
         holder.sessionDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //Call onClickSession in LoadActivity.java
+                if(context instanceof LoadActivity)
+                    ((LoadActivity)context).onClickSession(position);
                 //Send it "position" data
             }
         });
@@ -37,6 +44,8 @@ public class LoadSessionItemAdapter extends RecyclerView.Adapter<LoadSessionItem
             @Override
             public void onClick(View v) {
                 //Open the pop up menu
+                if(context instanceof LoadActivity)
+                    ((LoadActivity)context).onClickPopup(holder.popUpMenu);
             }
         });
     }

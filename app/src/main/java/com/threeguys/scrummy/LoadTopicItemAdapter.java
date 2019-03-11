@@ -18,7 +18,7 @@ public class LoadTopicItemAdapter extends RecyclerView.Adapter<LoadTopicItemAdap
 
     @Override
     public LoadTopicItemAdapter.LoadTopicItemsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.vote_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.load_topic_item, parent, false);
         return new LoadTopicItemAdapter.LoadTopicItemsViewHolder(view);
     }
 
@@ -57,7 +57,7 @@ public class LoadTopicItemAdapter extends RecyclerView.Adapter<LoadTopicItemAdap
 
         public LoadTopicItemsViewHolder(View itemView) {
             super(itemView);
-            topicTitle = itemView.findViewById(R.id._topicTitleTextView);
+            topicTitle = itemView.findViewById(R.id._loadtopicTitleTextView);
             topicCategory = itemView.findViewById(R.id._loadtopicCategoryTextView);
             topicActions = itemView.findViewById(R.id._loadtopicActionsTextView);
         }

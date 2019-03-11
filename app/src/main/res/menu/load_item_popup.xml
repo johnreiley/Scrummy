@@ -2,8 +2,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/_deletePopupItem"
-        android:title="@string/delete"
-        android:onClick="onClickDelete"/>
+        android:title="Delete" />
 
 </menu>

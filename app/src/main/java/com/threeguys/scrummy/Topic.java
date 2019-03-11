@@ -1,5 +1,7 @@
 package com.threeguys.scrummy;
 
+import android.util.Log;
+
 public class Topic {
 
     private String title;
@@ -60,11 +62,14 @@ public class Topic {
 
     public void addVote() {
         this.votes += 1;
+        Log.i("Topic addVote", "Vote added");
     }
 
     public void subVote() {
         if (votes > 0) {
             this.votes -= 1;
+            Log.i("Topic subVote", "Vote subtracted");
         }
+        Log.i("Topic subVote", "Votes already at 0");
     }
 }

@@ -4,8 +4,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -15,9 +13,9 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 
 import java.text.DateFormat;
-import java.text.FieldPosition;
-import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 import static com.threeguys.scrummy.MainActivity.ACTIVITY_KEY;
@@ -81,19 +79,37 @@ public class SprintActivity extends AppCompatActivity {
 
         topicNumber++;
 
-        // No more topics, save and quit
-        if (topicNumber >= session.getTopics().size()) {
 
+        if (topicNumber >= session.getTopics().size()) {
+            // No more topics, save and quit
             Log.d(SPRINT_TAG, "Topic # == " + topicNumber +
                     "| getTopics.size() == " + session.getTopics().size());
 
+            // get the date
             //TODO save
             Date date = new Date();
-            DateFormat dateformat = new SimpleDateFormat("yyyy_MM_dd hh:mm a");
-            String formattedDate = dateformat.format(date);
+            String strDateFormat = "yyyy/MM/dd hh:mm:ss";
+            DateFormat dateFormat = new SimpleDateFormat(strDateFormat);
+            String formattedDate= dateFormat.format(date);
 
+            // DEBUGGING
+            Log.d(SPRINT_TAG, "DATE = " + formattedDate);
+
+            // assign date to session date
             session.setDate(formattedDate);
-            //return;
+
+            // save in SharedPreferences
+            Save save = new SaveLocal(session, getApplicationContext());
+            save.save();
+
+            SharedPreferences sp = this.getSharedPreferences(TEMP_SAVE_PREF, MODE_PRIVATE);
+            SharedPreferences.Editor editor = sp.edit();
+            editor.clear();
+            editor.remove(CONTINUE_KEY);
+            editor.remove(ACTIVITY_KEY);
+            editor.apply();
+
+            // go back to the main menu
             Intent mainIntent = new Intent(this, MainActivity.class);
             startActivity(mainIntent);
         } else {
