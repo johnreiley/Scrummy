@@ -121,12 +121,9 @@ public class VoteActivity extends AppCompatActivity {
 
             List<Topic> topics = session.getTopics();
             Topic topic = topics.get(position);
-            topics.remove(position);
-
             topic.addVote();
 
-            topics.add(topic);
-            session.setTopics(topics);
+            session.updateTopic(position, topic);
 
             refreshAdapter();
         }
@@ -176,13 +173,9 @@ public class VoteActivity extends AppCompatActivity {
 
             List<Topic> topics = session.getTopics();
             Topic topic = topics.get(position);
-            topics.remove(position);
-
             topic.subVote();
 
-            topics.add(topic);
-            session.setTopics(topics);
-
+            session.updateTopic(position, topic);
             refreshAdapter();
         }
 

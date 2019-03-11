@@ -102,4 +102,8 @@ public class Session {
         }
         return tl;
     }
+
+    public void updateTopic(int position, Topic t) {
+        topics.set(position, t);
+    }
 }
