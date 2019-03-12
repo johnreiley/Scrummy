@@ -2,6 +2,7 @@ package com.threeguys.scrummy;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -188,23 +189,13 @@ public class TopicActivity extends AppCompatActivity {
         }
         else
         {
+            Parcelable recyclerViewState = expandableListView.onSaveInstanceState();
 
             adapter.setCategories(groupData);
             adapter.setTopics(childData);
+            adapter.notifyDataSetChanged();
 
-            boolean exp0 = expandableListView.isGroupExpanded(0);
-            boolean exp1 = expandableListView.isGroupExpanded(1);
-            boolean exp2 = expandableListView.isGroupExpanded(2);
-
-            expandableListView.setAdapter(adapter);
-            if (exp0)
-                expandableListView.expandGroup(0);
-
-            if (exp1)
-                expandableListView.expandGroup(1);
-
-            if (exp2)
-                expandableListView.expandGroup(2);
+            expandableListView.onRestoreInstanceState(recyclerViewState);
         }
     }
 
