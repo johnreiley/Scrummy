@@ -31,4 +31,6 @@
     <string name="category">Category</string>
     <string name="category_type">Category</string>
     <string name="save_and_quit_button">Save and Quit</string>
+    <string name="votes">Votes:</string>
+    <string name="username">Name:</string>
 </resources>

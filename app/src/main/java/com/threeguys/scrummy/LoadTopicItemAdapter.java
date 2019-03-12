@@ -25,6 +25,8 @@ public class LoadTopicItemAdapter extends RecyclerView.Adapter<LoadTopicItemAdap
     @Override
     public void onBindViewHolder(LoadTopicItemAdapter.LoadTopicItemsViewHolder holder, int position) {
         holder.topicTitle.setText(topics.get(position).getTitle());
+        holder.topicUsername.setText(topics.get(position).getUsername());
+        holder.topicVotes.setText(topics.get(position).getVotes() + "");
         holder.topicActions.setText(topics.get(position).getActions());
 
         String bad = "Bad";
@@ -53,12 +55,16 @@ public class LoadTopicItemAdapter extends RecyclerView.Adapter<LoadTopicItemAdap
 
         TextView topicTitle;
         TextView topicCategory;
+        TextView topicUsername;
+        TextView topicVotes;
         TextView topicActions;
 
         public LoadTopicItemsViewHolder(View itemView) {
             super(itemView);
             topicTitle = itemView.findViewById(R.id._loadtopicTitleTextView);
             topicCategory = itemView.findViewById(R.id._loadtopicCategoryTextView);
+            topicUsername = itemView.findViewById(R.id._loadtopicUsernameTextView);
+            topicVotes = itemView.findViewById(R.id._loadtopicVotesTextView);
             topicActions = itemView.findViewById(R.id._loadtopicActionsTextView);
         }
     }

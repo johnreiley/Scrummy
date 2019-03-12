@@ -51,7 +51,8 @@ public class LoadActivity extends AppCompatActivity {
         t3.setActions("Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action");
 
         Session session1 = new Session();
-        session1.setDate("First");
+        session1.setTitle("First Sprint Meeting");
+        session1.setDate("Yesterday");
         session1.addTopic(t1);
         session1.addTopic(t2);
         session1.addTopic(t3);
@@ -75,7 +76,8 @@ public class LoadActivity extends AppCompatActivity {
         t6.setActions("Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action Action");
 
         Session session2 = new Session();
-        session2.setDate("Second");
+        session2.setTitle("Second Sprint Meeting - Follow Up");
+        session2.setDate("Today");
         session2.addTopic(t4);
         session2.addTopic(t5);
         session2.addTopic(t6);

@@ -10,6 +10,7 @@ import java.util.List;
 public class Session {
 
     private List<Topic> topics;
+    private String title;
     private String Date;
 
     Session(){
@@ -53,6 +54,14 @@ public class Session {
 
     public void setDate(String date) {
         Date = date;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     /**

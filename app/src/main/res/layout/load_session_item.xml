@@ -11,9 +11,10 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:background="#f0f0f0"
-        android:text="@string/date"
+        android:textAlignment="textStart"
+        android:textAppearance="@style/TextAppearance.AppCompat.Title"
         app:layout_constraintEnd_toStartOf="@+id/_sessionItemPopupImageButton"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -22,12 +23,38 @@
         android:id="@+id/_sessionItemPopupImageButton"
         android:layout_width="wrap_content"
         android:layout_height="48dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
         android:background="#f0f0f0"
         android:contentDescription="sessionViewPopupMenu"
         android:src="@android:drawable/btn_star"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/_viewSessionDateTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="4dp"
+        android:text="@string/date"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+        app:layout_constraintBottom_toBottomOf="@+id/_viewSessionButton"
+        app:layout_constraintEnd_toStartOf="@+id/_sessionItemPopupImageButton"
+        app:layout_constraintStart_toStartOf="@+id/_viewSessionButton" />
+
+    <TextView
+        android:id="@+id/_viewSessionTitleTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="8dp"
+        android:text="@string/topic_title"
+        android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+        app:layout_constraintEnd_toStartOf="@+id/_sessionItemPopupImageButton"
+        app:layout_constraintStart_toStartOf="@+id/_viewSessionButton"
+        app:layout_constraintTop_toTopOf="@+id/_viewSessionButton" />
 
 </android.support.constraint.ConstraintLayout>
