@@ -33,6 +33,7 @@ public class VoteActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_vote);
+        Log.i(VOTE_TAG, "VoteActivity Started");
 
         String sessionJson = (String)getIntent().getExtras().get(MainActivity.SESSION_KEY);
         Gson gson = new Gson();
@@ -107,7 +108,7 @@ public class VoteActivity extends AppCompatActivity {
                     "Can't find the Topic to add a vote to.", Toast.LENGTH_SHORT).show();
         }
         else {
-            Log.d(VOTE_TAG, "AddVote found: " + tl.get(index).getTitle());
+            Log.i("Add Vote", "Found correct topic: " + tl.get(index).getTitle());
 
             int position = index;
             switch (category) {
@@ -159,7 +160,7 @@ public class VoteActivity extends AppCompatActivity {
                     "Can't find the Topic to subtract a vote from.", Toast.LENGTH_SHORT).show();
         }
         else {
-            Log.d(VOTE_TAG, "SubtractVote found: " + tl.get(index).getTitle());
+            Log.i("Subtract Vote", "Found correct topic: " + tl.get(index).getTitle());
 
             int position = index;
             switch (category) {

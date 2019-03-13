@@ -7,7 +7,7 @@ import java.util.List;
 public class LoadCloud implements Load {
 
     @Override
-    public List<Session> load(Context context) {
+    public SessionList load(Context context) {
         return null;
     }
 }

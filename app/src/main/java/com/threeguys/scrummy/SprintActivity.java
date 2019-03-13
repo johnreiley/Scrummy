@@ -34,6 +34,7 @@ public class SprintActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sprint);
+        Log.i(SPRINT_TAG, "SprintActivity Started");
 
         // Initialize Member Data
         Gson gson = new Gson();

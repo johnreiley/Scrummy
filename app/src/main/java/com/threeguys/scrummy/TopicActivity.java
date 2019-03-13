@@ -41,6 +41,7 @@ public class TopicActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_topic);
+        Log.i(TOPIC_TAG, "TopicActivity Started");
 
         LinearLayout linearLayout = (LinearLayout)findViewById(R.id._snackbarLayout);
         linearLayout.setVisibility(View.GONE);

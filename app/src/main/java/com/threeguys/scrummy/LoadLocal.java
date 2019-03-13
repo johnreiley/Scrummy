@@ -2,6 +2,7 @@ package com.threeguys.scrummy;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import com.google.gson.Gson;
 
@@ -11,15 +12,17 @@ import java.util.List;
 public class LoadLocal implements Load {
 
     @Override
-    public List<Session> load(Context context) {
-        List<Session> sessions = new ArrayList<>();
+    public SessionList load(Context context) {
+        SessionList sessions;
 
         Gson gson = new Gson();
         SharedPreferences sp = context.getSharedPreferences(MainActivity.SAVE_PREF, Context.MODE_PRIVATE);
         String saves = sp.toString();
 
-        sessions.add(gson.fromJson(saves, Session.class)); // TODO have a class to hold a list of sessions
+        sessions = gson.fromJson(saves, SessionList.class); // TODO have a class to hold a list of sessions
 
+        Log.i("LoadLocal", "Loaded Sessions");
+        
         return sessions;
     }
 }

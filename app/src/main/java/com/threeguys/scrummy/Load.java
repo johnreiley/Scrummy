@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface Load {
 
-    List<Session> load(Context context);
+    SessionList load(Context context);
 }

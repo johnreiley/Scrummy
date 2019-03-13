@@ -21,6 +21,8 @@ import static com.threeguys.scrummy.MainActivity.SESSION_KEY;
 
 public class LoadActivity extends AppCompatActivity {
 
+    public static final String LOADACTIVITY_TAG = LoadActivity.class.getSimpleName();
+
     List<Session> sessions;
     private RecyclerView recyclerView;
     private LoadSessionItemAdapter adapter;
@@ -29,6 +31,7 @@ public class LoadActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_load);
+        Log.i(LOADACTIVITY_TAG, "LoadActivity Started");
 
         sessions = new ArrayList<>();
 
