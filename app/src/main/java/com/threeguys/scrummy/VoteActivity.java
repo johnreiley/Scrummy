@@ -22,6 +22,7 @@ import static com.threeguys.scrummy.MainActivity.TEMP_SAVE_PREF;
 
 public class VoteActivity extends AppCompatActivity {
 
+    private static final String VOTE_TAG = VoteActivity.class.getSimpleName();
     private Session session;
     private ExpandableListView expandableListView;
     private VoteItemAdapter adapter;
@@ -106,7 +107,7 @@ public class VoteActivity extends AppCompatActivity {
                     "Can't find the Topic to add a vote to.", Toast.LENGTH_SHORT).show();
         }
         else {
-            Log.i("Add Vote", "Found correct topic: " + tl.get(index).getTitle());
+            Log.d(VOTE_TAG, "AddVote found: " + tl.get(index).getTitle());
 
             int position = index;
             switch (category) {
@@ -158,7 +159,7 @@ public class VoteActivity extends AppCompatActivity {
                     "Can't find the Topic to subtract a vote from.", Toast.LENGTH_SHORT).show();
         }
         else {
-            Log.i("Subtract Vote", "Found correct topic: " + tl.get(index).getTitle());
+            Log.d(VOTE_TAG, "SubtractVote found: " + tl.get(index).getTitle());
 
             int position = index;
             switch (category) {

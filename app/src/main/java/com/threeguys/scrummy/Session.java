@@ -9,6 +9,7 @@ import java.util.List;
 
 public class Session {
 
+    private static final String SESSION_TAG = Session.class.getSimpleName();
     private List<Topic> topics;
     private String title;
     private String Date;
@@ -73,7 +74,7 @@ public class Session {
         List<Topic> tl = new ArrayList<>();
         for (Topic t : topics ) {
             if (t.getCategory() == Topic.Category.GOOD) {
-                //Log.i("Good Topic Loop", "Found a good one: " + t.getTitle());
+                Log.d(SESSION_TAG, "GoodTopics found: " + t.getTitle());
                 tl.add(t);
             }
         }
@@ -89,7 +90,7 @@ public class Session {
         List<Topic> tl = new ArrayList<>();
         for (Topic t : topics ) {
             if (t.getCategory() == Topic.Category.NEUTRAL) {
-                //Log.i("Neutral Topic Loop", "Found a neutral one: " + t.getTitle());
+                Log.d(SESSION_TAG, "NeutralTopics found: " + t.getTitle());
                 tl.add(t);
             }
         }
@@ -105,7 +106,7 @@ public class Session {
         List<Topic> tl = new ArrayList<>();
         for (Topic t : topics ) {
             if (t.getCategory() == Topic.Category.BAD) {
-                //Log.i("Bad Topic Loop", "Found a bad one: " + t.getTitle());
+                Log.d(SESSION_TAG, "BadTopics found: " + t.getTitle());
                 tl.add(t);
             }
         }
