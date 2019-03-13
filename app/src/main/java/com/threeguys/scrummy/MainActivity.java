@@ -22,7 +22,6 @@ public class MainActivity extends AppCompatActivity {
     static final String SESSION_LIST_KEY = "session_list_key"; // used for storing session list
     static final String CONTINUE_KEY = "continue_key"; // used for accessing temp session
     static final String ACTIVITY_KEY = "activity_key"; // used for accessing temp session activity
-    static final String LOAD_KEY = "load_key"; // used for accessing the load activity
     public static final String MAIN_TAG = MainActivity.class.getSimpleName();
 
     @Override
@@ -111,9 +110,10 @@ public class MainActivity extends AppCompatActivity {
     public void onClickLoad(View view) {
         // check if there is any data saved.
         SharedPreferences spTemp = this.getSharedPreferences(SAVE_PREF, MODE_PRIVATE);
-        String sessionJson = spTemp.getString(LOAD_KEY, "no saved data");
+        String sessionJson = spTemp.getString(SESSION_LIST_KEY, "no saved data");
         if (sessionJson.equals("no saved data")) {
-            // don't start the load activity because there is not data
+            // don't start the load activity because there is no data
+
             Toast.makeText(this,
                     "There is no saved data", Toast.LENGTH_SHORT).show();
         }
