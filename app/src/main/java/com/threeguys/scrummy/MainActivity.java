@@ -44,8 +44,13 @@ public class MainActivity extends AppCompatActivity {
      * @param view, the "new session" button
      */
     public void onClickNew(View view) {
-        Intent newIntent = new Intent(this, TopicActivity.class);
-        startActivity(newIntent);
+        if (findViewById(R.id._continueSessionButton).getVisibility() == View.GONE) {
+            Intent newIntent = new Intent(this, TopicActivity.class);
+            startActivity(newIntent);
+        } else {
+            //TODO: make a pop-up dialogue for this
+            Toast.makeText(this, R.string.new_dialogue_warning, Toast.LENGTH_SHORT).show();
+        }
     }
 
     /**
@@ -57,48 +62,43 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences spTemp = this.getSharedPreferences(TEMP_SAVE_PREF, MODE_PRIVATE);
         String sessionJson = spTemp.getString(CONTINUE_KEY, "no session");
 
-        if (!sessionJson.equals("no session")) {
-            // turn the string into a Session object with Gson
-            Gson gson = new Gson();
-            Session continueSession = gson.fromJson(sessionJson, Session.class);
-            // check to make sure there is data
-            if (continueSession.getTopics().size() > 0) {
+        // turn the string into a Session object with Gson
+        Gson gson = new Gson();
+        Session continueSession = gson.fromJson(sessionJson, Session.class);
+        // check to make sure there is data
+        if (continueSession.getTopics().size() > 0) {
 
-                //Which activity?
-                switch (spTemp.getString(ACTIVITY_KEY,"")) {
-                    case "TopicActivity":
-                        // if there is data, call the Sprint activity and pass the session string
-                        Intent topicIntent = new Intent(this, TopicActivity.class);
-                        topicIntent.putExtra(SESSION_KEY, sessionJson);
-                        startActivity(topicIntent);
-                        break;
-                    case "VoteActivity":
-                        // if there is data, call the Sprint activity and pass the session string
-                        Intent voteIntent = new Intent(this, VoteActivity.class);
-                        voteIntent.putExtra(SESSION_KEY, sessionJson);
-                        startActivity(voteIntent);
-                        break;
-                    case "SprintActivity":
-                        // if there is data, call the Sprint activity and pass the session string
-                        Intent sprintIntent = new Intent(this, SprintActivity.class);
-                        sprintIntent.putExtra(SESSION_KEY, sessionJson);
-                        startActivity(sprintIntent);
-                        break;
-                    default:
-                        Toast.makeText(this,
-                                "No active session", Toast.LENGTH_SHORT).show();
-                        break;
-                }
-
-            } else {
-                // if not, display text
-                Toast.makeText(this,
-                        "There are no topics in the session to continue", Toast.LENGTH_SHORT).show();
+            //Which activity?
+            switch (spTemp.getString(ACTIVITY_KEY,"")) {
+                case "TopicActivity":
+                    // if there is data, call the Sprint activity and pass the session string
+                    Intent topicIntent = new Intent(this, TopicActivity.class);
+                    topicIntent.putExtra(SESSION_KEY, sessionJson);
+                    startActivity(topicIntent);
+                    break;
+                case "VoteActivity":
+                    // if there is data, call the Sprint activity and pass the session string
+                    Intent voteIntent = new Intent(this, VoteActivity.class);
+                    voteIntent.putExtra(SESSION_KEY, sessionJson);
+                    startActivity(voteIntent);
+                    break;
+                case "SprintActivity":
+                    // if there is data, call the Sprint activity and pass the session string
+                    Intent sprintIntent = new Intent(this, SprintActivity.class);
+                    sprintIntent.putExtra(SESSION_KEY, sessionJson);
+                    startActivity(sprintIntent);
+                    break;
+                default:
+                    Toast.makeText(this,
+                            "No active session", Toast.LENGTH_SHORT).show();
+                    break;
             }
         } else {
+            // if not, display text
             Toast.makeText(this,
-                    "There are no sessions to continue", Toast.LENGTH_SHORT).show();
+                    "There are no topics in the session to continue", Toast.LENGTH_SHORT).show();
         }
+
 
     }
 

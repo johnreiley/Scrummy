@@ -42,16 +42,21 @@ public class SprintActivity extends AppCompatActivity {
         session = gson.fromJson(gsonSession, Session.class);
         topicNumber = 0;
 
+        /*
         TextView currentTopic = findViewById(R.id._currentTopicTextView);
         Button nextTopic = findViewById(R.id._nextTopicButton);
+        TextView actionsTextView = findViewById(R.id._actionsTextView);
 
         currentTopic.setText(session.getTopics().get(0).getTitle());
+        actionsTextView.setText(session.getTopics().get(0).getActions());
         // Is there more than one topic?
         if (session.getTopics().size() > 1) {
             nextTopic.setText(getNextTopicText());
         } else {
             nextTopic.setText(R.string.save_and_quit_button);
         }
+        */
+        setTopicText();
     }
 
     @Override
@@ -105,15 +110,20 @@ public class SprintActivity extends AppCompatActivity {
             Save save = new SaveLocal(session, getApplicationContext());
             save.save();
 
+            Log.i(SPRINT_TAG, "Session saved");
+
             // clear the temp file
             SharedPreferences sp = this.getSharedPreferences(TEMP_SAVE_PREF, MODE_PRIVATE);
             sp.edit().clear().apply();
+
+            Log.i(SPRINT_TAG, "Temporary files cleared");
 
             // go back to the main menu
             Intent mainIntent = new Intent(this, MainActivity.class);
             startActivity(mainIntent);
         } else {
 
+            /*
             // Go to next Topic
             currentTopic.setText(session.getTopics().get(topicNumber).getTitle());
 
@@ -123,12 +133,32 @@ public class SprintActivity extends AppCompatActivity {
             } else {
                 nextTopic.setText(R.string.save_and_quit_button);
             }
+            */
+            setTopicText();
         }
     }
 
     private String getNextTopicText() {
         String nextText = getString(R.string.next_topic_button);
         return nextText + " " + session.getTopics().get(topicNumber + 1).getTitle();
+    }
+
+    private void setTopicText() {
+        TextView currentTopic = findViewById(R.id._currentTopicTextView);
+        Button nextTopic = findViewById(R.id._nextTopicButton);
+        TextView actionsTextView = findViewById(R.id._actionsMultiAutoCompleteTextView);
+
+        currentTopic.setText(session.getTopics().get(topicNumber).getTitle());
+        actionsTextView.setText(session.getTopics().get(topicNumber).getActions());
+        // Is there more than one topic?
+        if (topicNumber + 1 < session.getTopics().size()) {
+            String nextText = getString(R.string.next_topic_button);
+            String nextTopicText = nextText + " " +
+                    session.getTopics().get(topicNumber + 1).getTitle();
+            nextTopic.setText(nextTopicText);
+        } else {
+            nextTopic.setText(R.string.save_and_quit_button);
+        }
     }
 }
 
