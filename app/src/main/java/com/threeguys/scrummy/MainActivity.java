@@ -6,6 +6,8 @@ import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -13,10 +15,10 @@ import com.google.gson.Gson;
 public class MainActivity extends AppCompatActivity {
 
     static final String SESSION_KEY =  "SESSION_KEY"; // used for passing sessions between activities
-    static final String TEMP_SAVE_PREF = "continue_session";
-    static final String SAVE_PREF = "saved_sessions";
-    static final String CONTINUE_KEY = "continue_key";
-    static final String ACTIVITY_KEY = "activity_key";
+    static final String TEMP_SAVE_PREF = "continue_session"; // used for storing temp session
+    static final String SAVE_PREF = "saved_sessions"; // used for storing completed sessions
+    static final String CONTINUE_KEY = "continue_key"; // used for accessing temp session
+    static final String ACTIVITY_KEY = "activity_key"; // used for accessing temp session activity
     public static final String MAIN_TAG = MainActivity.class.getSimpleName();
 
     @Override
@@ -24,6 +26,14 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // check if there is a session in progress
+        SharedPreferences spTemp = this.getSharedPreferences(TEMP_SAVE_PREF, MODE_PRIVATE);
+        String sessionJson = spTemp.getString(CONTINUE_KEY, "no session");
+        if (sessionJson.equals("no session")) {
+            // hide the 'continue' button
+            Button continueButton = findViewById(R.id._continueSessionButton);
+            continueButton.setVisibility(View.GONE);
+        }
     }
 
     /**
@@ -31,7 +41,6 @@ public class MainActivity extends AppCompatActivity {
      * @param view, the "new session" button
      */
     public void onClickNew(View view) {
-        // start the topic activity
         Intent newIntent = new Intent(this, TopicActivity.class);
         startActivity(newIntent);
     }
@@ -42,8 +51,8 @@ public class MainActivity extends AppCompatActivity {
      */
     public void onClickContinue(View view) {
         // access the session string in shared preferences
-        SharedPreferences sessionSaveFile = this.getSharedPreferences(TEMP_SAVE_PREF, Context.MODE_PRIVATE);
-        String sessionJson = sessionSaveFile.getString(CONTINUE_KEY, "no session");
+        SharedPreferences spTemp = this.getSharedPreferences(TEMP_SAVE_PREF, MODE_PRIVATE);
+        String sessionJson = spTemp.getString(CONTINUE_KEY, "no session");
 
         if (!sessionJson.equals("no session")) {
             // turn the string into a Session object with Gson
@@ -53,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
             if (continueSession.getTopics().size() > 0) {
 
                 //Which activity?
-                switch (sessionSaveFile.getString(ACTIVITY_KEY,"")) {
+                switch (spTemp.getString(ACTIVITY_KEY,"")) {
                     case "TopicActivity":
                         // if there is data, call the Sprint activity and pass the session string
                         Intent topicIntent = new Intent(this, TopicActivity.class);

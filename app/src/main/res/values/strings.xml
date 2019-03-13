@@ -35,4 +35,7 @@
     <string name="save">Save</string>
     <string name="quit">Quit</string>
     <string name="delete">Delete</string>
+    <string name="next_topic_button">Next: </string>
+    <string name="new_dialogue_warning">There is currently a session in progress.  Would you like
+        to proceed anyway?</string>
 </resources>
