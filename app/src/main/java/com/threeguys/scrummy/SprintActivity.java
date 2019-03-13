@@ -20,6 +20,7 @@ import java.util.Date;
 
 import static com.threeguys.scrummy.MainActivity.ACTIVITY_KEY;
 import static com.threeguys.scrummy.MainActivity.CONTINUE_KEY;
+import static com.threeguys.scrummy.MainActivity.SESSION_KEY;
 import static com.threeguys.scrummy.MainActivity.TEMP_SAVE_PREF;
 
 public class SprintActivity extends AppCompatActivity {
@@ -36,7 +37,7 @@ public class SprintActivity extends AppCompatActivity {
 
         // Initialize Member Data
         Gson gson = new Gson();
-        String gsonSession = (String)getIntent().getExtras().get(MainActivity.SESSION_KEY);
+        String gsonSession = (String)getIntent().getExtras().get(SESSION_KEY);
         session = gson.fromJson(gsonSession, Session.class);
         topicNumber = 0;
 
@@ -46,7 +47,7 @@ public class SprintActivity extends AppCompatActivity {
         currentTopic.setText(session.getTopics().get(0).getTitle());
         // Is there more than one topic?
         if (session.getTopics().size() > 1) {
-            nextTopic.setText(session.getTopics().get(1).getTitle());
+            nextTopic.setText(getNextTopicText());
         } else {
             nextTopic.setText(R.string.save_and_quit_button);
         }
@@ -59,14 +60,17 @@ public class SprintActivity extends AppCompatActivity {
         SharedPreferences sp = this.getSharedPreferences(TEMP_SAVE_PREF, MODE_PRIVATE);
         Gson gson = new Gson();
 
-        String sessionJson = gson.toJson(session, Session.class);
-        String activityJson = "SprintActivity";
+        if (topicNumber < session.getTopics().size()) {
+            String sessionJson = gson.toJson(session, Session.class);
+            String activityJson = "SprintActivity";
 
-        SharedPreferences.Editor editor = sp.edit();
-        editor.putString(CONTINUE_KEY, sessionJson);
-        editor.putString(ACTIVITY_KEY, activityJson);
-        editor.apply();
+            SharedPreferences.Editor editor = sp.edit();
+            editor.putString(CONTINUE_KEY, sessionJson);
+            editor.putString(ACTIVITY_KEY, activityJson);
+            editor.apply();
+        }
     }
+
 
     public void onClickNextTopic(View view) {
         TextView currentTopic = findViewById(R.id._currentTopicTextView);
@@ -79,14 +83,12 @@ public class SprintActivity extends AppCompatActivity {
 
         topicNumber++;
 
-
         if (topicNumber >= session.getTopics().size()) {
             // No more topics, save and quit
             Log.d(SPRINT_TAG, "Topic # == " + topicNumber +
                     "| getTopics.size() == " + session.getTopics().size());
 
             // get the date
-            //TODO save
             Date date = new Date();
             String strDateFormat = "yyyy/MM/dd hh:mm:ss";
             DateFormat dateFormat = new SimpleDateFormat(strDateFormat);
@@ -102,12 +104,9 @@ public class SprintActivity extends AppCompatActivity {
             Save save = new SaveLocal(session, getApplicationContext());
             save.save();
 
+            // clear the temp file
             SharedPreferences sp = this.getSharedPreferences(TEMP_SAVE_PREF, MODE_PRIVATE);
-            SharedPreferences.Editor editor = sp.edit();
-            editor.clear();
-            editor.remove(CONTINUE_KEY);
-            editor.remove(ACTIVITY_KEY);
-            editor.apply();
+            sp.edit().clear().apply();
 
             // go back to the main menu
             Intent mainIntent = new Intent(this, MainActivity.class);
@@ -119,10 +118,16 @@ public class SprintActivity extends AppCompatActivity {
 
             // Check if there is a next topic
             if (topicNumber + 1 < session.getTopics().size()) {
-                nextTopic.setText(session.getTopics().get(topicNumber + 1).getTitle());
+                nextTopic.setText(getNextTopicText());
             } else {
                 nextTopic.setText(R.string.save_and_quit_button);
             }
         }
     }
+
+    private String getNextTopicText() {
+        String nextText = getString(R.string.next_topic_button);
+        return nextText + " " + session.getTopics().get(topicNumber + 1).getTitle();
+    }
 }
+

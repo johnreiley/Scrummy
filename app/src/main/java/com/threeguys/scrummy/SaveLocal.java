@@ -16,7 +16,7 @@ public class SaveLocal extends Save {
 
     @Override
     public void save() {
-        // does nothing for now..
+
         Gson gson = new Gson();
         String sessionJson = gson.toJson(getSaveSession());
         if (getSaveContext() instanceof SprintActivity) {

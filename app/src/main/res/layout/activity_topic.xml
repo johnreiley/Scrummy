@@ -88,9 +88,9 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:hint="@string/name"
-            android:importantForAutofill="no"
             android:inputType="textPersonName"
-            android:text="" />
+            android:text=""
+            android:autofillHints="" />
 
         <Spinner
             android:id="@+id/_categoryInputSpinner"

@@ -13,6 +13,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:background="#f0f0f0"
+        android:onClick="onClickSession"
         android:textAlignment="textStart"
         android:textAppearance="@style/TextAppearance.AppCompat.Title"
         app:layout_constraintEnd_toStartOf="@+id/_sessionItemPopupImageButton"
@@ -26,7 +27,8 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
         android:background="#f0f0f0"
-        android:contentDescription="sessionViewPopupMenu"
+        android:contentDescription="@string/sessionviewpopupmenu"
+        android:onClick="onClickPopup"
         android:src="@android:drawable/btn_star"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
