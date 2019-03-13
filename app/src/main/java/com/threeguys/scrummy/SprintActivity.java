@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.MultiAutoCompleteTextView;
 import android.widget.TextView;
 
@@ -67,6 +68,8 @@ public class SprintActivity extends AppCompatActivity {
         Gson gson = new Gson();
 
         if (topicNumber < session.getTopics().size()) {
+            saveTopicActions();
+
             String sessionJson = gson.toJson(session, Session.class);
             String activityJson = "SprintActivity";
 
@@ -79,13 +82,9 @@ public class SprintActivity extends AppCompatActivity {
 
 
     public void onClickNextTopic(View view) {
-        TextView currentTopic = findViewById(R.id._currentTopicTextView);
-        Button nextTopic = findViewById(R.id._nextTopicButton);
-        MultiAutoCompleteTextView actionsView = findViewById(R.id._actionsMultiAutoCompleteTextView);
 
         // add the actions to the session topic
-        session.getTopics().get(topicNumber).setActions(actionsView.getText().toString());
-        actionsView.setText("");
+        saveTopicActions();
 
         topicNumber++;
 
@@ -122,27 +121,13 @@ public class SprintActivity extends AppCompatActivity {
             Intent mainIntent = new Intent(this, MainActivity.class);
             startActivity(mainIntent);
         } else {
-
-            /*
-            // Go to next Topic
-            currentTopic.setText(session.getTopics().get(topicNumber).getTitle());
-
-            // Check if there is a next topic
-            if (topicNumber + 1 < session.getTopics().size()) {
-                nextTopic.setText(getNextTopicText());
-            } else {
-                nextTopic.setText(R.string.save_and_quit_button);
-            }
-            */
             setTopicText();
         }
     }
 
-    private String getNextTopicText() {
-        String nextText = getString(R.string.next_topic_button);
-        return nextText + " " + session.getTopics().get(topicNumber + 1).getTitle();
-    }
-
+    /**
+     * Sets the appropriate text for the next Topic
+     */
     private void setTopicText() {
         TextView currentTopic = findViewById(R.id._currentTopicTextView);
         Button nextTopic = findViewById(R.id._nextTopicButton);
@@ -159,6 +144,12 @@ public class SprintActivity extends AppCompatActivity {
         } else {
             nextTopic.setText(R.string.save_and_quit_button);
         }
+    }
+
+    private void saveTopicActions() {
+        EditText actionsTextView = findViewById(R.id._actionsMultiAutoCompleteTextView);
+        session.getTopics().get(topicNumber).setActions(actionsTextView.getText().toString());
+        actionsTextView.setText("");
     }
 }
 

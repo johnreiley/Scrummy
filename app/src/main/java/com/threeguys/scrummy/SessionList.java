@@ -18,4 +18,8 @@ public class SessionList {
     public void setList(List<Session> list) {
         this.list = list;
     }
+
+    public void addSession(Session s) {
+        list.add(s);
+    }
 }

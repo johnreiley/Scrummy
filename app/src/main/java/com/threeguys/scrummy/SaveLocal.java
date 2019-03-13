@@ -5,7 +5,9 @@ import android.content.SharedPreferences;
 
 import com.google.gson.Gson;
 
+import static android.content.Context.MODE_PRIVATE;
 import static com.threeguys.scrummy.MainActivity.SAVE_PREF;
+import static com.threeguys.scrummy.MainActivity.SESSION_LIST_KEY;
 
 public class SaveLocal extends Save {
 
@@ -18,12 +20,15 @@ public class SaveLocal extends Save {
     public void save() {
 
         Gson gson = new Gson();
-        String sessionJson = gson.toJson(getSaveSession());
+        Load load = new LoadLocal();
+        SessionList sessionList = load.load(getSaveContext());
+        sessionList.addSession(getSaveSession());
+        String sessionListJson = gson.toJson(sessionList);
         if (getSaveContext() instanceof SprintActivity) {
             SharedPreferences sp = getSaveContext().
-                    getSharedPreferences(SAVE_PREF, Context.MODE_PRIVATE);
+                    getSharedPreferences(SAVE_PREF, MODE_PRIVATE);
             SharedPreferences.Editor editor = sp.edit();
-            editor.putString(getSaveSession().getDate(), sessionJson);
+            editor.putString(SESSION_LIST_KEY, sessionListJson);
             editor.apply();
         }
     }

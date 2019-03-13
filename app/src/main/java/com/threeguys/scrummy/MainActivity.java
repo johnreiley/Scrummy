@@ -19,6 +19,7 @@ public class MainActivity extends AppCompatActivity {
     static final String SESSION_KEY =  "SESSION_KEY"; // used for passing sessions between activities
     static final String TEMP_SAVE_PREF = "continue_session"; // used for storing temp session
     static final String SAVE_PREF = "saved_sessions"; // used for storing completed sessions
+    static final String SESSION_LIST_KEY = "session_list_key"; // used for storing session list
     static final String CONTINUE_KEY = "continue_key"; // used for accessing temp session
     static final String ACTIVITY_KEY = "activity_key"; // used for accessing temp session activity
     static final String LOAD_KEY = "load_key"; // used for accessing the load activity
