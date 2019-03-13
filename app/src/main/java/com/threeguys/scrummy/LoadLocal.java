@@ -19,7 +19,7 @@ public class LoadLocal implements Load {
         SharedPreferences sp = context.getSharedPreferences(MainActivity.SAVE_PREF, Context.MODE_PRIVATE);
         String saves = sp.toString();
 
-        sessions = gson.fromJson(saves, SessionList.class); // TODO have a class to hold a list of sessions
+        sessions = gson.fromJson(saves, SessionList.class);
 
         Log.i("LoadLocal", "Loaded Sessions");
         
