@@ -35,6 +35,7 @@ public class LoadActivity extends AppCompatActivity {
 
         Load loader = new LoadLocal();
         sessions = loader.load(getApplicationContext()).getList();
+        Log.i(LOADACTIVITY_TAG, "LoadActivity Data Loaded");
 
         //TEST Dummy code
 //        Topic t1 = new Topic();
