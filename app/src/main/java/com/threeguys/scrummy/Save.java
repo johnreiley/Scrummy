@@ -8,7 +8,6 @@ import java.lang.ref.WeakReference;
 public abstract class Save {
 
     private Session saveSession;
-
     private Context saveContext;
 
     public void setSaveSession(Session saveSession) {
