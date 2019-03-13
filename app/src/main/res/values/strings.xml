@@ -40,6 +40,5 @@
         to proceed anyway?</string>
     <string name="votes">Votes:</string>
     <string name="username">Name:</string>
-    <string name="delete">Delete</string>
     <string name="rename">Rename</string>
 </resources>
