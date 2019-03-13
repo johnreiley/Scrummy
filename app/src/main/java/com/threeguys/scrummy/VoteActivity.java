@@ -31,6 +31,7 @@ public class VoteActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_vote);
         Log.i(VOTE_TAG, "VoteActivity Started");
@@ -38,6 +39,7 @@ public class VoteActivity extends AppCompatActivity {
         String sessionJson = (String)getIntent().getExtras().get(MainActivity.SESSION_KEY);
         Gson gson = new Gson();
         session = gson.fromJson(sessionJson, Session.class);
+        session.sortByCategory();
 
         groupData = new ArrayList<>();
         groupData.add("Good");
@@ -68,7 +70,6 @@ public class VoteActivity extends AppCompatActivity {
      * Starts the SprintActivity activity
      */
     public void onClickStart(View view) {
-        session.sortByVote();
         // start the sprint activity
         Intent sprintIntent = new Intent(this, SprintActivity.class);
         // turn the session into a string

@@ -33,6 +33,8 @@ public class SprintActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sprint);
         Log.i(SPRINT_TAG, "SprintActivity Started");
@@ -41,23 +43,12 @@ public class SprintActivity extends AppCompatActivity {
         Gson gson = new Gson();
         String gsonSession = (String)getIntent().getExtras().get(SESSION_KEY);
         session = gson.fromJson(gsonSession, Session.class);
+        // prioritize the topics by highest vote
+        session.sortByVote();
+
         topicNumber = 0;
 
-        /*
-        TextView currentTopic = findViewById(R.id._currentTopicTextView);
-        Button nextTopic = findViewById(R.id._nextTopicButton);
-        TextView actionsTextView = findViewById(R.id._actionsTextView);
-
-        currentTopic.setText(session.getTopics().get(0).getTitle());
-        actionsTextView.setText(session.getTopics().get(0).getActions());
-        // Is there more than one topic?
-        if (session.getTopics().size() > 1) {
-            nextTopic.setText(getNextTopicText());
-        } else {
-            nextTopic.setText(R.string.save_and_quit_button);
-        }
-        */
-        setTopicText();
+        setupNextTopic();
     }
 
     @Override
@@ -81,8 +72,21 @@ public class SprintActivity extends AppCompatActivity {
     }
 
 
-    public void onClickNextTopic(View view) {
+    public void onClickPrevTopic(View view) {
+        saveTopicActions();
+        topicNumber--;
+        setupNextTopic();
+        /*
+        if (topicNumber > 0) {
+            setupNextTopic();
+        } else {
+            findViewById(R.id._prevTopicButton).setVisibility(View.GONE);
+        }
+        */
+    }
 
+
+    public void onClickNextTopic(View view) {
         // add the actions to the session topic
         saveTopicActions();
 
@@ -121,14 +125,21 @@ public class SprintActivity extends AppCompatActivity {
             Intent mainIntent = new Intent(this, MainActivity.class);
             startActivity(mainIntent);
         } else {
-            setTopicText();
+            setupNextTopic();
         }
     }
 
     /**
      * Sets the appropriate text for the next Topic
      */
-    private void setTopicText() {
+    private void setupNextTopic() {
+        // check whether or not to show the 'previous' button
+        if (topicNumber > 0) {
+            findViewById(R.id._prevTopicButton).setVisibility(View.VISIBLE);
+        } else {
+            findViewById(R.id._prevTopicButton).setVisibility(View.GONE);
+        }
+
         TextView currentTopic = findViewById(R.id._currentTopicTextView);
         Button nextTopic = findViewById(R.id._nextTopicButton);
         TextView actionsTextView = findViewById(R.id._actionsMultiAutoCompleteTextView);

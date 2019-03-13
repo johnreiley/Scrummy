@@ -12,11 +12,11 @@ public class Session {
     private static final String SESSION_TAG = Session.class.getSimpleName();
     private List<Topic> topics;
     private String title;
-    private String Date;
+    private String date;
 
     Session(){
-        topics = new ArrayList<>();
-        Date = "No Date";
+        this.topics = new ArrayList<>();
+        date = "No Date";
     }
 
     public void sortByVote(){
@@ -32,7 +32,7 @@ public class Session {
         temp.addAll(getBadTopics());
         temp.addAll(getNeutralTopics());
         temp.addAll(getGoodTopics());
-        topics = temp;
+        this.topics = temp;
     }
 
     public List<Topic> getTopics() {
@@ -50,11 +50,11 @@ public class Session {
     }
 
     public String getDate() {
-        return Date;
+        return date;
     }
 
     public void setDate(String date) {
-        Date = date;
+        this.date = date;
     }
 
     public String getTitle() {
