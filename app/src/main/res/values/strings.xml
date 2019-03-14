@@ -42,4 +42,10 @@
     <string name="username">Name:</string>
     <string name="rename">Rename</string>
     <string name="previous_button">Previous</string>
+    <string name="cancel">Cancel</string>
+    <string name="session_title">Session Title</string>
+    <string name="textview">TextView</string>
+    <string name="dialog_warning_1">WARNING: There is currently a session in progress.</string>
+    <string name="dialog_warning_2">Starting a new session will cause the prior session to be discarded.</string>
+    <string name="dialog_new_name">Name the new session.</string>
 </resources>

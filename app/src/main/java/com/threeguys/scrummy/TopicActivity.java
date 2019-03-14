@@ -43,6 +43,9 @@ public class TopicActivity extends AppCompatActivity {
         setContentView(R.layout.activity_topic);
         Log.i(TOPIC_TAG, "TopicActivity Started");
 
+        String sessionTitle = (String)getIntent().getExtras().get(MainActivity.SESSION_TITLE_KEY);
+        Log.d(TOPIC_TAG, "Obtained new session title: " + sessionTitle);
+
         LinearLayout linearLayout = (LinearLayout)findViewById(R.id._snackbarLayout);
         linearLayout.setVisibility(View.GONE);
 
@@ -51,6 +54,7 @@ public class TopicActivity extends AppCompatActivity {
         categoryS = findViewById(R.id._categoryInputSpinner);
 
         session = new Session();
+        session.setTitle(sessionTitle);
 
         groupData = new ArrayList<>(); // new change
         groupData.add("Good");

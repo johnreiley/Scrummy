@@ -1,15 +1,18 @@
 package com.threeguys.scrummy;
 
-import android.content.Context;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.view.menu.MenuView;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
-import android.widget.LinearLayout;
+import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -17,12 +20,16 @@ import com.google.gson.Gson;
 public class MainActivity extends AppCompatActivity {
 
     static final String SESSION_KEY =  "SESSION_KEY"; // used for passing sessions between activities
+    static final String SESSION_TITLE_KEY = "session_title"; // used for passing the session title to the topic activity
     static final String TEMP_SAVE_PREF = "continue_session"; // used for storing temp session
     static final String SAVE_PREF = "saved_sessions"; // used for storing completed sessions
     static final String SESSION_LIST_KEY = "session_list_key"; // used for storing session list
     static final String CONTINUE_KEY = "continue_key"; // used for accessing temp session
     static final String ACTIVITY_KEY = "activity_key"; // used for accessing temp session activity
     public static final String MAIN_TAG = MainActivity.class.getSimpleName();
+
+
+    Dialog titleDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +45,9 @@ public class MainActivity extends AppCompatActivity {
             Button continueButton = findViewById(R.id._continueSessionButton);
             continueButton.setVisibility(View.GONE);
         }
+
+        // initialize dialog variables
+
     }
 
     /**
@@ -45,13 +55,42 @@ public class MainActivity extends AppCompatActivity {
      * @param view, the "new session" button
      */
     public void onClickNew(View view) {
+        View v = (LayoutInflater.from(MainActivity.this)).inflate(R.layout.title_dialog, null);
+
+        AlertDialog.Builder alertBuilder = new AlertDialog.Builder(MainActivity.this);
+        alertBuilder.setView(v);
+
+        TextView dialogText1 = v.findViewById(R.id._dialogTextView1);
+        TextView dialogText2 = v.findViewById(R.id._dialogTextView2);
+        TextView dialogText3 = v.findViewById(R.id._dialogTextView3);
+        final EditText dialogTitle = v.findViewById(R.id._dialogTitleEditText);
+
+        alertBuilder.setCancelable(true).setPositiveButton("Start", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Intent newIntent = new Intent(MainActivity.this, TopicActivity.class);
+                newIntent.putExtra(SESSION_TITLE_KEY, dialogTitle.getText().toString());
+                startActivity(newIntent);
+            }
+        });
+
+        dialogText1.setEnabled(true);
+        dialogText2.setEnabled(true);
+        dialogText3.setEnabled(true);
+        dialogTitle.setEnabled(true);
+
         if (findViewById(R.id._continueSessionButton).getVisibility() == View.GONE) {
-            Intent newIntent = new Intent(this, TopicActivity.class);
-            startActivity(newIntent);
+            dialogText1.setText(R.string.dialog_new_name);
+            dialogText2.setVisibility(View.GONE);
+            dialogText3.setVisibility(View.GONE);
         } else {
-            //TODO: make a pop-up dialogue for this
-            Toast.makeText(this, R.string.new_dialogue_warning, Toast.LENGTH_SHORT).show();
+            dialogText1.setText(R.string.dialog_warning_1);
+            dialogText2.setText(R.string.dialog_warning_2);
+            dialogText3.setText(R.string.dialog_new_name);
         }
+
+        titleDialog = alertBuilder.create();
+        titleDialog.show();
     }
 
     /**
