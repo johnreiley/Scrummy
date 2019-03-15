@@ -1,6 +1,9 @@
 package com.threeguys.scrummy;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.ClipData;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
@@ -10,10 +13,13 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -88,12 +94,40 @@ public class LoadActivity extends AppCompatActivity {
         refreshAdapter();
     }
 
-    public void onClickRename(int position) {
-        Session session = sessions.get(position);
-        session.setTitle("New Title");
-        sessions.set(position,session);
-        Save save = new SaveLocal(getApplicationContext());
-        save.update(sessions);
-        refreshAdapter();
+    public void onClickRename(final int position) {
+        View v = (LayoutInflater.from(LoadActivity.this)).inflate(R.layout.title_dialog, null);
+
+        AlertDialog.Builder alertBuilder = new AlertDialog.Builder(LoadActivity.this);
+        alertBuilder.setView(v);
+
+        TextView dialogText1 = v.findViewById(R.id._dialogTextView1);
+        TextView dialogText2 = v.findViewById(R.id._dialogTextView2);
+        TextView dialogText3 = v.findViewById(R.id._dialogTextView3);
+        final EditText dialogTitle = v.findViewById(R.id._dialogTitleEditText);
+
+        alertBuilder.setCancelable(true).setPositiveButton("Rename", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Session session = sessions.get(position);
+                session.setTitle(dialogTitle.getText().toString());
+                sessions.set(position, session);
+                Save save = new SaveLocal(getApplicationContext());
+                save.update(sessions);
+                refreshAdapter();
+            }
+        });
+
+        dialogText1.setEnabled(true);
+        dialogText2.setEnabled(true);
+        dialogText3.setEnabled(true);
+        dialogTitle.setEnabled(true);
+
+        dialogText1.setText(R.string.dialog_rename);
+        dialogText2.setVisibility(View.GONE);
+        dialogText3.setVisibility(View.GONE);
+        dialogTitle.setText(sessions.get(position).getTitle());
+
+        Dialog titleDialog = alertBuilder.create();
+        titleDialog.show();
     }
 }

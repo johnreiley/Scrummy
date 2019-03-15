@@ -45,9 +45,6 @@ public class MainActivity extends AppCompatActivity {
             Button continueButton = findViewById(R.id._continueSessionButton);
             continueButton.setVisibility(View.GONE);
         }
-
-        // initialize dialog variables
-
     }
 
     /**
@@ -138,8 +135,6 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(this,
                     "There are no topics in the session to continue", Toast.LENGTH_SHORT).show();
         }
-
-
     }
 
     /**
@@ -161,6 +156,5 @@ public class MainActivity extends AppCompatActivity {
             Intent loadIntent = new Intent(this, LoadActivity.class);
             startActivity(loadIntent);
         }
-
     }
 }
