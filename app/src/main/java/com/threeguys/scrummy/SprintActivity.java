@@ -8,15 +8,13 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.MultiAutoCompleteTextView;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 import static com.threeguys.scrummy.MainActivity.ACTIVITY_KEY;
@@ -30,6 +28,10 @@ public class SprintActivity extends AppCompatActivity {
 
     Session session;
     private int topicNumber;
+    private ImageButton playPause;
+    private boolean isPaused;
+    private ImageButton toggleAlarm;
+    private boolean isMuted;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +49,11 @@ public class SprintActivity extends AppCompatActivity {
         session.sortByVote();
 
         topicNumber = 0;
+
+        playPause = findViewById(R.id._playPauseTimeButton);
+        toggleAlarm = findViewById(R.id._alarmButton);
+        isPaused = false;
+        isMuted = true;
 
         setupNextTopic();
     }
@@ -164,7 +171,13 @@ public class SprintActivity extends AppCompatActivity {
     }
 
     public void playPause(View v) {
-
+        if(!isPaused) {
+            playPause.setImageResource(android.R.drawable.ic_media_play);
+            isPaused = true;
+        } else {
+            playPause.setImageResource(android.R.drawable.ic_media_pause);
+            isPaused = false;
+        }
     }
 
     public void rewind(View v) {
@@ -176,7 +189,13 @@ public class SprintActivity extends AppCompatActivity {
     }
 
     public void toggleAlarm(View v) {
-
+        if(!isMuted) {
+            toggleAlarm.setImageResource(android.R.drawable.ic_lock_silent_mode);
+            isMuted = true;
+        } else {
+            toggleAlarm.setImageResource(android.R.drawable.ic_lock_silent_mode_off);
+            isMuted = false;
+        }
     }
 }
 
