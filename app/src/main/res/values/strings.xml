@@ -49,4 +49,5 @@
     <string name="dialog_warning_2">Starting a new session will cause the prior session to be discarded.</string>
     <string name="dialog_new_name">Name the new session.</string>
     <string name="dialog_rename">Rename the session.</string>
+    <string name="three_dot_menu">⋮</string>
 </resources>
