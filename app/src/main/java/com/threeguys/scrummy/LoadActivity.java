@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -38,10 +39,7 @@ public class LoadActivity extends AppCompatActivity {
 
         Load loader = new LoadLocal();
         sessions = loader.load(getApplicationContext()).getList();
-        // Order if available
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            orderSessionsByDate();
-        }
+        orderSessionsByDate();
         Log.i(LOADACTIVITY_TAG, "LoadActivity Data Loaded and ordered");
 
         adapter = new LoadSessionItemAdapter(this, sessions);
@@ -51,14 +49,13 @@ public class LoadActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
     private void orderSessionsByDate() {
-        sessions.sort(new Comparator<Session>() {
-            @Override
-            public int compare(Session o1, Session o2) {
-                return o1.getDate().compareTo(o2.getDate());
-            }
-        });
+            Collections.sort(sessions, new Comparator<Session>() {
+                @Override
+                public int compare(Session o1, Session o2) {
+                    return o1.getDate().compareTo(o2.getDate());
+                }
+            });
     }
 
     public void onClickSession(int index) {
