@@ -20,13 +20,13 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/_tempClock"
-        android:layout_width="326dp"
-        android:layout_height="54dp"
+        android:id="@+id/_timeValueTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
-        android:text="@string/clock_goes_here"
+        android:text="@string/timer_value"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display3"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/_currentTopicTextView" />
@@ -41,14 +41,13 @@
         android:text="@string/actions"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/_tempClock" />
+        app:layout_constraintTop_toBottomOf="@+id/_playPauseTimeButton" />
 
     <MultiAutoCompleteTextView
         android:id="@+id/_actionsMultiAutoCompleteTextView"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="8dp"
         android:gravity="top|start"
@@ -80,6 +79,50 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/_prevTopicButton" />
+
+    <ImageButton
+        android:id="@+id/_playPauseTimeButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/play_pause"
+        android:onClick="playPause"
+        app:layout_constraintEnd_toEndOf="@+id/_timeValueTextView"
+        app:layout_constraintStart_toStartOf="@+id/_timeValueTextView"
+        app:layout_constraintTop_toBottomOf="@+id/_timeValueTextView"
+        app:srcCompat="@android:drawable/ic_media_pause" />
+
+    <ImageButton
+        android:id="@+id/_resetTimeButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="4dp"
+        android:contentDescription="@string/rewind"
+        android:onClick="rewind"
+        app:layout_constraintEnd_toStartOf="@+id/_playPauseTimeButton"
+        app:layout_constraintTop_toTopOf="@+id/_playPauseTimeButton"
+        app:srcCompat="@android:drawable/ic_media_rew" />
+
+    <ImageButton
+        android:id="@+id/_stopTimeButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:contentDescription="@string/fast_forward"
+        android:onClick="fastForward"
+        app:layout_constraintStart_toEndOf="@+id/_playPauseTimeButton"
+        app:layout_constraintTop_toTopOf="@+id/_playPauseTimeButton"
+        app:srcCompat="@android:drawable/ic_media_ff" />
+
+    <ImageButton
+        android:id="@+id/_alarmButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:contentDescription="@string/toggle_alarm"
+        android:onClick="toggleAlarm"
+        app:layout_constraintStart_toEndOf="@+id/_stopTimeButton"
+        app:layout_constraintTop_toTopOf="@+id/_stopTimeButton"
+        app:srcCompat="@android:drawable/ic_lock_silent_mode" />
 
 
 </android.support.constraint.ConstraintLayout>

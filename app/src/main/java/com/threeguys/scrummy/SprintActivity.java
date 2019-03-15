@@ -162,5 +162,21 @@ public class SprintActivity extends AppCompatActivity {
         session.getTopics().get(topicNumber).setActions(actionsTextView.getText().toString());
         actionsTextView.setText("");
     }
+
+    public void playPause(View v) {
+
+    }
+
+    public void rewind(View v) {
+
+    }
+
+    public void fastForward(View v) {
+
+    }
+
+    public void toggleAlarm(View v) {
+
+    }
 }
 

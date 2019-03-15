@@ -50,4 +50,9 @@
     <string name="dialog_new_name">Name the new session.</string>
     <string name="dialog_rename">Rename the session.</string>
     <string name="three_dot_menu">⋮</string>
+    <string name="timer_value">0:00</string>
+    <string name="rewind">Rewind</string>
+    <string name="play_pause">Play/Pause</string>
+    <string name="fast_forward">Fast Forward</string>
+    <string name="toggle_alarm">Toggle Alarm</string>
 </resources>
