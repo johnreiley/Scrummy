@@ -1,9 +1,12 @@
 package com.threeguys.scrummy;
 
 import android.content.Context;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -13,6 +16,10 @@ import android.widget.TextView;
 import java.util.List;
 
 public class LoadSessionItemAdapter extends RecyclerView.Adapter<LoadSessionItemAdapter.LoadSessionItemsViewHolder> {
+
+    public void setSessions(List<Session> sessions) {
+        this.sessions = sessions;
+    }
 
     private List<Session> sessions;
     private Context context;
@@ -46,8 +53,26 @@ public class LoadSessionItemAdapter extends RecyclerView.Adapter<LoadSessionItem
             @Override
             public void onClick(View v) {
                 //Open the pop up menu
-                if(context instanceof LoadActivity)
-                    ((LoadActivity)context).onClickPopup(holder.popUpMenu);
+                PopupMenu popup = new PopupMenu((LoadActivity)context, holder.popUpMenu);
+                popup.inflate(R.menu.load_item_popup);
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem menuItem) {
+                        switch (menuItem.getItemId()) {
+                            case R.id._renamePopUpItem:
+                                if(context instanceof LoadActivity)
+                                    ((LoadActivity)context).onClickRename(position);
+                                return true;
+                            case R.id._deletePopUpItem:
+                                if(context instanceof LoadActivity)
+                                    ((LoadActivity)context).onClickDelete(position);
+                                return true;
+                            default:
+                                return false;
+                        }
+                    }
+                });
+                popup.show();
             }
         });
     }

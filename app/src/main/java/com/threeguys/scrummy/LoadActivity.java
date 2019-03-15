@@ -1,5 +1,6 @@
 package com.threeguys.scrummy;
 
+import android.content.ClipData;
 import android.content.Intent;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
@@ -9,6 +10,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -42,11 +44,7 @@ public class LoadActivity extends AppCompatActivity {
         orderSessionsByDate();
         Log.i(LOADACTIVITY_TAG, "LoadActivity Data Loaded and ordered");
 
-        adapter = new LoadSessionItemAdapter(this, sessions);
-
-        recyclerView = findViewById(R.id._loadSessionRecyclerView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(adapter);
+        refreshAdapter();
     }
 
     private void orderSessionsByDate() {
@@ -69,16 +67,33 @@ public class LoadActivity extends AppCompatActivity {
         startActivity(viewIntent);
     }
 
-    public void onClickPopup(View v) {
-        PopupMenu popup = new PopupMenu(this, v);
-        MenuInflater inflater = popup.getMenuInflater();
-        inflater.inflate(R.menu.load_item_popup, popup.getMenu());
-        popup.show();
+    private void refreshAdapter() {
+        if(adapter == null) {
+            adapter = new LoadSessionItemAdapter(this, sessions);
+            recyclerView = findViewById(R.id._loadSessionRecyclerView);
+            recyclerView.setLayoutManager(new LinearLayoutManager(this));
+            recyclerView.setAdapter(adapter);
+        }
+        else
+        {
+            adapter.setSessions(sessions);
+            adapter.notifyDataSetChanged();
+        }
     }
 
-    public void onClickDelete(int pos) {
-        sessions.remove(sessions.get(pos));
+    public void onClickDelete(int position) {
+        sessions.remove(position);
         Save save = new SaveLocal(getApplicationContext());
         save.update(sessions);
+        refreshAdapter();
+    }
+
+    public void onClickRename(int position) {
+        Session session = sessions.get(position);
+        session.setTitle("New Title");
+        sessions.set(position,session);
+        Save save = new SaveLocal(getApplicationContext());
+        save.update(sessions);
+        refreshAdapter();
     }
 }
