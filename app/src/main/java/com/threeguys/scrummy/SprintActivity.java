@@ -110,8 +110,8 @@ public class SprintActivity extends AppCompatActivity {
             session.setDate(formattedDate);
 
             // save in SharedPreferences
-            Save save = new SaveLocal(session, getApplicationContext());
-            save.save();
+            Save save = new SaveLocal(getApplicationContext());
+            save.save(session);
 
             Log.i(SPRINT_TAG, "Session saved");
 

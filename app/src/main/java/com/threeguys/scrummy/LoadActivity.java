@@ -78,5 +78,7 @@ public class LoadActivity extends AppCompatActivity {
 
     public void onClickDelete(int pos) {
         sessions.remove(sessions.get(pos));
+        Save save = new SaveLocal(getApplicationContext());
+        save.update(sessions);
     }
 }
