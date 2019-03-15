@@ -75,4 +75,8 @@ public class LoadActivity extends AppCompatActivity {
         inflater.inflate(R.menu.load_item_popup, popup.getMenu());
         popup.show();
     }
+
+    public void onClickDelete(int pos) {
+        sessions.remove(sessions.get(pos));
+    }
 }
