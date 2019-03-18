@@ -16,7 +16,7 @@ public class Topic {
         title = "";
         username = "";
         votes = 0;
-        actions = "No actions";
+        actions = "";
         category = Category.NEUTRAL;
     }
 

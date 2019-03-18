@@ -47,7 +47,6 @@
     <string name="textview">TextView</string>
     <string name="dialog_warning_1">WARNING: There is currently a session in progress.</string>
     <string name="dialog_warning_2">Starting a new session will cause the prior session to be discarded.</string>
-    <string name="dialog_new_name">Name the new session.</string>
     <string name="dialog_rename">Rename the session.</string>
     <string name="three_dot_menu">⋮</string>
     <string name="timer_value">0:00</string>
@@ -55,4 +54,5 @@
     <string name="play_pause">Play/Pause</string>
     <string name="fast_forward">Fast Forward</string>
     <string name="toggle_alarm">Toggle Alarm</string>
+    <string name="dialog_new_name">Name the new session</string>
 </resources>

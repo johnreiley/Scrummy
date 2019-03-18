@@ -16,7 +16,7 @@ public class Session {
 
     Session(){
         this.topics = new ArrayList<>();
-        date = "No Date";
+        date = "";
     }
 
     public void sortByVote(){
