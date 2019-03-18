@@ -127,7 +127,7 @@ public class SprintActivity extends AppCompatActivity {
 
             // get the date
             Date date = new Date();
-            String strDateFormat = "yyyy/MM/dd hh:mm:ss";
+            String strDateFormat = "yyyy/MM/dd a hh:mm:ss";
             DateFormat dateFormat = new SimpleDateFormat(strDateFormat);
             String formattedDate= dateFormat.format(date);
 
