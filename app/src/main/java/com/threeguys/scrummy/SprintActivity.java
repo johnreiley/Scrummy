@@ -2,6 +2,9 @@ package com.threeguys.scrummy;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.MediaPlayer;
+import android.os.CountDownTimer;
+import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -32,6 +35,10 @@ public class SprintActivity extends AppCompatActivity {
     private boolean isPaused;
     private ImageButton toggleAlarm;
     private boolean isMuted;
+    private CountDownTimer timer;
+    private long timeRemaining;
+    private TextView time;
+    private MediaPlayer mp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,9 +60,15 @@ public class SprintActivity extends AppCompatActivity {
         playPause = findViewById(R.id._playPauseTimeButton);
         toggleAlarm = findViewById(R.id._alarmButton);
         isPaused = false;
-        isMuted = true;
+        isMuted = false;
 
         setupNextTopic();
+
+        mp = MediaPlayer.create(getApplicationContext(), Settings.System.DEFAULT_ALARM_ALERT_URI);
+        time = findViewById(R.id._timeValueTextView);
+        time.setText("5:00");
+        timeRemaining = 300000; //300000 milliseconds is 5 minutes
+        refreshTimer();
     }
 
     @Override
@@ -78,6 +91,12 @@ public class SprintActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mp.pause();
+    }
+
 
     public void onClickPrevTopic(View view) {
         saveTopicActions();
@@ -90,6 +109,8 @@ public class SprintActivity extends AppCompatActivity {
             findViewById(R.id._prevTopicButton).setVisibility(View.GONE);
         }
         */
+        timeRemaining = 300000;
+        refreshTimer();
     }
 
 
@@ -133,6 +154,8 @@ public class SprintActivity extends AppCompatActivity {
             startActivity(mainIntent);
         } else {
             setupNextTopic();
+            timeRemaining = 300000;
+            refreshTimer();
         }
     }
 
@@ -174,28 +197,68 @@ public class SprintActivity extends AppCompatActivity {
         if(!isPaused) {
             playPause.setImageResource(android.R.drawable.ic_media_play);
             isPaused = true;
+            mp.pause();
         } else {
             playPause.setImageResource(android.R.drawable.ic_media_pause);
             isPaused = false;
+            refreshTimer();
         }
     }
 
     public void rewind(View v) {
-
+        timeRemaining = 300000;
+        refreshTimer();
+        time.setText("5:00");
     }
 
     public void fastForward(View v) {
-
+        timer.onFinish();
+        timer.cancel();
+        timeRemaining = 0;
+        time.setText("0:00");
     }
 
     public void toggleAlarm(View v) {
         if(!isMuted) {
             toggleAlarm.setImageResource(android.R.drawable.ic_lock_silent_mode);
             isMuted = true;
+            mp.pause();
         } else {
             toggleAlarm.setImageResource(android.R.drawable.ic_lock_silent_mode_off);
             isMuted = false;
         }
+    }
+
+    private void refreshTimer() {
+        if (timer != null) {
+            timer.cancel();
+            mp.pause();
+        }
+
+        timer = new CountDownTimer(timeRemaining, 250) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                if(isPaused) {
+                    cancel();
+                } else {
+                    long minutes = Math.round(millisUntilFinished / 60000);
+                    long seconds = Math.round(millisUntilFinished % 60000 / 1000);
+                    String display = String.format("%01d:%02d", minutes, seconds);
+                    time.setText(display);
+                    timeRemaining = millisUntilFinished;
+                }
+            }
+
+            @Override
+            public void onFinish() {
+                //Sound the alarm!
+                time.setText("0:00");
+                if(!isMuted){
+                    mp.setLooping(true);
+                    mp.start();
+                }
+            }
+        }.start();
     }
 }
 

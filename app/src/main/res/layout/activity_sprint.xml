@@ -123,7 +123,7 @@
         android:onClick="toggleAlarm"
         app:layout_constraintStart_toEndOf="@+id/_stopTimeButton"
         app:layout_constraintTop_toTopOf="@+id/_stopTimeButton"
-        app:srcCompat="@android:drawable/ic_lock_silent_mode" />
+        app:srcCompat="@android:drawable/ic_lock_silent_mode_off" />
 
 
 </android.support.constraint.ConstraintLayout>
