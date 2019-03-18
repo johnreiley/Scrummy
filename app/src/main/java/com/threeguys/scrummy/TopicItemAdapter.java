@@ -6,6 +6,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import java.util.HashMap;
@@ -87,7 +89,7 @@ public class TopicItemAdapter extends BaseExpandableListAdapter{
     }
 
     @Override
-    public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
+    public View getChildView(final int groupPosition, final int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
 
         Topic topic = getChild(groupPosition, childPosition);
         if (topic == null)
@@ -103,9 +105,19 @@ public class TopicItemAdapter extends BaseExpandableListAdapter{
 
         TextView titleTextView = convertView.findViewById(R.id._topicItemTitleTextView);
         TextView usernameTextView = convertView.findViewById(R.id._topicItemUsernameTextView);
+        ImageButton deleteButton = convertView.findViewById(R.id._deleteImageButton);
 
         titleTextView.setText(topic.getTitle());
         usernameTextView.setText(topic.getUsername());
+
+        deleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(context instanceof TopicActivity) {
+                    ((TopicActivity) context).onClickDelete(groupPosition, childPosition);
+                }
+            }
+        });
 
         return convertView;
     }

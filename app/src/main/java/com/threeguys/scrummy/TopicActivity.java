@@ -109,6 +109,57 @@ public class TopicActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Deletes the selected topic from the session
+     * @param category the category of the topic
+     * @param index of the topic in its respective category
+     */
+    public void onClickDelete(int category, int index) {
+        List<Topic> tl;
+        switch(category) {
+            case 0:
+                tl = session.getGoodTopics();
+                break;
+            case 1:
+                tl = session.getNeutralTopics();
+                break;
+            case 2:
+                tl = session.getBadTopics();
+                break;
+            default:
+                tl = new ArrayList<>();
+                Toast.makeText(this,
+                        "Can't find the Category this topic is in.", Toast.LENGTH_SHORT).show();
+                break;
+        }
+
+        if (tl.size() <= index) {
+            Toast.makeText(this,
+                    "Can't find the Topic to add a vote to.", Toast.LENGTH_SHORT).show();
+        }
+        else {
+            Log.i("Add Vote", "Found correct topic: " + tl.get(index).getTitle());
+
+            int position = index;
+            switch (category) {
+                case 0:
+                    position += session.getNeutralTopics().size();
+                case 1:
+                    position += session.getBadTopics().size();
+                    break;
+                case 2:
+                default:
+                    break;
+            }
+
+            List<Topic> topics = session.getTopics();
+            topics.remove(position);
+            session.setTopics(topics);
+
+            refreshAdapter();
+        }
+    }
+
     public void onClickVote(View view) {
 
         Log.d(TOPIC_TAG, "session.getTopics().size() == " + session.getTopics().size());
