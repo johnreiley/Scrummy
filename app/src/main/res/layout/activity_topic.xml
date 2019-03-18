@@ -49,8 +49,8 @@
         app:backgroundTint="?attr/actionMenuTextColor"
         app:layout_anchorGravity="bottom|right|end"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-    <!--app:src="@drawable/ic_done" -->
+        app:layout_constraintEnd_toEndOf="parent"/>
+        <!--app:src="@drawable/ic_done" -->
 
     <ExpandableListView
         android:id="@+id/_topicCategoryExpandableListView"
@@ -67,53 +67,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/_topicEntryTextView" />
-
-    <LinearLayout
-        android:id="@+id/_snackbarLayout"
-        android:layout_width="0dp"
-        android:layout_height="171dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toTopOf="@+id/_addTopicFloatingActionButton"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/guideline"
-        app:background="@android:color/background_light">
-
-        <EditText
-            android:id="@+id/_topicInputEditText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="@string/topic"
-            android:importantForAutofill="no"
-            android:inputType="textPersonName"
-            android:text="" />
-
-        <EditText
-            android:id="@+id/_nameInputEditText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:autofillHints=""
-            android:ems="10"
-            android:hint="@string/name"
-            android:inputType="textPersonName"
-            android:text="" />
-
-        <Spinner
-            android:id="@+id/_categoryInputSpinner"
-            android:layout_width="match_parent"
-            android:layout_height="37dp"
-            android:entries="@array/categories_array"
-            android:spinnerMode="dropdown" />
-
-        <Button
-            android:id="@+id/_addTopicButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:onClick="onClickFinishInput"
-            android:text="@string/add" />
-    </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>

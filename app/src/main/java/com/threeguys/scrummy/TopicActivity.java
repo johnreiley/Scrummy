@@ -1,16 +1,21 @@
 package com.threeguys.scrummy;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -25,7 +30,7 @@ import static com.threeguys.scrummy.MainActivity.TEMP_SAVE_PREF;
 
 public class TopicActivity extends AppCompatActivity {
 
-    public static final String TOPIC_TAG = TopicActivity.class.getSimpleName();
+    public static final String TOPIC_TAG = "TopicActivity";//TopicActivity.class.getSimpleName();
     private Session session;
 
     private ExpandableListView expandableListView;
@@ -33,9 +38,7 @@ public class TopicActivity extends AppCompatActivity {
     private HashMap<String, List<Topic>> childData;
     private List<String> groupData;
 
-    private EditText topicET;
-    private EditText nameET;
-    private Spinner categoryS;
+    Dialog addTopicDialogue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,13 +48,6 @@ public class TopicActivity extends AppCompatActivity {
 
         String sessionTitle = (String)getIntent().getExtras().get(MainActivity.SESSION_TITLE_KEY);
         Log.d(TOPIC_TAG, "Obtained new session title: " + sessionTitle);
-
-        LinearLayout linearLayout = (LinearLayout)findViewById(R.id._snackbarLayout);
-        linearLayout.setVisibility(View.GONE);
-
-        topicET = findViewById(R.id._topicInputEditText);
-        nameET = findViewById(R.id._nameInputEditText);
-        categoryS = findViewById(R.id._categoryInputSpinner);
 
         session = new Session();
         session.setTitle(sessionTitle);
@@ -182,26 +178,36 @@ public class TopicActivity extends AppCompatActivity {
     }
 
     public void onClickAddTopic(View view) {
-        LinearLayout linearLayout = findViewById(R.id._snackbarLayout);
-        if (linearLayout.getVisibility() == View.VISIBLE) {
-            linearLayout.setVisibility(View.GONE);
-            // reset the text input values to default
-            topicET.setText("");
-            nameET.setText("");
-            categoryS.setSelection(0);
-        } else {
-            linearLayout.setVisibility(View.VISIBLE);
-        }
+        Log.d(TOPIC_TAG, "entered onclick add topic");
+        View v = (LayoutInflater.from(this)).inflate(R.layout.add_topic, null);
+
+        AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
+        alertBuilder.setView(v);
+
+        final EditText topic = v.findViewById(R.id._topicInputEditText);
+        final EditText name = v.findViewById(R.id._nameInputEditText);
+        final Spinner category = v.findViewById(R.id._categoryInputSpinner);
+
+        alertBuilder.setCancelable(true).setPositiveButton("Add Topic", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                onClickFinishInput(topic, name, category);
+            }
+        });
+
+        addTopicDialogue = alertBuilder.create();
+        addTopicDialogue.show();
     }
 
-    public void onClickFinishInput(View view) {
-
+    public void onClickFinishInput(EditText topicET, EditText nameET, Spinner categoryS) {
+        Log.d(TOPIC_TAG, "entered onclick");
         // first make sure the text inputs aren't empty
         if (topicET.getText().toString().equals("") || nameET.getText().toString().equals("")) {
             Toast.makeText(this,
                     "Enter both a title and name before adding a new topic",
                     Toast.LENGTH_SHORT).show();
         } else {
+            Log.d(TOPIC_TAG, "populating topic");
             // populate the topic with the text input values
             Topic topic = new Topic();
             topic.setTitle(topicET.getText().toString());
@@ -218,16 +224,10 @@ public class TopicActivity extends AppCompatActivity {
             topic.setCategory(c);
 
             session.addTopic(topic);
-
-            LinearLayout linearLayout = findViewById(R.id._snackbarLayout);
-            linearLayout.setVisibility(View.GONE);
-
-            // reset the text input values to default
-            topicET.setText("");
-            nameET.setText("");
-            categoryS.setSelection(0);
+            Log.d(TOPIC_TAG, "topic added");
 
             refreshAdapter();
+            Log.d(TOPIC_TAG, "adapter refreshed");
         }
     }
 
