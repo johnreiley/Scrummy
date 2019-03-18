@@ -6,6 +6,13 @@
     android:layout_height="match_parent"
     tools:context=".TopicActivity">
 
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="1dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.5" />
+
     <TextView
         android:id="@+id/_topicEntryTextView"
         android:layout_width="wrap_content"
@@ -42,8 +49,8 @@
         app:backgroundTint="?attr/actionMenuTextColor"
         app:layout_anchorGravity="bottom|right|end"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
-        <!--app:src="@drawable/ic_done" -->
+        app:layout_constraintEnd_toEndOf="parent" />
+    <!--app:src="@drawable/ic_done" -->
 
     <ExpandableListView
         android:id="@+id/_topicCategoryExpandableListView"
@@ -63,13 +70,15 @@
 
     <LinearLayout
         android:id="@+id/_snackbarLayout"
-        android:layout_width="101dp"
-        android:layout_height="170dp"
+        android:layout_width="0dp"
+        android:layout_height="171dp"
+        android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
         android:orientation="vertical"
         app:layout_constraintBottom_toTopOf="@+id/_addTopicFloatingActionButton"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/guideline"
         tools:background="@android:color/background_light">
 
         <EditText
@@ -86,11 +95,11 @@
             android:id="@+id/_nameInputEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:autofillHints=""
             android:ems="10"
             android:hint="@string/name"
             android:inputType="textPersonName"
-            android:text=""
-            android:autofillHints="" />
+            android:text="" />
 
         <Spinner
             android:id="@+id/_categoryInputSpinner"
