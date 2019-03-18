@@ -79,7 +79,7 @@
         app:layout_constraintBottom_toTopOf="@+id/_addTopicFloatingActionButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/guideline"
-        tools:background="@android:color/background_light">
+        app:background="@android:color/background_light">
 
         <EditText
             android:id="@+id/_topicInputEditText"
