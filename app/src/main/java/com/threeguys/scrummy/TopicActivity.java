@@ -52,7 +52,9 @@ public class TopicActivity extends AppCompatActivity {
 
         sessionTitleHolder = findViewById(R.id._topicEntryTextView);
 
-        session = new Session();
+        String sessionJson = (String) getIntent().getExtras().get(MainActivity.SESSION_KEY);
+        Gson gson = new Gson();
+        session = gson.fromJson(sessionJson, Session.class);
         session.setTitle(sessionTitle);
         sessionTitleHolder.setText(sessionTitle);
 
@@ -61,7 +63,7 @@ public class TopicActivity extends AppCompatActivity {
         groupData.add("Neutral");
         groupData.add("Bad");
 
-
+/*
         // ------------ TEST CODE ------------ //
         Topic t1 = new Topic();
         t1.setTitle("Good Test");
@@ -81,7 +83,7 @@ public class TopicActivity extends AppCompatActivity {
         session.addTopic(t1);
         session.addTopic(t2);
         session.addTopic(t3);
-
+*/
 
         Log.i("Topic Count","Size: " + session.getTopics().size());
 
@@ -95,7 +97,7 @@ public class TopicActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        if (session.getTopics().size() > 0) {
+        //if (session.getTopics().size() > 0) {
             SharedPreferences sp = this.getSharedPreferences(TEMP_SAVE_PREF, MODE_PRIVATE);
             Gson gson = new Gson();
 
@@ -106,7 +108,7 @@ public class TopicActivity extends AppCompatActivity {
             editor.putString(CONTINUE_KEY, sessionJson);
             editor.putString(ACTIVITY_KEY, activityJson);
             editor.apply();
-        }
+        //}
     }
 
     /**

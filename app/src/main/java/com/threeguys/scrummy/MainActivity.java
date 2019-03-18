@@ -65,9 +65,22 @@ public class MainActivity extends AppCompatActivity {
         alertBuilder.setCancelable(true).setPositiveButton("Start", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Intent newIntent = new Intent(MainActivity.this, TopicActivity.class);
-                newIntent.putExtra(SESSION_TITLE_KEY, dialogTitle.getText().toString());
-                startActivity(newIntent);
+
+                Log.d(MAIN_TAG, "dialogTitle == " + dialogTitle.getText());
+
+                if (dialogTitle.getText().toString().equals("")) {
+                    Toast.makeText(getApplicationContext(),
+                            "Please enter a session title before continuing",
+                            Toast.LENGTH_SHORT).show();
+                } else {
+                    Intent newIntent = new Intent(MainActivity.this, TopicActivity.class);
+                    newIntent.putExtra(SESSION_TITLE_KEY, dialogTitle.getText().toString());
+                    Session session = new Session();
+                    Gson gson = new Gson();
+                    String sessionJson = gson.toJson(session, Session.class);
+                    newIntent.putExtra(SESSION_KEY, sessionJson);
+                    startActivity(newIntent);
+                }
             }
         });
 
