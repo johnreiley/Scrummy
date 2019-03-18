@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 
@@ -15,6 +16,7 @@ public class ViewSessionActivity extends AppCompatActivity {
     private Session session;
     private RecyclerView recyclerView;
     private LoadTopicItemAdapter adapter;
+    private TextView sessionTitleHolder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +33,9 @@ public class ViewSessionActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id._viewSessionRecyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
+
+        sessionTitleHolder = findViewById(R.id._viewSessionTextView);
+        sessionTitleHolder.setText(session.getTitle());
     }
 
     public void display() {

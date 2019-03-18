@@ -39,6 +39,7 @@ public class TopicActivity extends AppCompatActivity {
     private List<String> groupData;
 
     Dialog addTopicDialogue;
+    private TextView sessionTitleHolder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,8 +50,11 @@ public class TopicActivity extends AppCompatActivity {
         String sessionTitle = (String)getIntent().getExtras().get(MainActivity.SESSION_TITLE_KEY);
         Log.d(TOPIC_TAG, "Obtained new session title: " + sessionTitle);
 
+        sessionTitleHolder = findViewById(R.id._topicEntryTextView);
+
         session = new Session();
         session.setTitle(sessionTitle);
+        sessionTitleHolder.setText(sessionTitle);
 
         groupData = new ArrayList<>(); // new change
         groupData.add("Good");

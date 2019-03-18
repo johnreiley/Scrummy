@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ExpandableListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -28,6 +29,7 @@ public class VoteActivity extends AppCompatActivity {
     private VoteItemAdapter adapter;
     private HashMap<String, List<Topic>> childData;
     private List<String> groupData;
+    private TextView sessionTitleHolder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +50,9 @@ public class VoteActivity extends AppCompatActivity {
 
         expandableListView = findViewById(R.id._voteCategoryExpandableListView);
         refreshAdapter();
+
+        sessionTitleHolder = findViewById(R.id._voteTitleTextView);
+        sessionTitleHolder.setText(session.getTitle());
     }
 
     @Override

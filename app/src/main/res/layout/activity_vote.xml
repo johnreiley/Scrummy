@@ -20,7 +20,7 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
-        android:id="@+id/_TextView"
+        android:id="@+id/_voteTitleTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -46,6 +46,6 @@
         app:layout_constraintBottom_toTopOf="@+id/_startButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/_TextView" />
+        app:layout_constraintTop_toBottomOf="@+id/_voteTitleTextView" />
 
 </android.support.constraint.ConstraintLayout>
