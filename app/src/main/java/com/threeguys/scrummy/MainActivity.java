@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
     public static final String MAIN_TAG = MainActivity.class.getSimpleName();
 
 
-    Dialog titleDialog;
+    AlertDialog titleDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,21 +67,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
-                Log.d(MAIN_TAG, "dialogTitle == " + dialogTitle.getText());
-
-                if (dialogTitle.getText().toString().equals("")) {
-                    Toast.makeText(getApplicationContext(),
-                            "Please enter a session title before continuing",
-                            Toast.LENGTH_SHORT).show();
-                } else {
-                    Intent newIntent = new Intent(MainActivity.this, TopicActivity.class);
-                    newIntent.putExtra(SESSION_TITLE_KEY, dialogTitle.getText().toString());
-                    Session session = new Session();
-                    Gson gson = new Gson();
-                    String sessionJson = gson.toJson(session, Session.class);
-                    newIntent.putExtra(SESSION_KEY, sessionJson);
-                    startActivity(newIntent);
-                }
             }
         });
 
@@ -101,6 +87,29 @@ public class MainActivity extends AppCompatActivity {
 
         titleDialog = alertBuilder.create();
         titleDialog.show();
+
+        titleDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Log.d(MAIN_TAG, "dialogTitle == " + dialogTitle.getText());
+
+                if (TextUtils.isEmpty(dialogTitle.getText().toString())) {
+                    Toast.makeText(getApplicationContext(),
+                            "Please enter a session title before continuing",
+                            Toast.LENGTH_SHORT).show();
+                } else {
+                    Intent newIntent = new Intent(MainActivity.this, TopicActivity.class);
+                    newIntent.putExtra(SESSION_TITLE_KEY, dialogTitle.getText().toString());
+                    Session session = new Session();
+                    Gson gson = new Gson();
+                    String sessionJson = gson.toJson(session, Session.class);
+                    newIntent.putExtra(SESSION_KEY, sessionJson);
+                    startActivity(newIntent);
+                    titleDialog.dismiss();
+                }
+            }
+        });
     }
 
     /**
