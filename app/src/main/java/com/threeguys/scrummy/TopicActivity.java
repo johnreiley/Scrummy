@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,7 +39,7 @@ public class TopicActivity extends AppCompatActivity {
     private HashMap<String, List<Topic>> childData;
     private List<String> groupData;
 
-    Dialog addTopicDialogue;
+    AlertDialog addTopicDialogue;
     private TextView sessionTitleHolder;
 
     @Override
@@ -194,21 +195,30 @@ public class TopicActivity extends AppCompatActivity {
         final EditText name = v.findViewById(R.id._nameInputEditText);
         final Spinner category = v.findViewById(R.id._categoryInputSpinner);
 
-        alertBuilder.setCancelable(true).setPositiveButton("Add Topic", new DialogInterface.OnClickListener() {
+        alertBuilder.setCancelable(true).setPositiveButton(
+                "Add Topic",
+                new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                onClickFinishInput(topic, name, category);
             }
         });
 
         addTopicDialogue = alertBuilder.create();
         addTopicDialogue.show();
+        addTopicDialogue.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(
+                new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onClickFinishInput(topic, name, category);
+            }
+        });
     }
 
     public void onClickFinishInput(EditText topicET, EditText nameET, Spinner categoryS) {
         Log.d(TOPIC_TAG, "entered onclick");
         // first make sure the text inputs aren't empty
-        if (topicET.getText().toString().equals("") || nameET.getText().toString().equals("")) {
+        if (TextUtils.isEmpty(topicET.getText().toString()) ||
+                TextUtils.isEmpty(nameET.getText().toString())) {
             Toast.makeText(this,
                     "Enter both a title and name before adding a new topic",
                     Toast.LENGTH_SHORT).show();
@@ -231,6 +241,8 @@ public class TopicActivity extends AppCompatActivity {
 
             session.addTopic(topic);
             Log.d(TOPIC_TAG, "topic added");
+
+            addTopicDialogue.dismiss();
 
             refreshAdapter();
             Log.d(TOPIC_TAG, "adapter refreshed");
