@@ -27,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
     static final String SESSION_LIST_KEY = "session_list_key"; // used for storing session list
     static final String CONTINUE_KEY = "continue_key"; // used for accessing temp session
     static final String ACTIVITY_KEY = "activity_key"; // used for accessing temp session activity
+    static final String INDEX_KEY = "index_key"; // used for loading correct topic in sprint activity
     public static final String MAIN_TAG = MainActivity.class.getSimpleName();
 
 
@@ -120,7 +121,7 @@ public class MainActivity extends AppCompatActivity {
         // access the session string in shared preferences
         SharedPreferences spTemp = this.getSharedPreferences(TEMP_SAVE_PREF, MODE_PRIVATE);
         String sessionJson = spTemp.getString(CONTINUE_KEY, "no session");
-
+        String index = spTemp.getString(INDEX_KEY, "0");
         // turn the string into a Session object with Gson
         Gson gson = new Gson();
         Session continueSession = gson.fromJson(sessionJson, Session.class);
@@ -145,6 +146,7 @@ public class MainActivity extends AppCompatActivity {
                     // if there is data, call the Sprint activity and pass the session string
                     Intent sprintIntent = new Intent(this, SprintActivity.class);
                     sprintIntent.putExtra(SESSION_KEY, sessionJson);
+                    sprintIntent.putExtra(INDEX_KEY, index);
                     startActivity(sprintIntent);
                     break;
                 default:

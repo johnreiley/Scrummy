@@ -22,6 +22,7 @@ import java.util.Date;
 
 import static com.threeguys.scrummy.MainActivity.ACTIVITY_KEY;
 import static com.threeguys.scrummy.MainActivity.CONTINUE_KEY;
+import static com.threeguys.scrummy.MainActivity.INDEX_KEY;
 import static com.threeguys.scrummy.MainActivity.SESSION_KEY;
 import static com.threeguys.scrummy.MainActivity.TEMP_SAVE_PREF;
 
@@ -55,7 +56,14 @@ public class SprintActivity extends AppCompatActivity {
         // prioritize the topics by highest vote
         session.sortByVote();
 
-        topicNumber = 0;
+        Log.i(SPRINT_TAG, "find out the index of the topic to load first");
+        String index = (String)getIntent().getExtras().get(INDEX_KEY);
+        if (Integer.valueOf(index) < 0) {
+            Log.e(SPRINT_TAG, "WOAH!! INDEX is less than 0 ya'll.  " +
+                    "Something done been messed up!");
+            return;
+        }
+        topicNumber = Integer.valueOf(index);
 
         playPause = findViewById(R.id._playPauseTimeButton);
         toggleAlarm = findViewById(R.id._alarmButton);
@@ -87,6 +95,7 @@ public class SprintActivity extends AppCompatActivity {
             SharedPreferences.Editor editor = sp.edit();
             editor.putString(CONTINUE_KEY, sessionJson);
             editor.putString(ACTIVITY_KEY, activityJson);
+            editor.putString(INDEX_KEY, String.valueOf(topicNumber));
             editor.apply();
         }
     }
