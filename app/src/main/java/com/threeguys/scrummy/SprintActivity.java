@@ -44,7 +44,6 @@ public class SprintActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sprint);
         Log.i(SPRINT_TAG, "SprintActivity Started");
