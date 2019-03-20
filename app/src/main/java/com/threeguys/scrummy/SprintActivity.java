@@ -56,6 +56,7 @@ public class SprintActivity extends AppCompatActivity {
         session.sortByVote();
 
         Log.i(SPRINT_TAG, "find out the index of the topic to load first");
+
         String index = (String)getIntent().getExtras().get(INDEX_KEY);
         if (Integer.valueOf(index) < 0) {
             Log.e(SPRINT_TAG, "WOAH!! INDEX is less than 0 ya'll.  " +

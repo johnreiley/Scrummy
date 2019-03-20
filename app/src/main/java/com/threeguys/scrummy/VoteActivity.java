@@ -19,6 +19,8 @@ import java.util.List;
 
 import static com.threeguys.scrummy.MainActivity.ACTIVITY_KEY;
 import static com.threeguys.scrummy.MainActivity.CONTINUE_KEY;
+import static com.threeguys.scrummy.MainActivity.INDEX_KEY;
+import static com.threeguys.scrummy.MainActivity.SESSION_KEY;
 import static com.threeguys.scrummy.MainActivity.TEMP_SAVE_PREF;
 
 public class VoteActivity extends AppCompatActivity {
@@ -38,7 +40,7 @@ public class VoteActivity extends AppCompatActivity {
         setContentView(R.layout.activity_vote);
         Log.i(VOTE_TAG, "VoteActivity Started");
 
-        String sessionJson = (String)getIntent().getExtras().get(MainActivity.SESSION_KEY);
+        String sessionJson = (String)getIntent().getExtras().get(SESSION_KEY);
         Gson gson = new Gson();
         session = gson.fromJson(sessionJson, Session.class);
         session.sortByCategory();
@@ -82,7 +84,8 @@ public class VoteActivity extends AppCompatActivity {
         String sessionJson = gson.toJson(session);
 
         // add the session string to the intent
-        sprintIntent.putExtra(MainActivity.SESSION_KEY, sessionJson);
+        sprintIntent.putExtra(SESSION_KEY, sessionJson);
+        sprintIntent.putExtra(INDEX_KEY, "0");
         startActivity(sprintIntent);
     }
 
