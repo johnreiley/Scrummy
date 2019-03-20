@@ -2,6 +2,10 @@ package com.threeguys.scrummy;
 
 import android.util.Log;
 
+/**
+ * This class represents a single topic of discussion as part of a retrospective meeting which is a
+ * part of the Scrum Software Development Methodology.
+ */
 public class Topic {
 
     private String title;
@@ -10,6 +14,9 @@ public class Topic {
     private Category category;
     private int votes;
 
+    /**
+     *
+     */
     public enum Category {GOOD, NEUTRAL, BAD}
 
     Topic() {

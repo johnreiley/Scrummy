@@ -7,6 +7,10 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+/**
+ * This class represents a single retrospective meeting as a part of the Scrum Software Development
+ * Methodology.
+ */
 public class Session {
 
     private static final String SESSION_TAG = Session.class.getSimpleName();
@@ -14,11 +18,17 @@ public class Session {
     private String title;
     private String date;
 
+    /**
+     * The default constructor creates an empty list of topics and sets the date to "".
+     */
     Session(){
         this.topics = new ArrayList<>();
         date = "";
     }
 
+    /**
+     * Sorts all the topics by the number of votes they all have from highest to lowest count.
+     */
     public void sortByVote(){
         Collections.sort(topics, new Comparator<Topic>() {
             @Override public int compare(Topic t1, Topic t2) {
@@ -27,6 +37,9 @@ public class Session {
         });
     }
 
+    /**
+     * Sorts all the topics by their category giving preference to bad, then neutral, then good.
+     */
     public void sortByCategory() {
         List<Topic> temp = new ArrayList<>();
         temp.addAll(getBadTopics());
@@ -66,7 +79,7 @@ public class Session {
     }
 
     /**
-     * finds all of the good topics in the topics list
+     * Finds all of the good topics in the topics list.
      * @return tl, a list of good topics
      */
     public List<Topic> getGoodTopics() {
@@ -82,7 +95,7 @@ public class Session {
     }
 
     /**
-     * finds all of the neutral topics in the topics list
+     * Finds all of the neutral topics in the topics list.
      * @return tl, a list of neutral topics
      */
     public List<Topic> getNeutralTopics() {
@@ -98,8 +111,8 @@ public class Session {
     }
 
     /**
-     * finds all of the bad topics in the topics list
-     * @return tl, a list of bad topics
+     * Finds all of the bad topics in the topics list
+     * @return tl, a list of bad topics.
      */
     public List<Topic> getBadTopics() {
 
@@ -113,7 +126,12 @@ public class Session {
         return tl;
     }
 
-    public void updateTopic(int position, Topic t) {
-        topics.set(position, t);
+    /**
+     * Replaces the topic at the given position with the given topic.
+     * @param position, The index of the topic in the array of topics.
+     * @param topic, The topic with the updated data.
+     */
+    public void updateTopic(int position, Topic topic) {
+        topics.set(position, topic);
     }
 }
