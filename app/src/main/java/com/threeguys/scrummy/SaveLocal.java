@@ -29,7 +29,6 @@ public class SaveLocal extends Save {
         sessionList.addSession(session);
         String sessionListJson = gson.toJson(sessionList);
 
-        Log.d(SAVELOCAL_TAG, "SaveContext is an instance of SprintActivity");
         SharedPreferences sp = getSaveContext().getSharedPreferences(SAVE_PREF, MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         editor.putString(SESSION_LIST_KEY, sessionListJson);

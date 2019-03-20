@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "973162981055",
+    "firebase_url": "https://scrummyretro.firebaseio.com",
+    "project_id": "scrummyretro",
+    "storage_bucket": "scrummyretro.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:973162981055:android:d952d754da695559",
+        "android_client_info": {
+          "package_name": "com.threeguys.scrummy"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "973162981055-l82pqa2grghgvh17lb12ek4dknmvbstg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.threeguys.scrummy",
+            "certificate_hash": "e53cc46c03a6d950bef8baf7bb1eb2d1c886b0a5"
+          }
+        },
+        {
+          "client_id": "973162981055-75nimgldnvho66d8md48plna6mv8ppje.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAWTyju_yFdGStti2jtf0fTyaepUUMz0Bk"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "973162981055-75nimgldnvho66d8md48plna6mv8ppje.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
