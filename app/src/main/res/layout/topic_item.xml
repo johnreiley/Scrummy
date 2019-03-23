@@ -1,20 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/_threeDotMenuTextView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:text="@string/three_dot_menu"
+        android:textAppearance="@style/TextAppearance.AppCompat"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toBottomOf="@+id/_deleteImageButton"
+        app:layout_constraintEnd_toEndOf="@+id/_deleteImageButton"
+        app:layout_constraintStart_toStartOf="@+id/_deleteImageButton"
+        app:layout_constraintTop_toTopOf="@+id/_deleteImageButton" />
 
     <ImageButton
         android:id="@+id/_deleteImageButton"
         android:layout_width="48dp"
-        android:layout_height="56dp"
-        android:layout_marginTop="8dp"
+        android:layout_height="0dp"
         android:layout_marginEnd="8dp"
         android:background="@android:color/transparent"
         android:contentDescription="@string/sessionviewpopupmenu"
-        android:src="@drawable/delete_icon"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -23,7 +35,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="4dp"
         android:text="@string/topic_title"
         android:textSize="18sp"
         android:textStyle="bold"
@@ -34,8 +46,10 @@
         android:id="@+id/_topicItemUsernameTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginBottom="4dp"
         android:text="@string/topic_username"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="@+id/_topicItemTitleTextView"
         app:layout_constraintTop_toBottomOf="@+id/_topicItemTitleTextView" />
 

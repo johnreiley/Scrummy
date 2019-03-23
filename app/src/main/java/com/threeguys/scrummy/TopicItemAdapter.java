@@ -1,8 +1,10 @@
 package com.threeguys.scrummy;
 
 import android.content.Context;
+import android.support.v7.widget.PopupMenu;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
@@ -105,7 +107,7 @@ public class TopicItemAdapter extends BaseExpandableListAdapter{
 
         TextView titleTextView = convertView.findViewById(R.id._topicItemTitleTextView);
         TextView usernameTextView = convertView.findViewById(R.id._topicItemUsernameTextView);
-        ImageButton deleteButton = convertView.findViewById(R.id._deleteImageButton);
+        final ImageButton deleteButton = convertView.findViewById(R.id._deleteImageButton);
 
         titleTextView.setText(topic.getTitle());
         usernameTextView.setText(topic.getUsername());
@@ -113,9 +115,27 @@ public class TopicItemAdapter extends BaseExpandableListAdapter{
         deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(context instanceof TopicActivity) {
-                    ((TopicActivity) context).onClickDelete(groupPosition, childPosition);
-                }
+                //Open the pop up menu
+                PopupMenu popup = new PopupMenu((TopicActivity)context, deleteButton);
+                popup.inflate(R.menu.topic_item_popup);
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem menuItem) {
+                        switch (menuItem.getItemId()) {
+                            case R.id._editPopUpItem:
+                                if(context instanceof TopicActivity)
+                                    ((TopicActivity)context).onClickEditTopic(groupPosition, childPosition);
+                                return true;
+                            case R.id._deleteTopicPopUpItem:
+                                if(context instanceof TopicActivity)
+                                    ((TopicActivity)context).onClickDelete(groupPosition, childPosition);
+                                return true;
+                            default:
+                                return false;
+                        }
+                    }
+                });
+                popup.show();
             }
         });
 

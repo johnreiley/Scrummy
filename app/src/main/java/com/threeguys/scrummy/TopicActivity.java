@@ -1,7 +1,6 @@
 package com.threeguys.scrummy;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -14,7 +13,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
-import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -212,6 +210,119 @@ public class TopicActivity extends AppCompatActivity {
                 onClickFinishInput(topic, name, category);
             }
         });
+    }
+
+    public void onClickEditTopic(int category, final int index) {
+        Log.d(TOPIC_TAG, "entered onclick edit topic");
+        List<Topic> tl;
+        switch(category) {
+            case 0:
+                tl = session.getGoodTopics();
+                break;
+            case 1:
+                tl = session.getNeutralTopics();
+                break;
+            case 2:
+                tl = session.getBadTopics();
+                break;
+            default:
+                tl = new ArrayList<>();
+                Toast.makeText(this,
+                        "Can't find the Category this topic is in.", Toast.LENGTH_SHORT).show();
+                break;
+        }
+
+        if (tl.size() <= index) {
+            Toast.makeText(this,
+                    "Can't find the Topic to add a vote to.", Toast.LENGTH_SHORT).show();
+        }
+        else {
+            Log.i("Add Vote", "Found correct topic: " + tl.get(index).getTitle());
+
+            int position = index;
+            switch (category) {
+                case 0:
+                    position += session.getNeutralTopics().size();
+                case 1:
+                    position += session.getBadTopics().size();
+                    break;
+                case 2:
+                default:
+                    break;
+            }
+
+
+            View v = (LayoutInflater.from(this)).inflate(R.layout.add_topic, null);
+
+            AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
+            alertBuilder.setView(v);
+
+            final EditText topic = v.findViewById(R.id._topicInputEditText);
+            final EditText name = v.findViewById(R.id._nameInputEditText);
+            final Spinner categoryS = v.findViewById(R.id._categoryInputSpinner);
+
+            Topic t = session.getTopics().get(position);
+
+            topic.setText(t.getTitle());
+            name.setText(t.getUsername());
+            switch (t.getCategory()) {
+                case GOOD:
+                    categoryS.setSelection(0);
+                    break;
+                case NEUTRAL:
+                    categoryS.setSelection(1);
+                    break;
+                case BAD:
+                    categoryS.setSelection(2);
+                    break;
+                default:
+                    categoryS.setSelection(0);
+                    break;
+            }
+
+            alertBuilder.setCancelable(true).setPositiveButton(
+                    "Edit Topic",
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                        }
+                    });
+
+            addTopicDialogue = alertBuilder.create();
+            addTopicDialogue.show();
+            final int finalPosition = position;
+            addTopicDialogue.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(
+                    new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            onClickEditFinish(topic, name, categoryS, finalPosition);
+                        }
+                    });
+        }
+    }
+
+    public void onClickEditFinish(EditText topicET, EditText nameET, Spinner categoryS, int position) {
+        Topic t = session.getTopics().get(position);
+        t.setTitle(topicET.getText().toString());
+        t.setUsername(nameET.getText().toString());
+
+        Topic.Category c = Topic.Category.NEUTRAL;
+        if (categoryS.getSelectedItemPosition() == 0) {
+            c = Topic.Category.GOOD;
+        } else if (categoryS.getSelectedItemPosition() == 1) {
+            c = Topic.Category.NEUTRAL;
+        } else if (categoryS.getSelectedItemPosition() == 2) {
+            c = Topic.Category.BAD;
+        }
+
+        t.setCategory(c);
+
+        session.updateTopic(position, t);
+        session.sortByCategory();
+
+        addTopicDialogue.dismiss();
+
+        refreshAdapter();
     }
 
     public void onClickFinishInput(EditText topicET, EditText nameET, Spinner categoryS) {

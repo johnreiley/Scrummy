@@ -56,4 +56,5 @@
     <string name="toggle_alarm">Toggle Alarm</string>
     <string name="dialog_new_name">Name the new session</string>
     <string name="dialog_new_topic">New Topic</string>
+    <string name="edit">Edit</string>
 </resources>
