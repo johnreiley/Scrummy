@@ -131,41 +131,45 @@ public class SprintActivity extends AppCompatActivity {
 
         if (topicNumber >= session.getTopics().size()) {
             // No more topics, save and quit
-            Log.d(SPRINT_TAG, "Topic # == " + topicNumber +
-                    "| getTopics.size() == " + session.getTopics().size());
-
-            // get the date
-            Date date = new Date();
-            String strDateFormat = "yyyy/MM/dd a hh:mm:ss";
-            DateFormat dateFormat = new SimpleDateFormat(strDateFormat);
-            String formattedDate= dateFormat.format(date);
-
-            // DEBUGGING
-            Log.d(SPRINT_TAG, "DATE = " + formattedDate);
-
-            // assign date to session date
-            session.setDate(formattedDate);
-
-            // save in SharedPreferences
-            Save save = new SaveLocal(getApplicationContext());
-            save.save(session);
-
-            Log.i(SPRINT_TAG, "Session saved");
-
-            // clear the temp file
-            SharedPreferences sp = this.getSharedPreferences(TEMP_SAVE_PREF, MODE_PRIVATE);
-            sp.edit().clear().apply();
-
-            Log.i(SPRINT_TAG, "Temporary files cleared");
-
-            // go back to the main menu
-            Intent mainIntent = new Intent(this, MainActivity.class);
-            startActivity(mainIntent);
+            saveAndQuit();
         } else {
             setupNextTopic();
             timeRemaining = 300000;
             refreshTimer();
         }
+    }
+
+    private void saveAndQuit() {
+        Log.d(SPRINT_TAG, "Topic # == " + topicNumber +
+                "| getTopics.size() == " + session.getTopics().size());
+
+        // get the date
+        Date date = new Date();
+        String strDateFormat = "yyyy/MM/dd a hh:mm:ss";
+        DateFormat dateFormat = new SimpleDateFormat(strDateFormat);
+        String formattedDate= dateFormat.format(date);
+
+        // DEBUGGING
+        Log.d(SPRINT_TAG, "DATE = " + formattedDate);
+
+        // assign date to session date
+        session.setDate(formattedDate);
+
+        // save in SharedPreferences
+        Save save = new SaveCloud(getApplicationContext());
+        save.save(session);
+
+        Log.i(SPRINT_TAG, "Session saved");
+
+        // clear the temp file
+        SharedPreferences sp = this.getSharedPreferences(TEMP_SAVE_PREF, MODE_PRIVATE);
+        sp.edit().clear().apply();
+
+        Log.i(SPRINT_TAG, "Temporary files cleared");
+
+        // go back to the main menu
+        Intent mainIntent = new Intent(this, MainActivity.class);
+        startActivity(mainIntent);
     }
 
     /**

@@ -30,6 +30,10 @@ public class MainActivity extends AppCompatActivity {
     static final String INDEX_KEY = "index_key"; // used for loading correct topic in sprint activity
     public static final String MAIN_TAG = MainActivity.class.getSimpleName();
 
+    // ------- TEST STRINGS ------- //
+    static final String USERNAME = "username"; // used for fetching and saving the user's data file
+
+
 
     AlertDialog titleDialog;
 

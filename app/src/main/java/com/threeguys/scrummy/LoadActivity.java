@@ -2,26 +2,25 @@ package com.threeguys.scrummy;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.ClipData;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.Build;
-import android.support.annotation.RequiresApi;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -30,27 +29,77 @@ import java.util.Comparator;
 import java.util.List;
 
 import static com.threeguys.scrummy.MainActivity.SESSION_KEY;
+import static com.threeguys.scrummy.MainActivity.USERNAME;
 
 public class LoadActivity extends AppCompatActivity {
 
-    public static final String LOADACTIVITY_TAG = LoadActivity.class.getSimpleName();
+    public static final String LOAD_ACTIVITY_TAG = LoadActivity.class.getSimpleName();
 
     List<Session> sessions;
     private RecyclerView recyclerView;
     private LoadSessionItemAdapter adapter;
+    private String userSessions;
+    private SessionList sessionsList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_load);
-        Log.i(LOADACTIVITY_TAG, "LoadActivity Started");
+        Log.i(LOAD_ACTIVITY_TAG, "LoadActivity Started");
 
-        Load loader = new LoadLocal();
-        sessions = loader.load(getApplicationContext()).getList();
-        orderSessionsByDate();
-        Log.i(LOADACTIVITY_TAG, "LoadActivity Data Loaded and ordered");
+//        Load loader = new LoadCloud();
+//        sessions = loader.load(getApplicationContext()).getList();
 
-        refreshAdapter();
+        // -----------------------------------------------------------------------------------------
+        sessionsList = new SessionList();
+        sessions = new ArrayList<>();
+
+        final Gson gson = new Gson();
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageRef = storage.getReference();
+        StorageReference userDataRef = storageRef.child("/users/" + USERNAME + ".txt");
+
+        // just the default value the app can handle
+        final long ONE_MEGABYTE = 1024 * 1024;
+        userDataRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+            @Override
+            public void onSuccess(byte[] bytes) {
+                // Data for "images/island.jpg" is returns, use this as needed
+                String data = new String(bytes);
+                Log.d(LOAD_ACTIVITY_TAG, data);
+                userSessions = data;
+                Log.d(LOAD_ACTIVITY_TAG, "userSessions == " + userSessions);
+
+                Log.d(LOAD_ACTIVITY_TAG, "The variable \'userSessions\' == " + userSessions);
+
+                // If nothing was found
+                if (!TextUtils.isEmpty(userSessions)) {
+                    sessionsList = gson.fromJson(userSessions, SessionList.class);
+                }
+
+                Log.i(LOAD_ACTIVITY_TAG, "Loaded Sessions");
+                Log.d(LOAD_ACTIVITY_TAG, "Size of sessionList == " +
+                        String.valueOf(sessionsList.getList().size()));
+
+                sessions = sessionsList.getList();
+                orderSessionsByDate();
+                LoadActivity.this.findViewById(R.id._loadProgress).setVisibility(View.GONE);
+                LoadActivity.this.refreshAdapter();
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle any errors
+            }
+        });
+        // -----------------------------------------------------------------------------------------
+
+//        Log.d(LOAD_ACTIVITY_TAG, "sessions.size() == " + sessions.size());
+//
+//        orderSessionsByDate();
+//        Log.i(LOAD_ACTIVITY_TAG, "LoadActivity Data Loaded and ordered");
+
+//        refreshAdapter();
     }
 
     private void orderSessionsByDate() {
@@ -89,7 +138,7 @@ public class LoadActivity extends AppCompatActivity {
 
     public void onClickDelete(int position) {
         sessions.remove(position);
-        Save save = new SaveLocal(getApplicationContext());
+        Save save = new SaveCloud(getApplicationContext()); //Local(getApplicationContext());
         save.update(sessions);
         refreshAdapter();
     }
