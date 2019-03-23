@@ -97,6 +97,21 @@ public class SaveCloud extends Save {
 
     @Override
     public void update(List<Session> list) {
-        // TODO: implement SaveCloud's update()!
+
+        final Gson gson = new Gson();
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference userDataRef = storage.getReference().child("/users/" + USERNAME + ".txt");
+
+        sessionList = new SessionList();
+        sessionList.setList(list);
+        String sessionListJson = gson.toJson(sessionList, SessionList.class);
+
+        Log.d(SAVE_CLOUD_TAG, "The variable sessionListJson == " + sessionListJson);
+
+        // upload to Firebase
+        byte sessionBytes[] = sessionListJson.getBytes();
+        String path = "users/" + USERNAME + ".txt"; // this will be implemented to use the username to name the file
+
+        UploadTask uploadTask = userDataRef.putBytes(sessionBytes);
     }
 }
