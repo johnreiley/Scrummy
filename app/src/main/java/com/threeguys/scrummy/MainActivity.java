@@ -10,6 +10,8 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -51,6 +53,30 @@ public class MainActivity extends AppCompatActivity {
             Button continueButton = findViewById(R.id._continueSessionButton);
             continueButton.setVisibility(View.GONE);
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main_activity, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id._aboutMenuItem:
+                Toast.makeText(getApplicationContext(),
+                        "About menu item selected.",
+                        Toast.LENGTH_SHORT).show();
+                return true;
+            case R.id._settingsMenuItem:
+                Toast.makeText(getApplicationContext(),
+                        "Settings menu item selected.",
+                        Toast.LENGTH_SHORT).show();
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     /**
