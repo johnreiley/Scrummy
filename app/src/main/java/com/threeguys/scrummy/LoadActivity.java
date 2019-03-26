@@ -23,6 +23,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.gson.Gson;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -47,52 +48,11 @@ public class LoadActivity extends AppCompatActivity {
         setContentView(R.layout.activity_load);
         Log.i(LOAD_ACTIVITY_TAG, "LoadActivity Started");
 
-//        Load loader = new LoadCloud();
+        WeakReference<LoadActivity> reference = new WeakReference<>(this);
+
+       Load loader = new LoadCloud(reference,"Username");
+       loader.load(this);
 //        sessions = loader.load(getApplicationContext()).getList();
-
-        // -----------------------------------------------------------------------------------------
-        sessionsList = new SessionList();
-        sessions = new ArrayList<>();
-
-        final Gson gson = new Gson();
-        FirebaseStorage storage = FirebaseStorage.getInstance();
-        StorageReference storageRef = storage.getReference();
-        StorageReference userDataRef = storageRef.child("/users/" + USERNAME + ".txt");
-
-        // just the default value the app can handle
-        final long ONE_MEGABYTE = 1024 * 1024;
-        userDataRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-            @Override
-            public void onSuccess(byte[] bytes) {
-                // Data for "images/island.jpg" is returns, use this as needed
-                String data = new String(bytes);
-                Log.d(LOAD_ACTIVITY_TAG, data);
-                userSessions = data;
-                Log.d(LOAD_ACTIVITY_TAG, "userSessions == " + userSessions);
-
-                Log.d(LOAD_ACTIVITY_TAG, "The variable \'userSessions\' == " + userSessions);
-
-                // If nothing was found
-                if (!TextUtils.isEmpty(userSessions)) {
-                    sessionsList = gson.fromJson(userSessions, SessionList.class);
-                }
-
-                Log.i(LOAD_ACTIVITY_TAG, "Loaded Sessions");
-                Log.d(LOAD_ACTIVITY_TAG, "Size of sessionList == " +
-                        String.valueOf(sessionsList.getList().size()));
-
-                sessions = sessionsList.getList();
-                orderSessionsByDate();
-                LoadActivity.this.findViewById(R.id._loadProgress).setVisibility(View.GONE);
-                LoadActivity.this.refreshAdapter();
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception exception) {
-                // Handle any errors
-            }
-        });
-        // -----------------------------------------------------------------------------------------
 
 //        Log.d(LOAD_ACTIVITY_TAG, "sessions.size() == " + sessions.size());
 //
@@ -102,7 +62,7 @@ public class LoadActivity extends AppCompatActivity {
 //        refreshAdapter();
     }
 
-    private void orderSessionsByDate() {
+    public void orderSessionsByDate() {
             Collections.sort(sessions, new Comparator<Session>() {
                 @Override
                 public int compare(Session o1, Session o2) {
@@ -122,7 +82,7 @@ public class LoadActivity extends AppCompatActivity {
         startActivity(viewIntent);
     }
 
-    private void refreshAdapter() {
+    public void refreshAdapter() {
         if(adapter == null) {
             adapter = new LoadSessionItemAdapter(this, sessions);
             recyclerView = findViewById(R.id._loadSessionRecyclerView);

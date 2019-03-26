@@ -1,21 +1,21 @@
 package com.threeguys.scrummy;
 
 import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.View;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.gson.Gson;
 
-import java.util.List;
+import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 
+import static com.threeguys.scrummy.LoadActivity.LOAD_ACTIVITY_TAG;
 import static com.threeguys.scrummy.MainActivity.USERNAME;
 
 
@@ -28,15 +28,23 @@ public class LoadCloud implements Load {
     public static final String LOAD_CLOUD_TAG = LoadCloud.class.getSimpleName();
     private String userSessions;
     private SessionList sessions;
+    private WeakReference<LoadActivity> loadWeakRef;
+    private String username;
 
     public LoadCloud() {
+
+    }
+
+    public LoadCloud(WeakReference<LoadActivity> loadActivityWeakReference, String username) {
+        this.loadWeakRef = loadActivityWeakReference;
+        this.username = username;
     }
 
     @Override
     public SessionList load(Context context) {
+
         sessions = new SessionList();
 
-        // Grab the JSON object related to our list of sessions from SharedPreferences.
         final Gson gson = new Gson();
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageRef = storage.getReference();
@@ -50,8 +58,8 @@ public class LoadCloud implements Load {
                 // Data for "images/island.jpg" is returns, use this as needed
                 String data = new String(bytes);
                 Log.d(LOAD_CLOUD_TAG, data);
-                LoadCloud.this.userSessions = data;
-                Log.d(LOAD_CLOUD_TAG, "userSessions == " + LoadCloud.this.userSessions);
+                userSessions = data;
+                Log.d(LOAD_CLOUD_TAG, "userSessions == " + userSessions);
 
                 Log.d(LOAD_CLOUD_TAG, "The variable \'userSessions\' == " + userSessions);
 
@@ -60,16 +68,14 @@ public class LoadCloud implements Load {
                     sessions = gson.fromJson(userSessions, SessionList.class);
                 }
 
-                Log.i("LoadLocal", "Loaded Sessions");
+                Log.i(LOAD_CLOUD_TAG, "Loaded Sessions");
                 Log.d(LOAD_CLOUD_TAG, "Size of sessionList == " +
                         String.valueOf(sessions.getList().size()));
 
-                // GET THIS WORKING!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-
-
-                // consider using a callback function (putting a bunch of SaveCloud's functionality
-                // inside a separate class.
+                loadWeakRef.get().sessions = sessions.getList();
+                loadWeakRef.get().orderSessionsByDate();
+                loadWeakRef.get().findViewById(R.id._loadProgress).setVisibility(View.GONE);
+                loadWeakRef.get().refreshAdapter();
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -77,9 +83,6 @@ public class LoadCloud implements Load {
                 // Handle any errors
             }
         });
-
-
-
 
         return sessions;
     }
