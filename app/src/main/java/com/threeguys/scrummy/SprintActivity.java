@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 
+import java.lang.ref.WeakReference;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -149,14 +150,20 @@ public class SprintActivity extends AppCompatActivity {
         DateFormat dateFormat = new SimpleDateFormat(strDateFormat);
         String formattedDate= dateFormat.format(date);
 
-        // DEBUGGING
         Log.d(SPRINT_TAG, "DATE = " + formattedDate);
 
-        // assign date to session date
         session.setDate(formattedDate);
 
-        // save in SharedPreferences
-        Save save = new SaveCloud(getApplicationContext());
+        findViewById(R.id._loadProgress).setVisibility(View.VISIBLE);
+        findViewById(R.id._nextTopicButton).setEnabled(false);
+        findViewById(R.id._prevTopicButton).setEnabled(false);
+        findViewById(R.id._stopTimeButton).setEnabled(false);
+        findViewById(R.id._resetTimeButton).setEnabled(false);
+        findViewById(R.id._playPauseTimeButton).setEnabled(false);
+        findViewById(R.id._actionsMultiAutoCompleteTextView).setEnabled(false);
+        playPause(findViewById(R.id._playPauseTimeButton));
+
+        Save save = new SaveCloud(new WeakReference<>(this));
         save.save(session);
 
         Log.i(SPRINT_TAG, "Session saved");
@@ -168,8 +175,8 @@ public class SprintActivity extends AppCompatActivity {
         Log.i(SPRINT_TAG, "Temporary files cleared");
 
         // go back to the main menu
-        Intent mainIntent = new Intent(this, MainActivity.class);
-        startActivity(mainIntent);
+        //Intent mainIntent = new Intent(this, MainActivity.class);
+        //startActivity(mainIntent);
     }
 
     /**
