@@ -224,6 +224,7 @@ public class SprintActivity extends AppCompatActivity {
 
         session.setDate(formattedDate);
 
+        timer.cancel();
         findViewById(R.id._loadProgress).setVisibility(View.VISIBLE);
         findViewById(R.id._nextTopicButton).setEnabled(false);
         findViewById(R.id._prevTopicButton).setEnabled(false);
@@ -232,7 +233,6 @@ public class SprintActivity extends AppCompatActivity {
         findViewById(R.id._playPauseTimeButton).setEnabled(false);
         findViewById(R.id._actionsMultiAutoCompleteTextView).setEnabled(false);
         findViewById(R.id._changeTimeMenuItem).setEnabled(false);
-        timer.cancel();
 
         Save save = new SaveCloud(new WeakReference<>(this));
         save.save(session);

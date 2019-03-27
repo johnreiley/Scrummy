@@ -38,7 +38,6 @@ public class TopicActivity extends AppCompatActivity {
     private List<String> groupData;
 
     AlertDialog addTopicDialogue;
-    private TextView sessionTitleHolder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,13 +48,16 @@ public class TopicActivity extends AppCompatActivity {
         String sessionTitle = (String)getIntent().getExtras().get(MainActivity.SESSION_TITLE_KEY);
         Log.d(TOPIC_TAG, "Obtained new session title: " + sessionTitle);
 
-        sessionTitleHolder = findViewById(R.id._topicEntryTextView);
+        TextView sessionTitleHolder = findViewById(R.id._topicEntryTextView);
 
         String sessionJson = (String) getIntent().getExtras().get(MainActivity.SESSION_KEY);
         Gson gson = new Gson();
         session = gson.fromJson(sessionJson, Session.class);
-        session.setTitle(sessionTitle);
-        sessionTitleHolder.setText(sessionTitle);
+
+        if (sessionTitle != null) {
+            session.setTitle(sessionTitle);
+        }
+        sessionTitleHolder.setText(session.getTitle());
 
         groupData = new ArrayList<>(); // new change
         groupData.add("Good");
@@ -96,18 +98,19 @@ public class TopicActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        //if (session.getTopics().size() > 0) {
-            SharedPreferences sp = this.getSharedPreferences(TEMP_SAVE_PREF, MODE_PRIVATE);
-            Gson gson = new Gson();
+        SharedPreferences sp = this.getSharedPreferences(TEMP_SAVE_PREF, MODE_PRIVATE);
+        Gson gson = new Gson();
 
-            String sessionJson = gson.toJson(session, Session.class);
-            String activityJson = "TopicActivity";
+        String sessionJson = gson.toJson(session, Session.class);
 
-            SharedPreferences.Editor editor = sp.edit();
-            editor.putString(CONTINUE_KEY, sessionJson);
-            editor.putString(ACTIVITY_KEY, activityJson);
-            editor.apply();
-        //}
+        Log.d(TOPIC_TAG, "SESSION TITLE == " + session.getTitle());
+
+        String activityJson = "TopicActivity";
+
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putString(CONTINUE_KEY, sessionJson);
+        editor.putString(ACTIVITY_KEY, activityJson);
+        editor.apply();
     }
 
     /**
