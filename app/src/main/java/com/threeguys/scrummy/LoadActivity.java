@@ -120,7 +120,7 @@ public class LoadActivity extends AppCompatActivity {
                 Session session = sessions.get(position);
                 session.setTitle(dialogTitle.getText().toString());
                 sessions.set(position, session);
-                Save save = new SaveLocal(getApplicationContext());
+                Save save = new SaveCloud();
                 save.update(sessions);
                 refreshAdapter();
             }

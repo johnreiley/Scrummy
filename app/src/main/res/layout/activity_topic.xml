@@ -48,11 +48,11 @@
         android:clickable="true"
         android:focusable="true"
         android:onClick="onClickAddTopic"
-        android:src="@android:drawable/ic_input_add"
-        app:backgroundTint="?attr/actionMenuTextColor"
+        android:src="@drawable/add_icon"
+        app:backgroundTint="@color/colorAccent"
         app:layout_anchorGravity="bottom|right|end"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent" />
         <!--app:src="@drawable/ic_done" -->
 
     <ExpandableListView
