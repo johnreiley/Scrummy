@@ -1,5 +1,7 @@
 package com.threeguys.scrummy;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.MediaPlayer;
@@ -8,11 +10,16 @@ import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 
@@ -38,9 +45,12 @@ public class SprintActivity extends AppCompatActivity {
     private ImageButton toggleAlarm;
     private boolean isMuted;
     private CountDownTimer timer;
+    private long timerDuration;
     private long timeRemaining;
     private TextView time;
     private MediaPlayer mp;
+
+    AlertDialog changeTimeDialogue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,8 +86,68 @@ public class SprintActivity extends AppCompatActivity {
         mp = MediaPlayer.create(getApplicationContext(), Settings.System.DEFAULT_ALARM_ALERT_URI);
         time = findViewById(R.id._timeValueTextView);
         time.setText("5:00");
-        timeRemaining = 300000; //300000 milliseconds is 5 minutes
+        timerDuration = 300000; //300000 milliseconds is 5 minutes
+        timeRemaining = timerDuration + 1000;
         refreshTimer();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_sprint_activity, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id._changeTimeMenuItem) {
+            onClickTimerDuration();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void onClickTimerDuration() {
+        Log.d(SPRINT_TAG, "entered onclick Timer Duration");
+        View v = (LayoutInflater.from(this)).inflate(R.layout.change_timer_duration_dialog, null);
+
+        AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
+        alertBuilder.setView(v);
+
+        final Spinner minute = v.findViewById(R.id._minuteInputSpinner);
+        final Spinner second = v.findViewById(R.id._secondInputSpinner);
+
+        minute.setSelection(Math.round(timerDuration / 60000));
+        second.setSelection(Math.round(timerDuration % 60000 / 1000));
+
+        alertBuilder.setCancelable(true).setPositiveButton(
+                "Update Timer",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                    }
+                });
+
+        changeTimeDialogue = alertBuilder.create();
+        changeTimeDialogue.show();
+        changeTimeDialogue.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        onClickUpdateTime(minute.getSelectedItemPosition(), second.getSelectedItemPosition());
+                    }
+                });
+    }
+
+    private void onClickUpdateTime(int minutes, int seconds) {
+        timerDuration = 0;
+        timerDuration += minutes * 60000;
+        timerDuration += seconds * 1000;
+        timeRemaining = timerDuration + 1000; //Add one second because the timer rounds down.
+        refreshTimer();
+        time.setText(String.format("%01d:%02d", minutes, seconds));
+
+        changeTimeDialogue.dismiss();
     }
 
     @Override
@@ -119,7 +189,7 @@ public class SprintActivity extends AppCompatActivity {
             findViewById(R.id._prevTopicButton).setVisibility(View.GONE);
         }
         */
-        timeRemaining = 300000;
+        timeRemaining = timerDuration + 1000;
         refreshTimer();
     }
 
@@ -135,7 +205,7 @@ public class SprintActivity extends AppCompatActivity {
             saveAndQuit();
         } else {
             setupNextTopic();
-            timeRemaining = 300000;
+            timeRemaining = timerDuration + 1000;
             refreshTimer();
         }
     }
@@ -226,9 +296,11 @@ public class SprintActivity extends AppCompatActivity {
     }
 
     public void rewind(View v) {
-        timeRemaining = 300000;
+        timeRemaining = timerDuration + 1000;
         refreshTimer();
-        time.setText("5:00");
+        int minutes = Math.round(timerDuration / 60000);
+        int seconds = Math.round(timerDuration % 60000 / 1000);
+        time.setText(String.format("%01d:%02d", minutes, seconds));
     }
 
     public void fastForward(View v) {
