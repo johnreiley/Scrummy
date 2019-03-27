@@ -153,14 +153,14 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences spTemp = this.getSharedPreferences(TEMP_SAVE_PREF, MODE_PRIVATE);
         String sessionJson = spTemp.getString(CONTINUE_KEY, "no session");
         String index = spTemp.getString(INDEX_KEY, "0");
+        String activityString = spTemp.getString(ACTIVITY_KEY, "");
         // turn the string into a Session object with Gson
         Gson gson = new Gson();
         Session continueSession = gson.fromJson(sessionJson, Session.class);
         // check to make sure there is data
-        if (continueSession.getTopics().size() > 0) {
-
+        if (continueSession != null && activityString != null) {
             //Which activity?
-            switch (spTemp.getString(ACTIVITY_KEY,"")) {
+            switch (activityString) {
                 case "TopicActivity":
                     // if there is data, call the Sprint activity and pass the session string
                     Intent topicIntent = new Intent(this, TopicActivity.class);
@@ -211,5 +211,10 @@ public class MainActivity extends AppCompatActivity {
             Intent loadIntent = new Intent(this, LoadActivity.class);
             startActivity(loadIntent);
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        // do nothing
     }
 }
