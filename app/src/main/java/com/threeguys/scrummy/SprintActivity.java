@@ -231,6 +231,7 @@ public class SprintActivity extends AppCompatActivity {
         findViewById(R.id._resetTimeButton).setEnabled(false);
         findViewById(R.id._playPauseTimeButton).setEnabled(false);
         findViewById(R.id._actionsMultiAutoCompleteTextView).setEnabled(false);
+        findViewById(R.id._changeTimeMenuItem).setEnabled(false);
         playPause(findViewById(R.id._playPauseTimeButton));
 
         Save save = new SaveCloud(new WeakReference<>(this));
