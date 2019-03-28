@@ -5,7 +5,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.CountDownTimer;
+import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -24,6 +26,7 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 
 import java.lang.ref.WeakReference;
+import java.net.URI;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -83,10 +86,16 @@ public class SprintActivity extends AppCompatActivity {
 
         setupNextTopic();
 
-        mp = MediaPlayer.create(getApplicationContext(), Settings.System.DEFAULT_ALARM_ALERT_URI);
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        Integer minutes = Integer.valueOf(preferences.getString("timer_minutes", "5"));
+        Integer seconds = Integer.valueOf(preferences.getString("timer_seconds", "0"));
+        Uri alarmRingtone = Uri.parse(preferences.getString("alarm_ringtone", Settings.System.DEFAULT_ALARM_ALERT_URI.toString()));
+
+        timerDuration = (minutes * 60000) + (seconds * 1000);
+        mp = MediaPlayer.create(getApplicationContext(), alarmRingtone);
         time = findViewById(R.id._timeValueTextView);
-        time.setText("5:00");
-        timerDuration = 300000; //300000 milliseconds is 5 minutes
+
+        //timerDuration = 300000; //300000 milliseconds is 5 minutes
         timeRemaining = timerDuration + 1000;
         refreshTimer();
     }
@@ -174,7 +183,9 @@ public class SprintActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        mp.pause();
+        if (mp.isPlaying()) {
+            mp.pause();
+        }
     }
 
 
@@ -288,7 +299,9 @@ public class SprintActivity extends AppCompatActivity {
         if(!isPaused) {
             playPause.setImageResource(android.R.drawable.ic_media_play);
             isPaused = true;
-            mp.pause();
+            if (mp.isPlaying()) {
+                mp.pause();
+            }
         } else {
             playPause.setImageResource(android.R.drawable.ic_media_pause);
             isPaused = false;
@@ -315,7 +328,9 @@ public class SprintActivity extends AppCompatActivity {
         if(!isMuted) {
             toggleAlarm.setImageResource(android.R.drawable.ic_lock_silent_mode);
             isMuted = true;
-            mp.pause();
+            if (mp.isPlaying()) {
+                mp.pause();
+            }
         } else {
             toggleAlarm.setImageResource(android.R.drawable.ic_lock_silent_mode_off);
             isMuted = false;
@@ -325,7 +340,9 @@ public class SprintActivity extends AppCompatActivity {
     private void refreshTimer() {
         if (timer != null) {
             timer.cancel();
-            mp.pause();
+            if (mp.isPlaying()) {
+                mp.pause();
+            }
         }
 
         timer = new CountDownTimer(timeRemaining, 250) {

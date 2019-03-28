@@ -63,16 +63,16 @@
     <string name="timer_duration">Timer Duration</string>
     <string name="dialog_change_time">Change Timer Duration</string>
     <string-array name="time_array">
-        <item>00</item>
-        <item>01</item>
-        <item>02</item>
-        <item>03</item>
-        <item>04</item>
-        <item>05</item>
-        <item>06</item>
-        <item>07</item>
-        <item>08</item>
-        <item>09</item>
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
         <item>10</item>
         <item>11</item>
         <item>12</item>
@@ -187,12 +187,13 @@
 
     <string name="pref_title_system_sync_settings">System sync settings</string>
 
-    <!-- Example settings for Notifications -->
-    <string name="pref_header_notifications">Notifications</string>
+    <!-- Example settings for Timer -->
+    <string name="pref_header_timer_settings">Timer</string>
 
-    <string name="pref_title_new_message_notifications">New message notifications</string>
+    <string name="pref_title_timer_minutes">Timer Minutes</string>
+    <string name="pref_title_timer_seconds">Timer Seconds</string>
 
-    <string name="pref_title_ringtone">Ringtone</string>
+    <string name="pref_title_ringtone">Alarm Ringtone</string>
     <string name="pref_ringtone_silent">Silent</string>
 
     <string name="pref_title_vibrate">Vibrate</string>

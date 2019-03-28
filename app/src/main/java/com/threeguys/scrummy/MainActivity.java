@@ -70,10 +70,6 @@ public class MainActivity extends AppCompatActivity {
                         Toast.LENGTH_SHORT).show();
                 return true;
             case R.id._settingsMenuItem:
-                //startActivity(new Intent(this, SettingsActivity.class));
-                Toast.makeText(getApplicationContext(),
-                        "Settings menu item selected.",
-                        Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(MainActivity.this, SettingsActivity.class));
                 return true;
         }
