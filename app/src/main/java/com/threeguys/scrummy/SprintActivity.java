@@ -52,6 +52,7 @@ public class SprintActivity extends AppCompatActivity {
     private long timeRemaining;
     private TextView time;
     private MediaPlayer mp;
+    private boolean isMenuDisabled;
 
     AlertDialog changeTimeDialogue;
 
@@ -83,6 +84,7 @@ public class SprintActivity extends AppCompatActivity {
         toggleAlarm = findViewById(R.id._alarmButton);
         isPaused = false;
         isMuted = false;
+        isMenuDisabled = false;
 
         setupNextTopic();
 
@@ -108,7 +110,7 @@ public class SprintActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id._changeTimeMenuItem) {
+        if (item.getItemId() == R.id._changeTimeMenuItem && !isMenuDisabled) {
             onClickTimerDuration();
             return true;
         }
@@ -242,8 +244,7 @@ public class SprintActivity extends AppCompatActivity {
         findViewById(R.id._stopTimeButton).setEnabled(false);
         findViewById(R.id._resetTimeButton).setEnabled(false);
         findViewById(R.id._playPauseTimeButton).setEnabled(false);
-        findViewById(R.id._actionsMultiAutoCompleteTextView).setEnabled(false);
-        //findViewById(R.id._changeTimeMenuItem).setEnabled(false);
+        isMenuDisabled = true;
 
         Save save = new SaveCloud(new WeakReference<>(this));
         save.save(session);
