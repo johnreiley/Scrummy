@@ -4,59 +4,54 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".AboutActivity">
 
     <TextView
-        android:id="@+id/_scrummyTextView"
+        android:id="@+id/_AboutTextView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="8dp"
-        android:text="@string/scrummy_short_description"
-        android:textAppearance="@style/TextAppearance.AppCompat.Title"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/_newSessionButton"
-        style="@style/Widget.AppCompat.Button"
-        android:layout_width="147dp"
-        android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
-        android:onClick="onClickNew"
-        android:text="@string/new_session"
+        android:text="@string/contact_information"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/_scrummyTextView" />
+        app:layout_constraintTop_toBottomOf="@+id/_AboutTextView2" />
 
-    <Button
-        android:id="@+id/_continueSessionButton"
-        android:layout_width="147dp"
+    <TextView
+        android:id="@+id/_AboutTextView2"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
-        android:onClick="onClickContinue"
-        android:text="@string/continue_session"
+        android:text="@string/description"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/_newSessionButton" />
+        app:layout_constraintTop_toBottomOf="@+id/_AboutTextView1" />
 
-    <Button
-        android:id="@+id/_loadSessionButton"
-        android:layout_width="147dp"
+    <TextView
+        android:id="@+id/_AboutTextView1"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
-        android:onClick="onClickLoad"
-        android:text="@string/load_session"
+        android:text="@string/brief_overview"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/_continueSessionButton" />
+        app:layout_constraintTop_toBottomOf="@+id/_aboutLogoImageView" />
 
+    <ImageView
+        android:id="@+id/_aboutLogoImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:contentDescription="@string/logo_description"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@mipmap/scrummy_retro_launcher" />
 </android.support.constraint.ConstraintLayout>
