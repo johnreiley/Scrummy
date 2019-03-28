@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Parcelable;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -36,6 +37,7 @@ public class TopicActivity extends AppCompatActivity {
     private TopicItemAdapter adapter;
     private HashMap<String, List<Topic>> childData;
     private List<String> groupData;
+    private String username;
 
     AlertDialog addTopicDialogue;
 
@@ -93,6 +95,9 @@ public class TopicActivity extends AppCompatActivity {
         expandableListView = findViewById(R.id._topicCategoryExpandableListView);
 
         refreshAdapter();
+
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        username = preferences.getString("username","");
     }
 
     @Override
@@ -194,6 +199,7 @@ public class TopicActivity extends AppCompatActivity {
 
         final EditText topic = v.findViewById(R.id._topicInputEditText);
         final EditText name = v.findViewById(R.id._nameInputEditText);
+        name.setText(username);
         final Spinner category = v.findViewById(R.id._categoryInputSpinner);
 
         alertBuilder.setCancelable(true).setPositiveButton(
