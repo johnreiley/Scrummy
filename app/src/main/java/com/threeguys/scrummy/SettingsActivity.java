@@ -239,7 +239,9 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             // to their values. When their values change, their summaries are
             // updated to reflect the new value, per the Android Design
             // guidelines.
-            bindPreferenceSummaryToValue(findPreference("sync_frequency"));
+            bindPreferenceSummaryToValue(findPreference("load_method"));
+            //bindPreferenceSummaryToValue(findPreference("save_cloud"));
+            //bindPreferenceSummaryToValue(findPreference("save_local"));
         }
 
         @Override
