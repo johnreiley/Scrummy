@@ -23,6 +23,14 @@
           }
         },
         {
+          "client_id": "973162981055-8n0nv9u0pi4gtccgg4a54e0m895qqvld.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.threeguys.scrummy",
+            "certificate_hash": "b88b64d5182eb270668931f0d15dfb779040cdd1"
+          }
+        },
+        {
           "client_id": "973162981055-75nimgldnvho66d8md48plna6mv8ppje.apps.googleusercontent.com",
           "client_type": 3
         }

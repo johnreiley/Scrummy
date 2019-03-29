@@ -18,6 +18,11 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -38,6 +43,8 @@ public class TopicActivity extends AppCompatActivity {
     private HashMap<String, List<Topic>> childData;
     private List<String> groupData;
     private String username;
+
+    private DatabaseReference dataRef;
 
     AlertDialog addTopicDialogue;
 
@@ -94,10 +101,31 @@ public class TopicActivity extends AppCompatActivity {
 
         expandableListView = findViewById(R.id._topicCategoryExpandableListView);
 
-        refreshAdapter();
-
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         username = preferences.getString("username","");
+
+        // Setup database
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        dataRef = database.getReference(username);
+        dataRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String value = dataSnapshot.getValue(String.class);
+
+                Gson gson = new Gson();
+                session = gson.fromJson(value, Session.class);
+
+                Log.d(TOPIC_TAG, "FirebaseDatabase value is: " + value);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                // Failed to read value
+                Log.w(TOPIC_TAG, "Failed to read value.", error.toException());
+            }
+        });
+
+        refreshAdapter();
     }
 
     @Override
@@ -393,6 +421,21 @@ public class TopicActivity extends AppCompatActivity {
 
             expandableListView.onRestoreInstanceState(recyclerViewState);
         }
+
+        // Update FirebaseData
+        Gson gson = new Gson();
+        String sessionJson = gson.toJson(session, Session.class);
+        dataRef.setValue(sessionJson);
+        Log.i(TOPIC_TAG, "Firebase Updated");
+
+        String activityJson = "TopicActivity";
+
+        SharedPreferences sp = this.getSharedPreferences(TEMP_SAVE_PREF, MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putString(CONTINUE_KEY, sessionJson);
+        editor.putString(ACTIVITY_KEY, activityJson);
+        editor.apply();
+        Log.i(TOPIC_TAG, "Firebase Updated The Continue Button");
     }
 
     public Session getSession() {
