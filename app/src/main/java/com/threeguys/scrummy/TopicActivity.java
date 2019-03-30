@@ -6,12 +6,14 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Parcelable;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.Spinner;
@@ -48,6 +50,7 @@ public class TopicActivity extends AppCompatActivity {
     private String username;
 
     private DatabaseReference sessionDataRef;
+    private DatabaseReference activityDataRef;
 
     AlertDialog addTopicDialogue;
 
@@ -108,9 +111,39 @@ public class TopicActivity extends AppCompatActivity {
         username = preferences.getString("username","Username");
         Log.i(TOPIC_TAG, "username is: " + username);
 
-        // Setup database
+        // Setup Firebase database
         FirebaseDatabase database = FirebaseDatabase.getInstance();
+        // Setup activity Firebase
+        activityDataRef = database.getReference().child("users").child(username).child("activity");
+        activityDataRef.setValue("TopicActivity");
+        activityDataRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                String activity = dataSnapshot.getValue(String.class);
+
+                switch (activity){
+                    case "TopicActivity":
+                        break;
+                    case "VoteActivity":
+                        onClickVote(getCurrentFocus());
+                        break;
+                    case "SprintActivity":
+                        onClickVote(getCurrentFocus());
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                // Failed to read value
+                Log.w(TOPIC_TAG, "Failed to read value.", error.toException());
+            }
+        });
+        // Setup session Firebase
         sessionDataRef = database.getReference().child("users").child(username).child("session");
+        updateFirebaseSession();
         sessionDataRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -219,6 +252,7 @@ public class TopicActivity extends AppCompatActivity {
 
             // add the session string to the intent
             voteIntent.putExtra(MainActivity.SESSION_KEY, sessionJson);
+            activityDataRef.setValue("VoteActivity");
             startActivity(voteIntent);
 
         } else {
@@ -368,7 +402,7 @@ public class TopicActivity extends AppCompatActivity {
 
         addTopicDialogue.dismiss();
 
-        updateFirebase();
+        updateFirebaseSession();
         refreshAdapter();
     }
 
@@ -402,7 +436,7 @@ public class TopicActivity extends AppCompatActivity {
 
             addTopicDialogue.dismiss();
 
-            updateFirebase();
+            updateFirebaseSession();
             refreshAdapter();
             Log.d(TOPIC_TAG, "adapter refreshed");
         }
@@ -434,7 +468,10 @@ public class TopicActivity extends AppCompatActivity {
         }
     }
 
-    private void updateFirebase() {
+    /**
+     * Updates the user's session on the FireBase with the session data in TopicActivity.
+     */
+    private void updateFirebaseSession() {
         Gson gson = new Gson();
         String sessionJson = gson.toJson(session, Session.class);
         sessionDataRef.setValue(sessionJson);
