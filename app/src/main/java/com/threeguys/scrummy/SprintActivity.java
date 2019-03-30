@@ -52,7 +52,7 @@ public class SprintActivity extends AppCompatActivity {
     private long timeRemaining;
     private TextView time;
     private MediaPlayer mp;
-    private boolean isMenuDisabled;
+    private boolean isMenuDisabled, saveCloud, saveLocal;
 
     AlertDialog changeTimeDialogue;
 
@@ -91,6 +91,10 @@ public class SprintActivity extends AppCompatActivity {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         Integer minutes = Integer.valueOf(preferences.getString("timer_minutes", "5"));
         Integer seconds = Integer.valueOf(preferences.getString("timer_seconds", "0"));
+        saveCloud = preferences.getBoolean("save_cloud", true);
+        saveLocal = preferences.getBoolean("save_local", false);
+        Log.d(SPRINT_TAG, "saveCloud = " + saveCloud);
+        Log.d(SPRINT_TAG, "saveLocal = " + saveLocal);
         Uri alarmRingtone = Uri.parse(preferences.getString("alarm_ringtone", Settings.System.DEFAULT_ALARM_ALERT_URI.toString()));
 
         timerDuration = (minutes * 60000) + (seconds * 1000);
@@ -246,8 +250,17 @@ public class SprintActivity extends AppCompatActivity {
         findViewById(R.id._playPauseTimeButton).setEnabled(false);
         isMenuDisabled = true;
 
-        Save save = new SaveCloud(new WeakReference<>(this));
-        save.save(session);
+        if(saveCloud) {
+            Save save = new SaveCloud(new WeakReference<>(this));
+            save.save(session);
+            Log.i(SPRINT_TAG, "SaveAndQuit: Saved to Cloud");
+        }
+
+        if(saveLocal) {
+            Save save = new SaveLocal(this);
+            save.save(session);
+            Log.i(SPRINT_TAG, "SaveAndQuit: Saved to Device");
+        }
 
         Log.i(SPRINT_TAG, "Session saved");
 
