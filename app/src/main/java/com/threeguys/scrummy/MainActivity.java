@@ -197,19 +197,27 @@ public class MainActivity extends AppCompatActivity {
      */
     public void onClickLoad(View view) {
         // check if there is any data saved.
-        SharedPreferences spTemp = this.getSharedPreferences(SAVE_PREF, MODE_PRIVATE);
-        String sessionJson = spTemp.getString(SESSION_LIST_KEY, "no saved data");
-        if (sessionJson.equals("no saved data")) {
-            // don't start the load activity because there is no data
 
-            Toast.makeText(this,
-                    "There is no saved data", Toast.LENGTH_SHORT).show();
-        }
-        else {
-            // start the load activity
-            Intent loadIntent = new Intent(this, LoadActivity.class);
-            startActivity(loadIntent);
-        }
+        // if (settings.loadMethod == "local")
+        //------------------------------------------------------------------------------------------
+//        SharedPreferences spTemp = this.getSharedPreferences(SAVE_PREF, MODE_PRIVATE);
+//        String sessionJson = spTemp.getString(SESSION_LIST_KEY, "no saved data");
+//        if (sessionJson.equals("no saved data")) {
+//            // don't start the load activity because there is no data
+//
+//            Toast.makeText(this,
+//                    "There is no saved data", Toast.LENGTH_SHORT).show();
+//        }
+//        else {
+//            // start the load activity
+//            Intent loadIntent = new Intent(this, LoadActivity.class);
+//            startActivity(loadIntent);
+//        }
+        //------------------------------------------------------------------------------------------
+
+        Intent loadIntent = new Intent(this, LoadActivity.class);
+        startActivity(loadIntent);
+
     }
 
     @Override
