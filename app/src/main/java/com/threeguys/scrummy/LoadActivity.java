@@ -4,6 +4,8 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -16,6 +18,8 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -41,6 +45,9 @@ public class LoadActivity extends AppCompatActivity {
     private LoadSessionItemAdapter adapter;
     private String userSessions;
     private SessionList sessionsList;
+    private ToggleButton loadCloud, loadLocal;
+    private WeakReference<LoadActivity> reference;
+    private Load loader;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,10 +55,26 @@ public class LoadActivity extends AppCompatActivity {
         setContentView(R.layout.activity_load);
         Log.i(LOAD_ACTIVITY_TAG, "LoadActivity Started");
 
-        WeakReference<LoadActivity> reference = new WeakReference<>(this);
+        reference = new WeakReference<>(this);
 
-       Load loader = new LoadCloud(reference,"Username");
-       loader.load(this);
+        loadCloud = findViewById(R.id._loadCloudToggleButton);
+        loadLocal = findViewById(R.id._loadLocalToggleButton);
+
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        int loadMethod = Integer.valueOf(preferences.getString("load_method", "0"));
+
+        if (loadMethod == 0) {
+            loadCloud.setChecked(true);
+            loadLocal.setChecked(false);
+            loadCloudMethod(null);
+        } else {
+            loadCloud.setChecked(false);
+            loadLocal.setChecked(true);
+            loadLocalMethod(null);
+        }
+
+        //Load loader = new LoadCloud(reference,"Username");
+        //loader.load(this);
 //        sessions = loader.load(getApplicationContext()).getList();
 
 //        Log.d(LOAD_ACTIVITY_TAG, "sessions.size() == " + sessions.size());
@@ -138,5 +161,43 @@ public class LoadActivity extends AppCompatActivity {
 
         Dialog titleDialog = alertBuilder.create();
         titleDialog.show();
+    }
+
+    public void loadCloudMethod(View v) {
+        if (loadLocal.isChecked()) {
+            loadLocal.setChecked(false);
+        }
+
+        if (loadCloud.isChecked()) {
+            findViewById(R.id._loadProgress).setVisibility(View.VISIBLE);
+            loader = new LoadCloud(reference, "Username");
+            loader.load(this);
+        } else {
+            sessions = new ArrayList<>();
+            refreshAdapter();
+        }
+    }
+
+    public void loadLocalMethod(View v) {
+        if (loadCloud.isChecked()) {
+            loadCloud.setChecked(false);
+        }
+
+        if (loadLocal.isChecked()) {
+            loader = new LoadLocal();
+            sessionsList = loader.load(this);
+            sessions = sessionsList.getList();
+
+            if (sessionsList == null) {
+                Toast.makeText(getApplicationContext(),
+                        "No local data found.",
+                        Toast.LENGTH_SHORT).show();
+            } else {
+                refreshAdapter();
+            }
+        } else {
+            sessions = new ArrayList<>();
+            refreshAdapter();
+        }
     }
 }

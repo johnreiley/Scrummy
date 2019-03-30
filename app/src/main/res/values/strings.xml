@@ -216,4 +216,6 @@
     <string name="description">Description</string>
     <string name="logo_description">Picture of Scrummy Retro Logo</string>
     <string name="scrummy_short_description">Scrum Retrospective Meeting Tool</string>
+    <string name="load_cloud">Cloud Data</string>
+    <string name="load_local">Local Data</string>
 </resources>
