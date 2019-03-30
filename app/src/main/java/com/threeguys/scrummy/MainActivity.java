@@ -22,6 +22,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.storage.FirebaseStorage;
 import com.google.gson.Gson;
 
 public class MainActivity extends AppCompatActivity {
@@ -39,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
     // ------- TEST STRINGS ------- //
     static final String USERNAME = "username"; // used for fetching and saving the user's data file
 
-
+    private FirebaseAuth mAuth;
 
     AlertDialog titleDialog;
 
@@ -48,6 +50,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Log.i(MAIN_TAG, "MainActivity Started");
+
+        mAuth = FirebaseAuth.getInstance();
 
         // check if there is a session in progress
         SharedPreferences spTemp = this.getSharedPreferences(TEMP_SAVE_PREF, MODE_PRIVATE);
@@ -77,6 +81,16 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void onClickSignOut(View v) {
+        try {
+            mAuth.signOut();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return;
+        }
+        startActivity(new Intent(this, LoginActivity.class));
     }
 
     /**

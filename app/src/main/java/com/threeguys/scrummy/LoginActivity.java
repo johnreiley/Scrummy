@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -38,6 +39,13 @@ public class LoginActivity extends AppCompatActivity {
 
         mLoginButton = findViewById(R.id._loginButton);
 
+        mLoginButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startSignIn();
+            }
+        });
+
         mAuthStateListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -48,14 +56,26 @@ public class LoginActivity extends AppCompatActivity {
                 }
             }
         };
-
-        mLoginButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startSignIn();
-            }
-        });
     }
+
+//    protected void onClickLogin() {
+//        setContentView(R.layout.activity_login);
+//        mEmailTextField = findViewById(R.id._emailTextField);
+//        mPasswordTextField = findViewById(R.id._passwordTextField);
+//
+//        mLoginButton = findViewById(R.id._loginButton);
+//
+//        mLoginButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                startSignIn();
+//            }
+//        });
+//    }
+//
+//    protected void onClickRegister() {
+//        setContentView(R.layout.activity_register);
+//    }
 
     @Override
     protected void onStart() {
@@ -102,8 +122,6 @@ public class LoginActivity extends AppCompatActivity {
                 public void onComplete(@NonNull Task<AuthResult> task) {
 
                     if(!task.isSuccessful()) {
-                        Toast.makeText(LoginActivity.this,
-                                "Sign-in Failed", Toast.LENGTH_SHORT).show();
                         LoginActivity.this.registerNewUser(email, password);
                     }
                 }
@@ -122,7 +140,18 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void registerNewUser(String email, String password) {
-        mAuth.createUserWithEmailAndPassword(email, password);
+        mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if(!task.isSuccessful()) {
+                    mPasswordTextField.setError(getString(R.string.error_incorrect_password));
+                } else {
+                    Toast.makeText(LoginActivity.this,
+                            "Account created with email" +
+                                    mAuth.getCurrentUser().getEmail(), Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
         startSignIn();
     }
 }
