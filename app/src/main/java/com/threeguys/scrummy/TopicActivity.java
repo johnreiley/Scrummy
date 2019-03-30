@@ -23,7 +23,10 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
 import com.google.gson.Gson;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -44,7 +47,7 @@ public class TopicActivity extends AppCompatActivity {
     private List<String> groupData;
     private String username;
 
-    private DatabaseReference dataRef;
+    private DatabaseReference sessionDataRef;
 
     AlertDialog addTopicDialogue;
 
@@ -102,18 +105,24 @@ public class TopicActivity extends AppCompatActivity {
         expandableListView = findViewById(R.id._topicCategoryExpandableListView);
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        username = preferences.getString("username","");
+        username = preferences.getString("username","Username");
+        Log.i(TOPIC_TAG, "username is: " + username);
 
         // Setup database
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        dataRef = database.getReference(username);
-        dataRef.addValueEventListener(new ValueEventListener() {
+        sessionDataRef = database.getReference().child("users").child(username).child("session");
+        sessionDataRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 String value = dataSnapshot.getValue(String.class);
 
                 Gson gson = new Gson();
                 session = gson.fromJson(value, Session.class);
+
+                TextView title = findViewById(R.id._topicEntryTextView);
+                title.setText(session.getTitle());
+
+                refreshAdapter();
 
                 Log.d(TOPIC_TAG, "FirebaseDatabase value is: " + value);
             }
@@ -359,6 +368,7 @@ public class TopicActivity extends AppCompatActivity {
 
         addTopicDialogue.dismiss();
 
+        updateFirebase();
         refreshAdapter();
     }
 
@@ -392,6 +402,7 @@ public class TopicActivity extends AppCompatActivity {
 
             addTopicDialogue.dismiss();
 
+            updateFirebase();
             refreshAdapter();
             Log.d(TOPIC_TAG, "adapter refreshed");
         }
@@ -421,11 +432,12 @@ public class TopicActivity extends AppCompatActivity {
 
             expandableListView.onRestoreInstanceState(recyclerViewState);
         }
+    }
 
-        // Update FirebaseData
+    private void updateFirebase() {
         Gson gson = new Gson();
         String sessionJson = gson.toJson(session, Session.class);
-        dataRef.setValue(sessionJson);
+        sessionDataRef.setValue(sessionJson);
         Log.i(TOPIC_TAG, "Firebase Updated");
 
         String activityJson = "TopicActivity";
@@ -436,6 +448,7 @@ public class TopicActivity extends AppCompatActivity {
         editor.putString(ACTIVITY_KEY, activityJson);
         editor.apply();
         Log.i(TOPIC_TAG, "Firebase Updated The Continue Button");
+
     }
 
     public Session getSession() {
