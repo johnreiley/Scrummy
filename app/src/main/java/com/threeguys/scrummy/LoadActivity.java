@@ -121,8 +121,13 @@ public class LoadActivity extends AppCompatActivity {
 
     public void onClickDelete(int position) {
         sessions.remove(position);
-        Save save = new SaveCloud(getApplicationContext()); //Local(getApplicationContext());
-        save.update(sessions);
+        if(loadCloud.isChecked()) {
+            Save save = new SaveCloud();
+            save.update(sessions);
+        } else if (loadLocal.isChecked()) {
+            Save save = new SaveLocal(getApplicationContext());
+            save.update(sessions);
+        }
         refreshAdapter();
     }
 
@@ -143,8 +148,13 @@ public class LoadActivity extends AppCompatActivity {
                 Session session = sessions.get(position);
                 session.setTitle(dialogTitle.getText().toString());
                 sessions.set(position, session);
-                Save save = new SaveCloud();
-                save.update(sessions);
+                if(loadCloud.isChecked()) {
+                    Save save = new SaveCloud();
+                    save.update(sessions);
+                } else if (loadLocal.isChecked()) {
+                    Save save = new SaveLocal(getApplicationContext());
+                    save.update(sessions);
+                }
                 refreshAdapter();
             }
         });
