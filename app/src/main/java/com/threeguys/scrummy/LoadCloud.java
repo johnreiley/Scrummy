@@ -29,15 +29,15 @@ public class LoadCloud implements Load {
     private String userSessions;
     private SessionList sessions;
     private WeakReference<LoadActivity> loadWeakRef;
-    private String username;
+    private String userID;
 
     public LoadCloud() {
 
     }
 
-    public LoadCloud(WeakReference<LoadActivity> loadActivityWeakReference, String username) {
+    public LoadCloud(WeakReference<LoadActivity> loadActivityWeakReference, String userID) {
         this.loadWeakRef = loadActivityWeakReference;
-        this.username = username;
+        this.userID = userID;
     }
 
     @Override
@@ -47,8 +47,8 @@ public class LoadCloud implements Load {
 
         final Gson gson = new Gson();
         FirebaseStorage storage = FirebaseStorage.getInstance();
-        StorageReference storageRef = storage.getReference();
-        StorageReference userDataRef = storageRef.child("/users/" + USERNAME + ".txt");
+        final StorageReference storageRef = storage.getReference();
+        StorageReference userDataRef = storageRef.child("/users/" + userID + ".txt");
 
         // just the default value the app can handle
         final long ONE_MEGABYTE = 1024 * 1024;
@@ -80,7 +80,10 @@ public class LoadCloud implements Load {
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception exception) {
-                // Handle any errors
+                Log.d(LOAD_CLOUD_TAG, "Failure to download file");
+                loadWeakRef.get().sessions = new ArrayList<>();
+                loadWeakRef.get().findViewById(R.id._loadProgress).setVisibility(View.GONE);
+                loadWeakRef.get().refreshAdapter();
             }
         });
 

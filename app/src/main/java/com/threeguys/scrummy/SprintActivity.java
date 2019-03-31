@@ -23,6 +23,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.gson.Gson;
 
 import java.lang.ref.WeakReference;
@@ -55,6 +56,8 @@ public class SprintActivity extends AppCompatActivity {
     private boolean isMenuDisabled, saveCloud, saveLocal;
 
     AlertDialog changeTimeDialogue;
+
+    private FirebaseAuth mAuth = FirebaseAuth.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -251,7 +254,7 @@ public class SprintActivity extends AppCompatActivity {
         isMenuDisabled = true;
 
         if(saveCloud) {
-            Save save = new SaveCloud(new WeakReference<>(this));
+            Save save = new SaveCloud(new WeakReference<>(this), mAuth.getUid());
             save.save(session);
             Log.i(SPRINT_TAG, "SaveAndQuit: Saved to Cloud");
         }

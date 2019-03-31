@@ -140,9 +140,11 @@ public class MainActivity extends AppCompatActivity {
                 Log.d(MAIN_TAG, "dialogTitle == " + dialogTitle.getText());
 
                 if (TextUtils.isEmpty(dialogTitle.getText().toString())) {
-                    Toast.makeText(getApplicationContext(),
-                            "Please enter a session title before continuing",
-                            Toast.LENGTH_SHORT).show();
+                    dialogTitle.setError("Enter a session title");
+                    // TODO: remove the code below
+//                    Toast.makeText(getApplicationContext(),
+//                            "Please enter a session title before continuing",
+//                            Toast.LENGTH_SHORT).show();
                 } else {
                     Intent newIntent = new Intent(MainActivity.this, TopicActivity.class);
                     newIntent.putExtra(SESSION_TITLE_KEY, dialogTitle.getText().toString());

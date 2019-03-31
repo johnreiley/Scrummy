@@ -23,6 +23,7 @@ import android.widget.ToggleButton;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.gson.Gson;
@@ -49,11 +50,15 @@ public class LoadActivity extends AppCompatActivity {
     private WeakReference<LoadActivity> reference;
     private Load loader;
 
+    private FirebaseAuth mAuth;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_load);
         Log.i(LOAD_ACTIVITY_TAG, "LoadActivity Started");
+
+        mAuth = FirebaseAuth.getInstance();
 
         reference = new WeakReference<>(this);
 
@@ -122,7 +127,7 @@ public class LoadActivity extends AppCompatActivity {
     public void onClickDelete(int position) {
         sessions.remove(position);
         if(loadCloud.isChecked()) {
-            Save save = new SaveCloud();
+            Save save = new SaveCloud(mAuth.getUid());
             save.update(sessions);
         } else if (loadLocal.isChecked()) {
             Save save = new SaveLocal(getApplicationContext());
@@ -149,7 +154,7 @@ public class LoadActivity extends AppCompatActivity {
                 session.setTitle(dialogTitle.getText().toString());
                 sessions.set(position, session);
                 if(loadCloud.isChecked()) {
-                    Save save = new SaveCloud();
+                    Save save = new SaveCloud(mAuth.getUid());
                     save.update(sessions);
                 } else if (loadLocal.isChecked()) {
                     Save save = new SaveLocal(getApplicationContext());
@@ -180,7 +185,7 @@ public class LoadActivity extends AppCompatActivity {
 
         if (loadCloud.isChecked()) {
             findViewById(R.id._loadProgress).setVisibility(View.VISIBLE);
-            loader = new LoadCloud(reference, "Username");
+            loader = new LoadCloud(reference, mAuth.getCurrentUser().getUid());
             loader.load(this);
         } else {
             sessions = new ArrayList<>();
@@ -194,6 +199,7 @@ public class LoadActivity extends AppCompatActivity {
         }
 
         if (loadLocal.isChecked()) {
+            findViewById(R.id._loadProgress).setVisibility(View.GONE);
             loader = new LoadLocal();
             sessionsList = loader.load(this);
             sessions = sessionsList.getList();

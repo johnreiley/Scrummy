@@ -9,6 +9,7 @@ import android.view.View;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -26,17 +27,17 @@ public class SaveCloud extends Save {
     private SessionList sessionList;
 
     private WeakReference<SprintActivity> sprintWeakRef;
-    private String username;
-
+    private String userID;
 
     private FirebaseStorage storage = FirebaseStorage.getInstance();
 
-    public SaveCloud(WeakReference<SprintActivity> sprintWeakRef) { //, String username) {
+    public SaveCloud(WeakReference<SprintActivity> sprintWeakRef, String userID) {
         this.sprintWeakRef = sprintWeakRef;
-        //this.username = username;
+        this.userID = userID;
     }
 
-    public SaveCloud() {
+    public SaveCloud(String userID) {
+        this.userID = userID;
     }
 
     // This constructor is only for debugging purposes
@@ -50,7 +51,7 @@ public class SaveCloud extends Save {
         final Gson gson = new Gson();
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageRef = storage.getReference();
-        StorageReference userDataRef = storageRef.child("/users/" + USERNAME + ".txt");
+        StorageReference userDataRef = storageRef.child("/users/" + userID + ".txt");
         // TODO: find out how to check if the path exists yet or not
 
         // just the default value the app can handle
@@ -71,14 +72,39 @@ public class SaveCloud extends Save {
                 }
 
                 sessionList.addSession(session);
-                String sessionListJson = gson.toJson(sessionList, SessionList.class);
+                final String sessionListJson = gson.toJson(sessionList, SessionList.class);
 
                 Log.d(SAVE_CLOUD_TAG, "The variable sessionListJson == " + sessionListJson);
 
 
                 // upload to Firebase
                 byte sessionBytes[] = sessionListJson.getBytes();
-                String path = "users/" + USERNAME + ".txt"; // this will be implemented to use the usersname to name the file
+                String path = "users/" + userID + ".txt"; // this will be implemented to use the usersname to name the file
+                StorageReference userRef = SaveCloud.this.storage.getReference(path);
+
+                UploadTask uploadTask = userRef.putBytes(sessionBytes);
+
+                uploadTask.addOnSuccessListener(sprintWeakRef.get(), new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        sprintWeakRef.get().findViewById(R.id._loadProgress)
+                                .setVisibility(View.GONE);
+                        Intent intent = new Intent(sprintWeakRef.get(), MainActivity.class);
+                        sprintWeakRef.get().startActivity(intent);
+
+                    }
+
+
+                });
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                sessionList = new SessionList();
+                sessionList.addSession(session);
+                final String sessionListJson = gson.toJson(sessionList, SessionList.class);
+                byte sessionBytes[] = sessionListJson.getBytes();
+                String path = "users/" + userID + ".txt"; // this will be implemented to use the usersname to name the file
                 StorageReference userRef = SaveCloud.this.storage.getReference(path);
 
                 UploadTask uploadTask = userRef.putBytes(sessionBytes);
@@ -92,17 +118,15 @@ public class SaveCloud extends Save {
                         sprintWeakRef.get().startActivity(intent);
                     }
                 });
-
             }
         });
     }
-
     @Override
     public void update (final List<Session> list) {
 
         final Gson gson = new Gson();
         FirebaseStorage storage = FirebaseStorage.getInstance();
-        StorageReference userDataRef = storage.getReference().child("/users/" + USERNAME + ".txt");
+        StorageReference userDataRef = storage.getReference().child("/users/" + userID + ".txt");
 
         sessionList = new SessionList();
         sessionList.setList(list);
