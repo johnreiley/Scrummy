@@ -253,11 +253,11 @@ public class SprintActivity extends AppCompatActivity {
         findViewById(R.id._playPauseTimeButton).setEnabled(false);
         isMenuDisabled = true;
 
-        if(saveCloud) {
-            Save save = new SaveCloud(new WeakReference<>(this), mAuth.getUid());
-            save.save(session);
-            Log.i(SPRINT_TAG, "SaveAndQuit: Saved to Cloud");
-        }
+        // clear the temp file
+        SharedPreferences sp = this.getSharedPreferences(TEMP_SAVE_PREF, MODE_PRIVATE);
+        sp.edit().clear().apply();
+
+        Log.i(SPRINT_TAG, "Temporary files cleared");
 
         if(saveLocal) {
             Save save = new SaveLocal(this);
@@ -265,17 +265,16 @@ public class SprintActivity extends AppCompatActivity {
             Log.i(SPRINT_TAG, "SaveAndQuit: Saved to Device");
         }
 
-        Log.i(SPRINT_TAG, "Session saved");
-
-        // clear the temp file
-        SharedPreferences sp = this.getSharedPreferences(TEMP_SAVE_PREF, MODE_PRIVATE);
-        sp.edit().clear().apply();
-
-        Log.i(SPRINT_TAG, "Temporary files cleared");
-
-        // go back to the main menu
-        //Intent mainIntent = new Intent(this, MainActivity.class);
-        //startActivity(mainIntent);
+        if(saveCloud) {
+            Save save = new SaveCloud(new WeakReference<>(this), mAuth.getUid());
+            save.save(session);
+            Log.i(SPRINT_TAG, "SaveAndQuit: Saved to Cloud");
+        } else {
+            // go back to the main menu
+            Intent mainIntent = new Intent(this, MainActivity.class);
+            startActivity(mainIntent);
+            Log.i(SPRINT_TAG, "Session saved");
+        }
     }
 
     /**
