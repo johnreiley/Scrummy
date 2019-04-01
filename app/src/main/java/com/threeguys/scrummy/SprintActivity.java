@@ -389,7 +389,6 @@ public class SprintActivity extends AppCompatActivity {
             Save save = new SaveLocal(this);
             save.save(session);
             Log.i(SPRINT_TAG, "SaveAndQuit: Saved to Device");
-            quit();
         }
 
         if(saveCloud) {
