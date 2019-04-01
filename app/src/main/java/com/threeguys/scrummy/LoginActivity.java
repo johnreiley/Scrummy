@@ -1,7 +1,13 @@
 package com.threeguys.scrummy;
 
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -20,6 +26,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 public class LoginActivity extends AppCompatActivity {
+
+    private static final String LOGIN_ACTIVITY_TAG = LoginActivity.class.getSimpleName();
 
     private EditText mEmailTextField;
     private EditText mPasswordTextField;
@@ -100,6 +108,11 @@ public class LoginActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
+        toggleUiVisibility(true);
+        if(!isConnected()) {
+            Log.i(LOGIN_ACTIVITY_TAG, "No internet connection");
+        }
+
         mAuth.addAuthStateListener(mAuthStateListener);
     }
 
@@ -112,7 +125,11 @@ public class LoginActivity extends AppCompatActivity {
         View focusView = null;
 
         // Check for a valid password, if the user entered one.
-        if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
+        if (TextUtils.isEmpty(password)) {
+            mPasswordTextField.setError(getString(R.string.error_field_required));
+            focusView = mPasswordTextField;
+            cancel = true;
+        } else if (!isPasswordValid(password)) {
             mPasswordTextField.setError(getString(R.string.error_invalid_password));
             focusView = mPasswordTextField;
             cancel = true;
@@ -136,10 +153,11 @@ public class LoginActivity extends AppCompatActivity {
         } else {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
+            toggleUiVisibility(false);
+            findViewById(R.id._loadProgress).setVisibility(View.VISIBLE);
             mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
-
                     if(!task.isSuccessful()) {
                         LoginActivity.this.registerNewUser(email, password);
                     }
@@ -150,7 +168,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private boolean isEmailValid(String email) {
         //TODO: Replace this with your own logic
-        return email.contains("@");
+        return (email.contains("@") && email.contains("."));
     }
 
     private boolean isPasswordValid(String password) {
@@ -163,7 +181,13 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(!task.isSuccessful()) {
-                    mPasswordTextField.setError(getString(R.string.error_incorrect_password));
+                    findViewById(R.id._loadProgress).setVisibility(View.GONE);
+                    if(!isConnected()) {
+                        Log.i(LOGIN_ACTIVITY_TAG, "No internet connection");
+                    } else {
+                        toggleUiVisibility(true);
+                        mPasswordTextField.setError(getString(R.string.error_incorrect_password));
+                    }
                 } else {
                     Toast.makeText(LoginActivity.this,
                             "Account created with email" +
@@ -171,6 +195,65 @@ public class LoginActivity extends AppCompatActivity {
                 }
             }
         });
-        startSignIn();
+    }
+
+    /**
+     * Toggles all UI elements of LoginActivity screen
+     * @param isVisible true sets to VISIBLE, false sets to GONE
+     */
+    private void toggleUiVisibility(boolean isVisible) {
+        if(isVisible) {
+            findViewById(R.id._emailTextField).setVisibility(View.VISIBLE);
+            findViewById(R.id._passwordTextField).setVisibility(View.VISIBLE);
+            findViewById(R.id._loginButton).setVisibility(View.VISIBLE);
+            findViewById(R.id._registerInfoTextView).setVisibility(View.VISIBLE);
+            findViewById(R.id._scrummyIconImageView).setVisibility(View.VISIBLE);
+        } else {
+            findViewById(R.id._emailTextField).setVisibility(View.GONE);
+            findViewById(R.id._passwordTextField).setVisibility(View.GONE);
+            findViewById(R.id._loginButton).setVisibility(View.GONE);
+            findViewById(R.id._registerInfoTextView).setVisibility(View.GONE);
+            findViewById(R.id._scrummyIconImageView).setVisibility(View.GONE);
+        }
+    }
+
+
+    /**
+     * Checks to see if the device is connected to the internet via wifi or mobile data
+     * @return true if connected, false if not connected
+     */
+    public boolean isConnected() {
+        ConnectivityManager connectivityManager = (ConnectivityManager)getApplicationContext()
+                .getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo wifiInfo = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+        NetworkInfo mobileInfo = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+
+        if ((wifiInfo != null && wifiInfo.isConnected()) || (mobileInfo != null && mobileInfo.isConnected())) {
+            return true;
+        } else {
+            showConnectionDialog();
+            return false;
+        }
+    }
+
+    /**
+     * Displays a dialog reporting to the user that they must be connected to the internet
+     */
+    private void showConnectionDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(R.string.error_no_internet)
+                .setCancelable(false)
+                .setPositiveButton("Connect to WIFI", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
+                    }
+                })
+                .setNegativeButton("Quit", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        finish();
+                    }
+                });
+        AlertDialog alert = builder.create();
+        alert.show();
     }
 }
