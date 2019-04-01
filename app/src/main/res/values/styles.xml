@@ -3,9 +3,27 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">#2056FF</item>
-        <item name="colorPrimaryDark">#4006CC</item>
-        <item name="colorAccent">#FF7F00 </item>
+        <item name="colorPrimary">#5E95FF</item>
+        <item name="colorPrimaryDark">#4F6DE7</item>
+        <item name="colorAccent">#F44336</item>
     </style>
 
 </resources>
+
+<!-- <item name="colorPrimary">#2056FF</item>
+        <item name="colorPrimaryDark">#4006CC</item>
+        <item name="colorAccent">#FF7F00 </item> -->
+
+<!-- Decent Color Set
+        <item name="colorPrimary">#39B3E8</item>
+        <item name="colorPrimaryDark">#2985A8</item>
+        <item name="colorAccent">#82FF71</item>
+        -->
+
+<!-- Best So Far
+        <item name="colorPrimary">#5E95FF</item>
+        <item name="colorPrimaryDark">#4A56E8</item>
+        <item name="colorAccent">#FFAC35</item> Orange
+        4DE002 Green
+        6A76FF Primary Blue
+        -->
