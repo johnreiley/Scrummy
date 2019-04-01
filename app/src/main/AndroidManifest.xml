@@ -15,9 +15,15 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".LoginActivity"
+        <activity android:name=".HelpActivity"
+            android:label="Help"
             android:screenOrientation="portrait"
-            android:label="Sign In">
+            android:configChanges="keyboardHidden|orientation|screenSize" />
+        <activity
+            android:name=".LoginActivity"
+            android:label="Sign In"
+            android:screenOrientation="portrait"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -65,7 +71,8 @@
         <activity
             android:name=".MainActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:screenOrientation="portrait"></activity>
+            android:label="Scrummy Retro"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

@@ -74,6 +74,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case R.id._helpMenuItem:
+                startActivity(new Intent(MainActivity.this, HelpActivity.class));
+                return true;
             case R.id._aboutMenuItem:
                 startActivity(new Intent(MainActivity.this, AboutActivity.class));
                 return true;

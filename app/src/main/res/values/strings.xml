@@ -211,9 +211,10 @@
     <string name="pref_ringtone_silent">Silent</string>
 
     <string name="pref_title_vibrate">Vibrate</string>
-    <string name="brief_overview">Brief Overview</string>
-    <string name="contact_information">Contact Information</string>
-    <string name="description">Description</string>
+    <string name="brief_overview">Scrummy Retro is a tool that facilitates the Retrospective meetings which are a part of the Scrum Software Development Methodology.</string>
+    <string name="contact_information">Contact us at
+        threeguys19@gmail.com</string>
+    <string name="description">Version 1.0</string>
     <string name="logo_description">Picture of Scrummy Retro Logo</string>
     <string name="scrummy_short_description">Scrum Retrospective Meeting Tool</string>
     <string name="title_activity_login">Sign in</string>
@@ -233,4 +234,21 @@
     <string name="sign_out">Sign out</string>
     <string name="load_cloud">Cloud Data</string>
     <string name="load_local">Local Data</string>
+    <string name="help_team_login">How do I set up a team?</string>
+    <string name="help_team_login_1">Create one account to represent the whole team. This account will hold the team\'s cloud meeting data. Each team member must use this account to host or join meetings.</string>
+    <string name="help_start_meeting">How do I start a meeting?</string>
+    <string name="help_start_meeting_1">Have the Scrum Master or host click the \"NEW\" button. This will start a new meeting on the server. To get the rest of the team to join, have them press the \"CONTINUE / JOIN\" button. This will bring each of them into the online meeting.</string>
+    <string name="help_start_meeting_2">WARNING: If a team member clicks the \"NEW\" button after a meeting has started, their new meeting will replace any currently running meeting.</string>
+    <string name="help_run_meeting">How do meetings work?</string>
+    <string name="help_run_meeting_1">There are three stages to the meeting: Topic Entry, Vote, and Discussion. Each team member has the ability to progress the meeting to the next stage by simply pressing the button found at the bottom of the screen. When one member presses the button, the entire team will automatically progress to the next stage. At the end of the Discussion stage, only one team member should press the \"SAVE AND EXIT\" button. When it is pressed, the meeting will be saved to the cloud and every member will exit to the main menu.</string>
+    <string name="help_save_meeting">How do I save my meeting data?</string>
+    <string name="help_save_meeting_1">By default, every meeting will be saved to the team\'s cloud data, but not locally to the device. You can edit this in Settings under Data and Sync.</string>
+    <string name="help_load_saves">How do I view my saved meeting data?</string>
+    <string name="help_load_saves_1">Click on the \"LOAD SAVES\" button in the main menu. By default the list of saved meetings will be loaded from the team\'s cloud data. This can be edited in Settings under Data and Sync. Once there you can switch between seeing local saves and cloud saves by interacting with the two buttons.</string>
+    <string name="help_load_saves_2">To view a meeting\'s data, simply click on the desired meeting title. This will bring up all of the saved data for that meeting.</string>
+    <string name="help_load_saves_3">Each meeting entry can be renamed or deleted.</string>
+    <string name="help_run_meeting_2">The Topic Entry stage is where every topic of discussion should be entered in. Each topic can hold a title, the name of the one who created it, and a category ranking \"Good\", \"Neutral\", or \"Bad\".</string>
+    <string name="help_run_meeting_3">The Vote stage is where the team votes on which topics to discuss first. There is no limit for the number of votes each person can contribute. If there is a tie in votes, preference will be given to \"Bad\" topics first, then \"Neutral\" topics, then \"Good\" topics.</string>
+    <string name="help_run_meeting_4">The Discussion stage will display each topic one at a time starting with the one with the most votes. By default the timer is set to 5 minutes each topic, but the time can be edited while in this stage or in Settings under Timer. Notes from the discussion should be added to the textbox for each topic.</string>
+    <string name="help">Help</string>
 </resources>
