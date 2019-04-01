@@ -3,6 +3,7 @@ package com.threeguys.scrummy;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,6 +12,11 @@ import android.widget.ExpandableListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -32,6 +38,10 @@ public class VoteActivity extends AppCompatActivity {
     private HashMap<String, List<Topic>> childData;
     private List<String> groupData;
     private TextView sessionTitleHolder;
+    private String username = "Username";
+
+    private DatabaseReference sessionDataRef;
+    private DatabaseReference activityDataRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +59,63 @@ public class VoteActivity extends AppCompatActivity {
         groupData.add("Good");
         groupData.add("Neutral");
         groupData.add("Bad");
+
+        // Setup Firebase database
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        // Setup activity Firebase
+        activityDataRef = database.getReference().child("users").child(username).child("activity");
+        activityDataRef.setValue("VoteActivity");
+        activityDataRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                String activity = dataSnapshot.getValue(String.class);
+
+                switch (activity){
+                    case "TopicActivity":
+                        break;
+                    case "VoteActivity":
+                        break;
+                    case "SprintActivity":
+                        onClickStart(getCurrentFocus());
+                        break;
+                    case "MainActivity":
+                        onClickStart(getCurrentFocus());
+                        break;
+                    default:
+                        Log.wtf(VOTE_TAG, "The activity in database is: " + activity);
+                        break;
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                // Failed to read value
+                Log.w(VOTE_TAG, "Failed to read value.", error.toException());
+            }
+        });
+        // Setup session Firebase
+        sessionDataRef = database.getReference().child("users").child(username).child("session");
+        updateFirebaseSession();
+        sessionDataRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String value = dataSnapshot.getValue(String.class);
+
+                Gson gson = new Gson();
+                session = gson.fromJson(value, Session.class);
+
+                refreshAdapter();
+
+                Log.d(VOTE_TAG, "FirebaseDatabase value is: " + value);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                // Failed to read value
+                Log.w(VOTE_TAG, "Failed to read value.", error.toException());
+            }
+        });
+
 
         expandableListView = findViewById(R.id._voteCategoryExpandableListView);
         refreshAdapter();
@@ -74,6 +141,27 @@ public class VoteActivity extends AppCompatActivity {
     }
 
     /**
+     * Pushes the user's session to the FireBase and updates continue key.
+     */
+    private void updateFirebaseSession() {
+        Gson gson = new Gson();
+        String sessionJson = gson.toJson(session, Session.class);
+        sessionDataRef.setValue(sessionJson);
+        Log.i(VOTE_TAG, "Firebase Updated");
+
+        String activityJson = "VoteActivity";
+
+        SharedPreferences sp = this.getSharedPreferences(TEMP_SAVE_PREF, MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putString(CONTINUE_KEY, sessionJson);
+        editor.putString(ACTIVITY_KEY, activityJson);
+        editor.apply();
+        Log.i(VOTE_TAG, "Firebase Updated The Continue Button");
+
+    }
+
+
+    /**
      * Starts the SprintActivity activity
      */
     public void onClickStart(View view) {
@@ -86,6 +174,7 @@ public class VoteActivity extends AppCompatActivity {
         // add the session string to the intent
         sprintIntent.putExtra(SESSION_KEY, sessionJson);
         sprintIntent.putExtra(INDEX_KEY, "0");
+
         startActivity(sprintIntent);
     }
 
@@ -137,6 +226,7 @@ public class VoteActivity extends AppCompatActivity {
 
             session.updateTopic(position, topic);
 
+            updateFirebaseSession();
             refreshAdapter();
         }
     }
@@ -188,6 +278,7 @@ public class VoteActivity extends AppCompatActivity {
             topic.subVote();
 
             session.updateTopic(position, topic);
+            updateFirebaseSession();
             refreshAdapter();
         }
 

@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.CountDownTimer;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -24,6 +25,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 
 import java.lang.ref.WeakReference;
@@ -54,6 +60,11 @@ public class SprintActivity extends AppCompatActivity {
     private TextView time;
     private MediaPlayer mp;
     private boolean isMenuDisabled, saveCloud, saveLocal;
+    private DatabaseReference sessionDataRef;
+    public DatabaseReference activityDataRef;
+    private DatabaseReference currentTopicDataRef;
+
+    private String username = "Username";
 
     AlertDialog changeTimeDialogue;
 
@@ -107,6 +118,117 @@ public class SprintActivity extends AppCompatActivity {
         //timerDuration = 300000; //300000 milliseconds is 5 minutes
         timeRemaining = timerDuration + 1000;
         refreshTimer();
+
+        // Setup Firebase database
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        // Setup activity Firebase
+        activityDataRef = database.getReference().child("users").child(username).child("activity");
+        activityDataRef.setValue("SprintActivity");
+        activityDataRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                String activity = dataSnapshot.getValue(String.class);
+
+                switch (activity){
+                    case "TopicActivity":
+                        break;
+                    case "VoteActivity":
+                        break;
+                    case "SprintActivity":
+                        break;
+                    case "MainActivity":
+                        quit();
+                        break;
+                    default:
+                        Log.wtf(SPRINT_TAG, "The activity in database is: " + activity);
+                        break;
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                // Failed to read value
+                Log.w(SPRINT_TAG, "Failed to read value.", error.toException());
+            }
+        });
+        // Setup session Firebase
+        sessionDataRef = database.getReference().child("users").child(username).child("session");
+        updateFirebaseSession();
+        sessionDataRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String value = dataSnapshot.getValue(String.class);
+
+                Gson gson = new Gson();
+                session = gson.fromJson(value, Session.class);
+
+                Log.d(SPRINT_TAG, "FirebaseDatabase value is: " + value);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                // Failed to read value
+                Log.w(SPRINT_TAG, "Failed to read value.", error.toException());
+            }
+        });
+        // Setup current topic Firebase
+        currentTopicDataRef = database.getReference().child("users").child(username).child("currentTopic");
+        currentTopicDataRef.setValue(topicNumber);
+        currentTopicDataRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Integer value = dataSnapshot.getValue(Integer.class);
+
+                topicNumber = value;
+                if(topicNumber < session.getTopics().size())
+                    setupNextTopic();
+
+                Log.d(SPRINT_TAG, "FirebaseDatabase value is: " + value);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                // Failed to read value
+                Log.w(SPRINT_TAG, "Failed to read value.", error.toException());
+            }
+        });
+    }
+
+    /**
+     * Quit without saving. Used for cloud saving, so only one person saves.
+     */
+    private void quit()
+    {
+        // Clear the temp file
+        SharedPreferences sp = this.getSharedPreferences(TEMP_SAVE_PREF, MODE_PRIVATE);
+        sp.edit().clear().apply();
+
+        if(timer != null) timer.cancel();
+        isMuted = true;
+        mp.pause();
+
+        // Go to MainActivity
+        Intent mainIntent = new Intent(this, MainActivity.class);
+        startActivity(mainIntent);
+    }
+
+    /**
+     * Pushes the user's session to the FireBase and updates continue key.
+     */
+    private void updateFirebaseSession() {
+        Gson gson = new Gson();
+        String sessionJson = gson.toJson(session, Session.class);
+        sessionDataRef.setValue(sessionJson);
+        Log.i(SPRINT_TAG, "Firebase Updated");
+
+        String activityJson = "SprintActivity";
+
+        SharedPreferences sp = this.getSharedPreferences(TEMP_SAVE_PREF, MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putString(CONTINUE_KEY, sessionJson);
+        editor.putString(ACTIVITY_KEY, activityJson);
+        editor.apply();
+        Log.i(SPRINT_TAG, "Firebase Updated The Continue Button");
     }
 
     @Override
@@ -200,6 +322,7 @@ public class SprintActivity extends AppCompatActivity {
 
     public void onClickPrevTopic(View view) {
         saveTopicActions();
+
         topicNumber--;
         setupNextTopic();
         /*
@@ -211,6 +334,7 @@ public class SprintActivity extends AppCompatActivity {
         */
         timeRemaining = timerDuration + 1000;
         refreshTimer();
+        currentTopicDataRef.setValue(topicNumber);
     }
 
 
@@ -228,6 +352,7 @@ public class SprintActivity extends AppCompatActivity {
             timeRemaining = timerDuration + 1000;
             refreshTimer();
         }
+        currentTopicDataRef.setValue(topicNumber);
     }
 
     private void saveAndQuit() {
@@ -244,6 +369,7 @@ public class SprintActivity extends AppCompatActivity {
 
         session.setDate(formattedDate);
 
+        isMuted = true;
         timer.cancel();
         findViewById(R.id._loadProgress).setVisibility(View.VISIBLE);
         findViewById(R.id._nextTopicButton).setEnabled(false);
@@ -263,6 +389,7 @@ public class SprintActivity extends AppCompatActivity {
             Save save = new SaveLocal(this);
             save.save(session);
             Log.i(SPRINT_TAG, "SaveAndQuit: Saved to Device");
+            quit();
         }
 
         if(saveCloud) {
@@ -271,8 +398,7 @@ public class SprintActivity extends AppCompatActivity {
             Log.i(SPRINT_TAG, "SaveAndQuit: Saved to Cloud");
         } else {
             // go back to the main menu
-            Intent mainIntent = new Intent(this, MainActivity.class);
-            startActivity(mainIntent);
+            activityDataRef.setValue("MainActivity");
             Log.i(SPRINT_TAG, "Session saved");
         }
     }

@@ -68,42 +68,14 @@ public class TopicActivity extends AppCompatActivity {
         String sessionJson = (String) getIntent().getExtras().get(MainActivity.SESSION_KEY);
         Gson gson = new Gson();
         session = gson.fromJson(sessionJson, Session.class);
-
-        if (sessionTitle != null) {
-            session.setTitle(sessionTitle);
-        }
-        sessionTitleHolder.setText(session.getTitle());
+        session.setTitle(sessionTitle);
 
         groupData = new ArrayList<>(); // new change
         groupData.add("Good");
         groupData.add("Neutral");
         groupData.add("Bad");
 
-/*
-        // ------------ TEST CODE ------------ //
-        Topic t1 = new Topic();
-        t1.setTitle("Good Test");
-        t1.setUsername("Bretton");
-        t1.setCategory(Topic.Category.GOOD);
-
-        Topic t2 = new Topic();
-        t2.setTitle("Neutral Test");
-        t2.setUsername("John");
-        t2.setCategory(Topic.Category.NEUTRAL);
-
-        Topic t3 = new Topic();
-        t3.setTitle("Bad Test");
-        t3.setUsername("Nate");
-        t3.setCategory(Topic.Category.BAD);
-
-        session.addTopic(t1);
-        session.addTopic(t2);
-        session.addTopic(t3);
-*/
-
         Log.i("Topic Count","Size: " + session.getTopics().size());
-
-        // ------------------------------------ //
 
         expandableListView = findViewById(R.id._topicCategoryExpandableListView);
 
@@ -114,7 +86,7 @@ public class TopicActivity extends AppCompatActivity {
         // Setup Firebase database
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         // Setup activity Firebase
-        activityDataRef = database.getReference().child("users").child(username).child("activity");
+        activityDataRef = database.getReference().child("users").child("Username").child("activity");
         activityDataRef.setValue("TopicActivity");
         activityDataRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -130,7 +102,11 @@ public class TopicActivity extends AppCompatActivity {
                     case "SprintActivity":
                         onClickVote(getCurrentFocus());
                         break;
+                    case "MainActivity":
+                        onClickVote(getCurrentFocus());
+                        break;
                     default:
+                        Log.wtf(TOPIC_TAG, "The activity in database is: " + activity);
                         break;
                 }
             }
@@ -142,7 +118,7 @@ public class TopicActivity extends AppCompatActivity {
             }
         });
         // Setup session Firebase
-        sessionDataRef = database.getReference().child("users").child(username).child("session");
+        sessionDataRef = database.getReference().child("users").child("Username").child("session");
         updateFirebaseSession();
         sessionDataRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -166,6 +142,11 @@ public class TopicActivity extends AppCompatActivity {
                 Log.w(TOPIC_TAG, "Failed to read value.", error.toException());
             }
         });
+
+        if (sessionTitle != null) {
+            session.setTitle(sessionTitle);
+        }
+        sessionTitleHolder.setText(session.getTitle());
 
         refreshAdapter();
     }
@@ -252,7 +233,6 @@ public class TopicActivity extends AppCompatActivity {
 
             // add the session string to the intent
             voteIntent.putExtra(MainActivity.SESSION_KEY, sessionJson);
-            activityDataRef.setValue("VoteActivity");
             startActivity(voteIntent);
 
         } else {
@@ -469,7 +449,7 @@ public class TopicActivity extends AppCompatActivity {
     }
 
     /**
-     * Updates the user's session on the FireBase with the session data in TopicActivity.
+     * Pushes the user's session to the FireBase and updates continue key.
      */
     private void updateFirebaseSession() {
         Gson gson = new Gson();

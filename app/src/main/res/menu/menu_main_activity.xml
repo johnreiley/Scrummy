@@ -11,7 +11,7 @@
         android:title="@string/settings"
         app:showAsAction="never"/>
     <item
-        android:id="@+id/_signOutMenuItem"
+        android:id="@+id/_signOutMenuItem" 
         android:title="@string/sign_out"
         app:showAsAction="never" />
 </menu>

@@ -91,7 +91,7 @@ public class SaveCloud extends Save {
                                 .setVisibility(View.GONE);
                         Intent intent = new Intent(sprintWeakRef.get(), MainActivity.class);
                         sprintWeakRef.get().startActivity(intent);
-
+                        sprintWeakRef.get().activityDataRef.setValue("MainActivity");
                     }
 
 
@@ -116,6 +116,7 @@ public class SaveCloud extends Save {
                                 .setVisibility(View.GONE);
                         Intent intent = new Intent(sprintWeakRef.get(), MainActivity.class);
                         sprintWeakRef.get().startActivity(intent);
+                        sprintWeakRef.get().activityDataRef.setValue("MainActivity");
                     }
                 });
             }
