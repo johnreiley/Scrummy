@@ -68,7 +68,6 @@ public class TopicActivity extends AppCompatActivity {
         String sessionJson = (String) getIntent().getExtras().get(MainActivity.SESSION_KEY);
         Gson gson = new Gson();
         session = gson.fromJson(sessionJson, Session.class);
-        session.setTitle(sessionTitle);
 
         groupData = new ArrayList<>(); // new change
         groupData.add("Good");
@@ -119,7 +118,6 @@ public class TopicActivity extends AppCompatActivity {
         });
         // Setup session Firebase
         sessionDataRef = database.getReference().child("users").child("Username").child("session");
-        updateFirebaseSession();
         sessionDataRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -148,6 +146,7 @@ public class TopicActivity extends AppCompatActivity {
         }
         sessionTitleHolder.setText(session.getTitle());
 
+        updateFirebaseSession();
         refreshAdapter();
     }
 
