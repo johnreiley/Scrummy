@@ -236,6 +236,7 @@
     </string>
     <string name="error_no_internet">Internet connection is required to use this
         application</string>
+    <string name="log_in">Log In</string>
     <string name="sign_out">Sign out</string>
     <string name="load_cloud">Cloud Data</string>
     <string name="load_local">Local Data</string>
@@ -256,4 +257,6 @@
     <string name="help_run_meeting_3">The Vote stage is where the team votes on which topics to discuss first. There is no limit for the number of votes each person can contribute. If there is a tie in votes, preference will be given to \"Bad\" topics first, then \"Neutral\" topics, then \"Good\" topics.</string>
     <string name="help_run_meeting_4">The Discussion stage will display each topic one at a time starting with the one with the most votes. By default the timer is set to 5 minutes each topic, but the time can be edited while in this stage or in Settings under Timer. Notes from the discussion should be added to the textbox for each topic.</string>
     <string name="help">Help</string>
+    <string name="copy_to_cloud">Copy to cloud</string>
+    <string name="copy_to_local">Copy to local</string>
 </resources>

@@ -21,8 +21,8 @@
             android:configChanges="keyboardHidden|orientation|screenSize" />
         <activity
             android:name=".LoginActivity"
-            android:label="Sign In"
             android:screenOrientation="portrait"
+            android:label="Scrummy Retro"
             >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
