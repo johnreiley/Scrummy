@@ -206,9 +206,18 @@ public class SprintActivity extends AppCompatActivity {
         isMuted = true;
         mp.pause();
 
+        clearFirebaseSession();
+
         // Go to MainActivity
         Intent mainIntent = new Intent(this, MainActivity.class);
         startActivity(mainIntent);
+    }
+
+    /**
+     * Clears the session database to disable the join button
+     */
+    private void clearFirebaseSession() {
+        sessionDataRef.setValue("");
     }
 
     /**
@@ -395,9 +404,8 @@ public class SprintActivity extends AppCompatActivity {
             save.save(session);
             Log.i(SPRINT_TAG, "SaveAndQuit: Saved to Cloud");
         } else {
-            // go back to the main menu
-            activityDataRef.setValue("MainActivity");
             Log.i(SPRINT_TAG, "Session saved");
+            activityDataRef.setValue("MainActivity");
         }
     }
 

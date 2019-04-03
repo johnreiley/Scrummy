@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -25,6 +26,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.gson.Gson;
 
@@ -39,8 +45,12 @@ public class MainActivity extends AppCompatActivity {
     static final String INDEX_KEY = "index_key"; // used for loading correct topic in sprint activity
     public static final String MAIN_TAG = MainActivity.class.getSimpleName();
 
+    private DatabaseReference sessionRef;
+    private DatabaseReference activityRef;
+
     // ------- TEST STRINGS ------- //
     static final String USERNAME = "username"; // used for fetching and saving the user's data file
+    private String userID;
 
     private FirebaseAuth mAuth;
 
@@ -53,14 +63,56 @@ public class MainActivity extends AppCompatActivity {
         Log.i(MAIN_TAG, "MainActivity Started");
 
         mAuth = FirebaseAuth.getInstance();
+        userID = mAuth.getCurrentUser().getUid();
+
+        final Button continueButton = findViewById(R.id._continueSessionButton);
+
+        //Setup firebase database and update the sharedPreferences
+        SharedPreferences spTemp = getSharedPreferences(TEMP_SAVE_PREF, MODE_PRIVATE);
+        final SharedPreferences.Editor edit = spTemp.edit();
+        final FirebaseDatabase database = FirebaseDatabase.getInstance();
+        sessionRef = database.getReference().child("users").child(userID).child("session");
+        sessionRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                String value = dataSnapshot.getValue(String.class);
+
+                edit.putString(CONTINUE_KEY, value);
+                edit.apply();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                // Failed to read value
+                Log.w(MAIN_TAG, "Failed to read value.", error.toException());
+            }
+        });
+        activityRef = database.getReference().child("users").child(userID).child("activity");
+        activityRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                String value = dataSnapshot.getValue(String.class);
+
+                edit.putString(ACTIVITY_KEY, value);
+                edit.apply();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                // Failed to read value
+                Log.w(MAIN_TAG, "Failed to read value.", error.toException());
+            }
+        });
 
         // check if there is a session in progress
-        SharedPreferences spTemp = this.getSharedPreferences(TEMP_SAVE_PREF, MODE_PRIVATE);
         String sessionJson = spTemp.getString(CONTINUE_KEY, "no session");
-        if (sessionJson.equals("no session")) {
+        Log.i(MAIN_TAG, "Session Json is: " + sessionJson);
+        if (sessionJson.equals("no session") || sessionJson.equals(" ")) {
             // hide the 'continue' button
-            Button continueButton = findViewById(R.id._continueSessionButton);
             continueButton.setVisibility(View.GONE);
+        }
+        else {
+            continueButton.setVisibility(View.VISIBLE);
         }
     }
 
@@ -90,6 +142,10 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Starts the signing out of the group account currently connected
+     * @param v button view
+     */
     public void onClickSignOut(View v) {
         try {
             mAuth.signOut();
@@ -102,7 +158,7 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Begins a new session
-     * @param view, the "new session" button
+     * @param view the "new session" button
      */
     public void onClickNew(View view) {
         View v = (LayoutInflater.from(MainActivity.this)).inflate(R.layout.title_dialog, null);
@@ -169,7 +225,7 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Loads the last partially complete session
-     * @param view, the "continue session" button
+     * @param view the "continue session" button
      */
     public void onClickContinue(View view) {
         // access the session string in shared preferences
@@ -217,7 +273,7 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Loads all previously completed sessions for viewing info
-     * @param view, the "load session" button
+     * @param view the "load session" button
      */
     public void onClickLoad(View view) {
         // check if there is any data saved.

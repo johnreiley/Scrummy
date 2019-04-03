@@ -90,6 +90,9 @@ public class LoadActivity extends AppCompatActivity {
 //        refreshAdapter();
     }
 
+    /**
+     * Orders by year, month, day, am/pm, hour, then minutes.
+     */
     public void orderSessionsByDate() {
             Collections.sort(sessions, new Comparator<Session>() {
                 @Override
@@ -99,6 +102,10 @@ public class LoadActivity extends AppCompatActivity {
             });
     }
 
+    /**
+     * Called when a session is clicked
+     * @param index the number of session clicked in the session list
+     */
     public void onClickSession(int index) {
         Log.i("onClickSession", "Session clicked: " + sessions.get(index).getDate());
 
