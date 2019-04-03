@@ -12,6 +12,7 @@ import android.widget.ExpandableListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -38,7 +39,7 @@ public class VoteActivity extends AppCompatActivity {
     private HashMap<String, List<Topic>> childData;
     private List<String> groupData;
     private TextView sessionTitleHolder;
-    private String username = "Username";
+    private String userID;
 
     private DatabaseReference sessionDataRef;
     private DatabaseReference activityDataRef;
@@ -60,10 +61,12 @@ public class VoteActivity extends AppCompatActivity {
         groupData.add("Neutral");
         groupData.add("Bad");
 
+        userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
         // Setup Firebase database
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         // Setup activity Firebase
-        activityDataRef = database.getReference().child("users").child(username).child("activity");
+        activityDataRef = database.getReference().child("users").child(userID).child("activity");
         activityDataRef.setValue("VoteActivity");
         activityDataRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -94,7 +97,7 @@ public class VoteActivity extends AppCompatActivity {
             }
         });
         // Setup session Firebase
-        sessionDataRef = database.getReference().child("users").child(username).child("session");
+        sessionDataRef = database.getReference().child("users").child(userID).child("session");
         updateFirebaseSession();
         sessionDataRef.addValueEventListener(new ValueEventListener() {
             @Override

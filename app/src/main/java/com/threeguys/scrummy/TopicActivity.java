@@ -20,6 +20,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -60,14 +61,15 @@ public class TopicActivity extends AppCompatActivity {
         setContentView(R.layout.activity_topic);
         Log.i(TOPIC_TAG, "TopicActivity Started");
 
-        String sessionTitle = (String)getIntent().getExtras().get(MainActivity.SESSION_TITLE_KEY);
-        Log.d(TOPIC_TAG, "Obtained new session title: " + sessionTitle);
+        //String sessionTitle = (String)getIntent().getExtras().get(MainActivity.SESSION_TITLE_KEY);
+        //Log.d(TOPIC_TAG, "Obtained new session title: " + sessionTitle);
 
         TextView sessionTitleHolder = findViewById(R.id._topicEntryTextView);
 
         String sessionJson = (String) getIntent().getExtras().get(MainActivity.SESSION_KEY);
         Gson gson = new Gson();
         session = gson.fromJson(sessionJson, Session.class);
+        //session.setTitle(sessionTitle);
 
         groupData = new ArrayList<>(); // new change
         groupData.add("Good");
@@ -79,13 +81,15 @@ public class TopicActivity extends AppCompatActivity {
         expandableListView = findViewById(R.id._topicCategoryExpandableListView);
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        username = preferences.getString("username","Username");
+        username = preferences.getString("username","");
         Log.i(TOPIC_TAG, "username is: " + username);
+
+        userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         // Setup Firebase database
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         // Setup activity Firebase
-        activityDataRef = database.getReference().child("users").child("Username").child("activity");
+        activityDataRef = database.getReference().child("users").child(userID).child("activity");
         activityDataRef.setValue("TopicActivity");
         activityDataRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -117,21 +121,21 @@ public class TopicActivity extends AppCompatActivity {
             }
         });
         // Setup session Firebase
-        sessionDataRef = database.getReference().child("users").child("Username").child("session");
+        sessionDataRef = database.getReference().child("users").child(userID).child("session");
         sessionDataRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 String value = dataSnapshot.getValue(String.class);
 
-                Gson gson = new Gson();
-                session = gson.fromJson(value, Session.class);
+                if (value != null && value != ""){
+                    Gson gson = new Gson();
+                    session = gson.fromJson(value, Session.class);
 
-                TextView title = findViewById(R.id._topicEntryTextView);
-                if(session != null){
+                    TextView title = findViewById(R.id._topicEntryTextView);
                     title.setText(session.getTitle());
-                }
 
-                refreshAdapter();
+                    refreshAdapter();
+                }
 
                 Log.d(TOPIC_TAG, "FirebaseDatabase value is: " + value);
             }
@@ -143,9 +147,9 @@ public class TopicActivity extends AppCompatActivity {
             }
         });
 
-        if (sessionTitle != null) {
-            session.setTitle(sessionTitle);
-        }
+//        if (sessionTitle != null) {
+//            session.setTitle(sessionTitle);
+//        }
         sessionTitleHolder.setText(session.getTitle());
 
         updateFirebaseSession();
@@ -221,6 +225,10 @@ public class TopicActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Moves to the next activity
+     * @param view The "vote" button clicked
+     */
     public void onClickVote(View view) {
 
         Log.d(TOPIC_TAG, "session.getTopics().size() == " + session.getTopics().size());
@@ -242,6 +250,10 @@ public class TopicActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Called when the plus button is clicked
+     * @param view the plus button
+     */
     public void onClickAddTopic(View view) {
         Log.d(TOPIC_TAG, "entered onclick add topic");
         View v = (LayoutInflater.from(this)).inflate(R.layout.add_topic, null);
@@ -273,6 +285,11 @@ public class TopicActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Allows for the editing of a topic in the session
+     * @param category good, bad, or neutral
+     * @param index the index number of the topic being edited
+     */
     public void onClickEditTopic(int category, final int index) {
         Log.d(TOPIC_TAG, "entered onclick edit topic");
         List<Topic> tl;
@@ -362,6 +379,13 @@ public class TopicActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Called when finishing edits
+     * @param topicET The topic title view
+     * @param nameET The user's name view
+     * @param categoryS the category spinner
+     * @param position the position of the index of session
+     */
     public void onClickEditFinish(EditText topicET, EditText nameET, Spinner categoryS, int position) {
         Topic t = session.getTopics().get(position);
         t.setTitle(topicET.getText().toString());
@@ -387,6 +411,12 @@ public class TopicActivity extends AppCompatActivity {
         refreshAdapter();
     }
 
+    /**
+     * Called when the topic is being added to the session
+     * @param topicET the edit text holding the topic title
+     * @param nameET the edit text holding the name of the user
+     * @param categoryS the spinner holding the category
+     */
     public void onClickFinishInput(EditText topicET, EditText nameET, Spinner categoryS) {
         Log.d(TOPIC_TAG, "entered onclick");
         // first make sure the text inputs aren't empty

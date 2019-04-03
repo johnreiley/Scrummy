@@ -37,7 +37,6 @@ import com.google.gson.Gson;
 public class MainActivity extends AppCompatActivity {
 
     static final String SESSION_KEY =  "SESSION_KEY"; // used for passing sessions between activities
-    static final String SESSION_TITLE_KEY = "session_title"; // used for passing the session title to the topic activity
     static final String TEMP_SAVE_PREF = "continue_session"; // used for storing temp session
     static final String SAVE_PREF = "saved_sessions"; // used for storing completed sessions
     static final String SESSION_LIST_KEY = "session_list_key"; // used for storing session list
@@ -159,7 +158,7 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Begins a new session
-     * @param view, the "new session" button
+     * @param view the "new session" button
      */
     public void onClickNew(View view) {
         View v = (LayoutInflater.from(MainActivity.this)).inflate(R.layout.title_dialog, null);
@@ -211,8 +210,9 @@ public class MainActivity extends AppCompatActivity {
 //                            Toast.LENGTH_SHORT).show();
                 } else {
                     Intent newIntent = new Intent(MainActivity.this, TopicActivity.class);
-                    newIntent.putExtra(SESSION_TITLE_KEY, dialogTitle.getText().toString());
+                    //newIntent.putExtra(SESSION_TITLE_KEY, dialogTitle.getText().toString());
                     Session session = new Session();
+                    session.setTitle(dialogTitle.getText().toString());
                     Gson gson = new Gson();
                     String sessionJson = gson.toJson(session, Session.class);
                     newIntent.putExtra(SESSION_KEY, sessionJson);
@@ -225,7 +225,7 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Loads the last partially complete session
-     * @param view, the "continue session" button
+     * @param view the "continue session" button
      */
     public void onClickContinue(View view) {
         // access the session string in shared preferences
@@ -273,7 +273,7 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Loads all previously completed sessions for viewing info
-     * @param view, the "load session" button
+     * @param view the "load session" button
      */
     public void onClickLoad(View view) {
         // check if there is any data saved.
