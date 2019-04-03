@@ -44,11 +44,16 @@ public class LoadActivity extends AppCompatActivity {
     List<Session> sessions;
     private RecyclerView recyclerView;
     private LoadSessionItemAdapter adapter;
-    private String userSessions;
     private SessionList sessionsList;
     private ToggleButton loadCloud, loadLocal;
     private WeakReference<LoadActivity> reference;
     private Load loader;
+
+    public int getLoadMethod() {
+        return loadMethod;
+    }
+
+    private int loadMethod;
 
     private FirebaseAuth mAuth;
 
@@ -66,7 +71,7 @@ public class LoadActivity extends AppCompatActivity {
         loadLocal = findViewById(R.id._loadLocalToggleButton);
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        int loadMethod = Integer.valueOf(preferences.getString("load_method", "0"));
+        loadMethod = Integer.valueOf(preferences.getString("load_method", "0"));
 
         if (loadMethod == 0) {
             loadCloud.setChecked(true);
@@ -77,17 +82,6 @@ public class LoadActivity extends AppCompatActivity {
             loadLocal.setChecked(true);
             loadLocalMethod(null);
         }
-
-        //Load loader = new LoadCloud(reference,"Username");
-        //loader.load(this);
-//        sessions = loader.load(getApplicationContext()).getList();
-
-//        Log.d(LOAD_ACTIVITY_TAG, "sessions.size() == " + sessions.size());
-//
-//        orderSessionsByDate();
-//        Log.i(LOAD_ACTIVITY_TAG, "LoadActivity Data Loaded and ordered");
-
-//        refreshAdapter();
     }
 
     /**
@@ -185,12 +179,37 @@ public class LoadActivity extends AppCompatActivity {
         titleDialog.show();
     }
 
+    public void onClickCopy(final int position) {
+        Session copy = sessions.get(position);
+
+        if(loadCloud.isChecked()) {
+            LoadLocal loadLocal = new LoadLocal();
+            SessionList sessionList = loadLocal.load(this);
+            List<Session> localSessions = sessionList.getList();
+
+            localSessions.add(copy);
+            Save save = new SaveLocal(getApplicationContext());
+            save.update(localSessions);
+            Toast.makeText(getApplicationContext(),
+                    "Saved to local device.",
+                    Toast.LENGTH_SHORT).show();
+        } else if (loadLocal.isChecked()) {
+            SaveCloud save = new SaveCloud(mAuth.getUid());
+            save.add(copy);
+            Toast.makeText(getApplicationContext(),
+                    "Saved to cloud.",
+                    Toast.LENGTH_SHORT).show();
+        }
+        refreshAdapter();
+    }
+
     public void loadCloudMethod(View v) {
         if (loadLocal.isChecked()) {
             loadLocal.setChecked(false);
         }
 
         if (loadCloud.isChecked()) {
+            loadMethod = 0;
             findViewById(R.id._loadProgress).setVisibility(View.VISIBLE);
             loader = new LoadCloud(reference, mAuth.getCurrentUser().getUid());
             loader.load(this);
@@ -206,6 +225,7 @@ public class LoadActivity extends AppCompatActivity {
         }
 
         if (loadLocal.isChecked()) {
+            loadMethod = 1;
             findViewById(R.id._loadProgress).setVisibility(View.GONE);
             loader = new LoadLocal();
             sessionsList = loader.load(this);

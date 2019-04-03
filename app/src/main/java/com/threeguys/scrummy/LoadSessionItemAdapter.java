@@ -55,6 +55,15 @@ public class LoadSessionItemAdapter extends RecyclerView.Adapter<LoadSessionItem
                 //Open the pop up menu
                 PopupMenu popup = new PopupMenu((LoadActivity)context, holder.popUpMenu);
                 popup.inflate(R.menu.load_item_popup);
+                if(context instanceof LoadActivity) {
+                    int method = ((LoadActivity) context).getLoadMethod();
+
+                    if (method == 0) {
+                        popup.getMenu().getItem(2).setTitle(R.string.copy_to_local);
+                    } else {
+                        popup.getMenu().getItem(2).setTitle(R.string.copy_to_cloud);
+                    }
+                }
                 popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem menuItem) {
@@ -66,6 +75,10 @@ public class LoadSessionItemAdapter extends RecyclerView.Adapter<LoadSessionItem
                             case R.id._deletePopUpItem:
                                 if(context instanceof LoadActivity)
                                     ((LoadActivity)context).onClickDelete(position);
+                                return true;
+                            case R.id._copyPopUpItem:
+                                if(context instanceof LoadActivity)
+                                    ((LoadActivity)context).onClickCopy(position);
                                 return true;
                             default:
                                 return false;

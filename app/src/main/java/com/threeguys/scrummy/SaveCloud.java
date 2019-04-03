@@ -16,6 +16,7 @@ import com.google.firebase.storage.UploadTask;
 import com.google.gson.Gson;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.threeguys.scrummy.MainActivity.USERNAME;
@@ -123,6 +124,7 @@ public class SaveCloud extends Save {
     }
     @Override
     public void update (final List<Session> list) {
+        Log.d(SAVE_CLOUD_TAG, "Size of session list == " + list.size());
 
         final Gson gson = new Gson();
         FirebaseStorage storage = FirebaseStorage.getInstance();
@@ -138,6 +140,50 @@ public class SaveCloud extends Save {
         byte sessionBytes[] = sessionListJson.getBytes();
 
         UploadTask uploadTask = userDataRef.putBytes(sessionBytes);
+    }
+
+    /**
+     * Adds a session to the list of saved sessions.
+     * @param session
+     */
+    public void add (final Session session) {
+        sessionList = new SessionList();
+
+        final Gson gson = new Gson();
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        final StorageReference storageRef = storage.getReference();
+        StorageReference userDataRef = storageRef.child("/users/" + userID + ".txt");
+
+        // just the default value the app can handle
+        final long ONE_MEGABYTE = 1024 * 1024;
+        userDataRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+            @Override
+            public void onSuccess(byte[] bytes) {
+                // Data for "images/island.jpg" is returns, use this as needed
+                String data = new String(bytes);
+                Log.d(SAVE_CLOUD_TAG, data);
+                Log.d(SAVE_CLOUD_TAG, "userSessions == " + data);
+
+                Log.d(SAVE_CLOUD_TAG, "The variable \'userSessions\' == " + data);
+
+                // If nothing was found
+                if (!TextUtils.isEmpty(data)) {
+                    sessionList = gson.fromJson(data, SessionList.class);
+                }
+
+                Log.i(SAVE_CLOUD_TAG, "Loaded Sessions");
+                Log.d(SAVE_CLOUD_TAG, "Size of sessionList == " +
+                        String.valueOf(sessionList.getList().size()));
+
+                sessionList.addSession(session);
+                update(sessionList.getList());
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                Log.d(SAVE_CLOUD_TAG, "Failure to download file");
+            }
+        });
     }
 }
 
