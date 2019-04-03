@@ -49,6 +49,7 @@ public class TopicActivity extends AppCompatActivity {
     private HashMap<String, List<Topic>> childData;
     private List<String> groupData;
     private String username;
+    private String userID;
 
     private DatabaseReference sessionDataRef;
     private DatabaseReference activityDataRef;

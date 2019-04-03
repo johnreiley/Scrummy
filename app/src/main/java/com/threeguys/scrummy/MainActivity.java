@@ -50,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
 
     // ------- TEST STRINGS ------- //
     static final String USERNAME = "username"; // used for fetching and saving the user's data file
+    private String userID;
 
     private FirebaseAuth mAuth;
 
@@ -62,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
         Log.i(MAIN_TAG, "MainActivity Started");
 
         mAuth = FirebaseAuth.getInstance();
+        userID = mAuth.getCurrentUser().getUid();
 
         final Button continueButton = findViewById(R.id._continueSessionButton);
 
@@ -69,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences spTemp = getSharedPreferences(TEMP_SAVE_PREF, MODE_PRIVATE);
         final SharedPreferences.Editor edit = spTemp.edit();
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
-        sessionRef = database.getReference().child("users").child("Username").child("session");
+        sessionRef = database.getReference().child("users").child(userID).child("session");
         sessionRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -77,12 +79,6 @@ public class MainActivity extends AppCompatActivity {
 
                 edit.putString(CONTINUE_KEY, value);
                 edit.apply();
-
-                if(value != "") {
-                    continueButton.setVisibility(View.VISIBLE);
-                } else {
-                    continueButton.setVisibility(View.GONE);
-                }
             }
 
             @Override
@@ -91,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
                 Log.w(MAIN_TAG, "Failed to read value.", error.toException());
             }
         });
-        activityRef = database.getReference().child("users").child("Username").child("activity");
+        activityRef = database.getReference().child("users").child(userID).child("activity");
         activityRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -110,9 +106,13 @@ public class MainActivity extends AppCompatActivity {
 
         // check if there is a session in progress
         String sessionJson = spTemp.getString(CONTINUE_KEY, "no session");
-        if (sessionJson.equals("no session") && (sessionRef == null || sessionRef.toString() == "")) {
+        Log.i(MAIN_TAG, "Session Json is: " + sessionJson);
+        if (sessionJson.equals("no session") || sessionJson.equals(" ")) {
             // hide the 'continue' button
             continueButton.setVisibility(View.GONE);
+        }
+        else {
+            continueButton.setVisibility(View.VISIBLE);
         }
     }
 
@@ -144,7 +144,7 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Starts the signing out of the group account currently connected
-     * @param button view
+     * @param v button view
      */
     public void onClickSignOut(View v) {
         try {
