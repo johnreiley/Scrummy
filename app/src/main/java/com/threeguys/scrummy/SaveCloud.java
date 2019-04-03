@@ -40,11 +40,6 @@ public class SaveCloud extends Save {
         this.userID = userID;
     }
 
-    // This constructor is only for debugging purposes
-    public SaveCloud(Context context) {
-        setSaveContext(context);
-    }
-
     @Override
     public void save(final Session session) {
         // Grab the JSON object related to our list of sessions from Firebase.
@@ -52,10 +47,10 @@ public class SaveCloud extends Save {
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageRef = storage.getReference();
         StorageReference userDataRef = storageRef.child("/users/" + userID + ".txt");
-        // TODO: find out how to check if the path exists yet or not
 
         // just the default value the app can handle
         final long ONE_MEGABYTE = 1024 * 1024;
+
         userDataRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
             @Override
             public void onSuccess(byte[] bytes) {
@@ -79,7 +74,7 @@ public class SaveCloud extends Save {
 
                 // upload to Firebase
                 byte sessionBytes[] = sessionListJson.getBytes();
-                String path = "users/" + userID + ".txt"; // this will be implemented to use the usersname to name the file
+                String path = "users/" + userID + ".txt";
                 StorageReference userRef = SaveCloud.this.storage.getReference(path);
 
                 UploadTask uploadTask = userRef.putBytes(sessionBytes);
@@ -100,11 +95,13 @@ public class SaveCloud extends Save {
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
+
+                // create the new directory file because it doesn't exist
                 sessionList = new SessionList();
                 sessionList.addSession(session);
                 final String sessionListJson = gson.toJson(sessionList, SessionList.class);
                 byte sessionBytes[] = sessionListJson.getBytes();
-                String path = "users/" + userID + ".txt"; // this will be implemented to use the usersname to name the file
+                String path = "users/" + userID + ".txt";
                 StorageReference userRef = SaveCloud.this.storage.getReference(path);
 
                 UploadTask uploadTask = userRef.putBytes(sessionBytes);

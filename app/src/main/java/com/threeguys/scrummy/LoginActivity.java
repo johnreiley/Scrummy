@@ -85,25 +85,6 @@ public class LoginActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-//    protected void onClickLogin() {
-//        setContentView(R.layout.activity_login);
-//        mEmailTextField = findViewById(R.id._emailTextField);
-//        mPasswordTextField = findViewById(R.id._passwordTextField);
-//
-//        mLoginButton = findViewById(R.id._loginButton);
-//
-//        mLoginButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                startSignIn();
-//            }
-//        });
-//    }
-//
-//    protected void onClickRegister() {
-//        setContentView(R.layout.activity_register);
-//    }
-
     @Override
     protected void onStart() {
         super.onStart();
@@ -116,6 +97,10 @@ public class LoginActivity extends AppCompatActivity {
         mAuth.addAuthStateListener(mAuthStateListener);
     }
 
+    /**
+     * Kicks off the sign in to Firebase by grabbing from the text inputs,
+     * checking for valid input
+     */
     private void startSignIn() {
 
         final String email = mEmailTextField.getText().toString();
@@ -166,16 +151,31 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Checks the email to make sure it contains an "@" and "."
+     * @param email
+     * @return whether or not the email is valid
+     */
     private boolean isEmailValid(String email) {
         //TODO: Replace this with your own logic
         return (email.contains("@") && email.contains("."));
     }
 
+    /**
+     * Checks the password to make sure is is 8 or more characters
+     * @param password
+     * @return whether or not the password is valid
+     */
     private boolean isPasswordValid(String password) {
         //TODO: Replace this with your own logic
         return password.length() > 7;
     }
 
+    /**
+     * Creates a new user account in Firebase
+     * @param email The email to be registered
+     * @param password The account password
+     */
     private void registerNewUser(String email, String password) {
         mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
@@ -183,7 +183,7 @@ public class LoginActivity extends AppCompatActivity {
                 if(!task.isSuccessful()) {
                     findViewById(R.id._loadProgress).setVisibility(View.GONE);
                     if(!isConnected()) {
-                        Log.i(LOGIN_ACTIVITY_TAG, "No internet connection");
+                        Log.d(LOGIN_ACTIVITY_TAG, "No internet connection");
                     } else {
                         toggleUiVisibility(true);
                         mPasswordTextField.setError(getString(R.string.error_incorrect_password));
