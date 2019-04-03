@@ -102,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Begins a new session
-     * @param view, the "new session" button
+     * @param view the "new session" button
      */
     public void onClickNew(View view) {
         View v = (LayoutInflater.from(MainActivity.this)).inflate(R.layout.title_dialog, null);
@@ -169,7 +169,7 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Loads the last partially complete session
-     * @param view, the "continue session" button
+     * @param view the "continue session" button
      */
     public void onClickContinue(View view) {
         // access the session string in shared preferences
@@ -217,7 +217,7 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Loads all previously completed sessions for viewing info
-     * @param view, the "load session" button
+     * @param view the "load session" button
      */
     public void onClickLoad(View view) {
         // check if there is any data saved.

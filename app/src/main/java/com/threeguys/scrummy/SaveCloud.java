@@ -76,7 +76,6 @@ public class SaveCloud extends Save {
 
                 Log.d(SAVE_CLOUD_TAG, "The variable sessionListJson == " + sessionListJson);
 
-
                 // upload to Firebase
                 byte sessionBytes[] = sessionListJson.getBytes();
                 String path = "users/" + userID + ".txt"; // this will be implemented to use the usersname to name the file

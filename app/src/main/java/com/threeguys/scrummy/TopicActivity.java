@@ -226,6 +226,10 @@ public class TopicActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Moves to the next activity
+     * @param view The "vote" button clicked
+     */
     public void onClickVote(View view) {
 
         Log.d(TOPIC_TAG, "session.getTopics().size() == " + session.getTopics().size());
@@ -247,6 +251,10 @@ public class TopicActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Called when the plus button is clicked
+     * @param view the plus button
+     */
     public void onClickAddTopic(View view) {
         Log.d(TOPIC_TAG, "entered onclick add topic");
         View v = (LayoutInflater.from(this)).inflate(R.layout.add_topic, null);
@@ -278,6 +286,11 @@ public class TopicActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Allows for the editing of a topic in the session
+     * @param category good, bad, or neutral
+     * @param index the index number of the topic being edited
+     */
     public void onClickEditTopic(int category, final int index) {
         Log.d(TOPIC_TAG, "entered onclick edit topic");
         List<Topic> tl;
@@ -367,6 +380,13 @@ public class TopicActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Called when finishing edits
+     * @param topicET The topic title view
+     * @param nameET The user's name view
+     * @param categoryS the category spinner
+     * @param position the position of the index of session
+     */
     public void onClickEditFinish(EditText topicET, EditText nameET, Spinner categoryS, int position) {
         Topic t = session.getTopics().get(position);
         t.setTitle(topicET.getText().toString());
@@ -392,6 +412,12 @@ public class TopicActivity extends AppCompatActivity {
         refreshAdapter();
     }
 
+    /**
+     * Called when the topic is being added to the session
+     * @param topicET the edit text holding the topic title
+     * @param nameET the edit text holding the name of the user
+     * @param categoryS the spinner holding the category
+     */
     public void onClickFinishInput(EditText topicET, EditText nameET, Spinner categoryS) {
         Log.d(TOPIC_TAG, "entered onclick");
         // first make sure the text inputs aren't empty
