@@ -63,12 +63,9 @@ public class SprintActivity extends AppCompatActivity {
     private DatabaseReference sessionDataRef;
     public DatabaseReference activityDataRef;
     private DatabaseReference currentTopicDataRef;
-
-    private String username = "Username";
+    private String userID;
 
     AlertDialog changeTimeDialogue;
-
-    private FirebaseAuth mAuth = FirebaseAuth.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,10 +116,12 @@ public class SprintActivity extends AppCompatActivity {
         timeRemaining = timerDuration + 1000;
         refreshTimer();
 
+        userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
         // Setup Firebase database
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         // Setup activity Firebase
-        activityDataRef = database.getReference().child("users").child(username).child("activity");
+        activityDataRef = database.getReference().child("users").child(userID).child("activity");
         activityDataRef.setValue("SprintActivity");
         activityDataRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -152,7 +151,7 @@ public class SprintActivity extends AppCompatActivity {
             }
         });
         // Setup session Firebase
-        sessionDataRef = database.getReference().child("users").child(username).child("session");
+        sessionDataRef = database.getReference().child("users").child(userID).child("session");
         updateFirebaseSession();
         sessionDataRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -172,7 +171,7 @@ public class SprintActivity extends AppCompatActivity {
             }
         });
         // Setup current topic Firebase
-        currentTopicDataRef = database.getReference().child("users").child(username).child("currentTopic");
+        currentTopicDataRef = database.getReference().child("users").child(userID).child("currentTopic");
         currentTopicDataRef.setValue(topicNumber);
         currentTopicDataRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -392,7 +391,7 @@ public class SprintActivity extends AppCompatActivity {
         }
 
         if(saveCloud) {
-            Save save = new SaveCloud(new WeakReference<>(this), mAuth.getUid());
+            Save save = new SaveCloud(new WeakReference<>(this), userID);
             save.save(session);
             Log.i(SPRINT_TAG, "SaveAndQuit: Saved to Cloud");
         } else {

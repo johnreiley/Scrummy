@@ -31,7 +31,6 @@ import com.google.gson.Gson;
 public class MainActivity extends AppCompatActivity {
 
     static final String SESSION_KEY =  "SESSION_KEY"; // used for passing sessions between activities
-    static final String SESSION_TITLE_KEY = "session_title"; // used for passing the session title to the topic activity
     static final String TEMP_SAVE_PREF = "continue_session"; // used for storing temp session
     static final String SAVE_PREF = "saved_sessions"; // used for storing completed sessions
     static final String SESSION_LIST_KEY = "session_list_key"; // used for storing session list
@@ -155,8 +154,9 @@ public class MainActivity extends AppCompatActivity {
 //                            Toast.LENGTH_SHORT).show();
                 } else {
                     Intent newIntent = new Intent(MainActivity.this, TopicActivity.class);
-                    newIntent.putExtra(SESSION_TITLE_KEY, dialogTitle.getText().toString());
+                    //newIntent.putExtra(SESSION_TITLE_KEY, dialogTitle.getText().toString());
                     Session session = new Session();
+                    session.setTitle(dialogTitle.getText().toString());
                     Gson gson = new Gson();
                     String sessionJson = gson.toJson(session, Session.class);
                     newIntent.putExtra(SESSION_KEY, sessionJson);

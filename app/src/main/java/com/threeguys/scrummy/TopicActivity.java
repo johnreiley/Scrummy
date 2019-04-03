@@ -20,6 +20,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -48,6 +49,7 @@ public class TopicActivity extends AppCompatActivity {
     private HashMap<String, List<Topic>> childData;
     private List<String> groupData;
     private String username;
+    private String userID;
 
     private DatabaseReference sessionDataRef;
     private DatabaseReference activityDataRef;
@@ -60,15 +62,15 @@ public class TopicActivity extends AppCompatActivity {
         setContentView(R.layout.activity_topic);
         Log.i(TOPIC_TAG, "TopicActivity Started");
 
-        String sessionTitle = (String)getIntent().getExtras().get(MainActivity.SESSION_TITLE_KEY);
-        Log.d(TOPIC_TAG, "Obtained new session title: " + sessionTitle);
+        //String sessionTitle = (String)getIntent().getExtras().get(MainActivity.SESSION_TITLE_KEY);
+        //Log.d(TOPIC_TAG, "Obtained new session title: " + sessionTitle);
 
         TextView sessionTitleHolder = findViewById(R.id._topicEntryTextView);
 
         String sessionJson = (String) getIntent().getExtras().get(MainActivity.SESSION_KEY);
         Gson gson = new Gson();
         session = gson.fromJson(sessionJson, Session.class);
-        session.setTitle(sessionTitle);
+        //session.setTitle(sessionTitle);
 
         groupData = new ArrayList<>(); // new change
         groupData.add("Good");
@@ -80,13 +82,15 @@ public class TopicActivity extends AppCompatActivity {
         expandableListView = findViewById(R.id._topicCategoryExpandableListView);
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        username = preferences.getString("username","Username");
+        username = preferences.getString("username","");
         Log.i(TOPIC_TAG, "username is: " + username);
+
+        userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         // Setup Firebase database
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         // Setup activity Firebase
-        activityDataRef = database.getReference().child("users").child("Username").child("activity");
+        activityDataRef = database.getReference().child("users").child(userID).child("activity");
         activityDataRef.setValue("TopicActivity");
         activityDataRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -118,20 +122,22 @@ public class TopicActivity extends AppCompatActivity {
             }
         });
         // Setup session Firebase
-        sessionDataRef = database.getReference().child("users").child("Username").child("session");
+        sessionDataRef = database.getReference().child("users").child(userID).child("session");
         updateFirebaseSession();
         sessionDataRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 String value = dataSnapshot.getValue(String.class);
 
-                Gson gson = new Gson();
-                session = gson.fromJson(value, Session.class);
+                if (value != null && value != ""){
+                    Gson gson = new Gson();
+                    session = gson.fromJson(value, Session.class);
 
-                TextView title = findViewById(R.id._topicEntryTextView);
-                title.setText(session.getTitle());
+                    TextView title = findViewById(R.id._topicEntryTextView);
+                    title.setText(session.getTitle());
 
-                refreshAdapter();
+                    refreshAdapter();
+                }
 
                 Log.d(TOPIC_TAG, "FirebaseDatabase value is: " + value);
             }
@@ -143,9 +149,9 @@ public class TopicActivity extends AppCompatActivity {
             }
         });
 
-        if (sessionTitle != null) {
-            session.setTitle(sessionTitle);
-        }
+//        if (sessionTitle != null) {
+//            session.setTitle(sessionTitle);
+//        }
         sessionTitleHolder.setText(session.getTitle());
 
         refreshAdapter();
