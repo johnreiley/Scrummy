@@ -143,6 +143,10 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Starts the signing out of the group account currently connected
+     * @param button view
+     */
     public void onClickSignOut(View v) {
         try {
             mAuth.signOut();

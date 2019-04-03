@@ -398,7 +398,6 @@ public class SprintActivity extends AppCompatActivity {
             Save save = new SaveLocal(this);
             save.save(session);
             Log.i(SPRINT_TAG, "SaveAndQuit: Saved to Device");
-            quit();
         }
 
         if(saveCloud) {
@@ -406,9 +405,8 @@ public class SprintActivity extends AppCompatActivity {
             save.save(session);
             Log.i(SPRINT_TAG, "SaveAndQuit: Saved to Cloud");
         } else {
-            // go back to the main menu
-            activityDataRef.setValue("MainActivity");
             Log.i(SPRINT_TAG, "Session saved");
+            activityDataRef.setValue("MainActivity");
         }
     }
 

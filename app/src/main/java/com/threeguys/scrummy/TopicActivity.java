@@ -127,7 +127,9 @@ public class TopicActivity extends AppCompatActivity {
                 session = gson.fromJson(value, Session.class);
 
                 TextView title = findViewById(R.id._topicEntryTextView);
-                title.setText(session.getTitle());
+                if(session != null){
+                    title.setText(session.getTitle());
+                }
 
                 refreshAdapter();
 
