@@ -45,7 +45,6 @@ public class MainActivity extends AppCompatActivity {
     static final String INDEX_KEY = "index_key"; // used for loading correct topic in sprint activity
     public static final String MAIN_TAG = MainActivity.class.getSimpleName();
 
-    private DatabaseReference sessionRef;
     private DatabaseReference activityRef;
 
     // ------- TEST STRINGS ------- //
@@ -67,31 +66,37 @@ public class MainActivity extends AppCompatActivity {
 
         final Button continueButton = findViewById(R.id._continueSessionButton);
 
-        //Setup firebase database and update the sharedPreferences
+        // Setup firebase database and update the sharedPreferences
         SharedPreferences spTemp = getSharedPreferences(TEMP_SAVE_PREF, MODE_PRIVATE);
         final SharedPreferences.Editor edit = spTemp.edit();
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
-        sessionRef = database.getReference().child("users").child(userID).child("session");
-        sessionRef.addValueEventListener(new ValueEventListener() {
+        // Session database
+        DatabaseReference sessionDataRef = database.getReference().child("users").child(userID).child("session");
+        sessionDataRef.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+            public void onDataChange(DataSnapshot dataSnapshot) {
                 String value = dataSnapshot.getValue(String.class);
 
                 edit.putString(CONTINUE_KEY, value);
-                edit.apply();
+
+                Log.d(MAIN_TAG, "FirebaseDatabase value is: " + value);
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError error) {
+            public void onCancelled(DatabaseError error) {
                 // Failed to read value
                 Log.w(MAIN_TAG, "Failed to read value.", error.toException());
             }
         });
+        // Activity database
         activityRef = database.getReference().child("users").child(userID).child("activity");
         activityRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 String value = dataSnapshot.getValue(String.class);
+
+                if(value.equals("MainActivity")) continueButton.setVisibility(View.GONE);
+                else continueButton.setVisibility(View.VISIBLE);
 
                 edit.putString(ACTIVITY_KEY, value);
                 edit.apply();
@@ -103,12 +108,30 @@ public class MainActivity extends AppCompatActivity {
                 Log.w(MAIN_TAG, "Failed to read value.", error.toException());
             }
         });
+        // Update index in the case of a sprint activity
+        DatabaseReference indexRef = database.getReference().child("users").child(userID).child("currentTopic");
+        indexRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Integer value = dataSnapshot.getValue(Integer.class);
 
-        // check if there is a session in progress
+                edit.putString(INDEX_KEY, value.toString()).apply();
+
+                Log.d(MAIN_TAG, "FirebaseDatabase value is: " + value);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                // Failed to read value
+                Log.w(MAIN_TAG, "Failed to read value.", error.toException());
+            }
+        });
+
+        // Check if there is a session in progress
         String sessionJson = spTemp.getString(CONTINUE_KEY, "no session");
         Log.i(MAIN_TAG, "Session Json is: " + sessionJson);
         if (sessionJson.equals("no session") || sessionJson.equals(" ")) {
-            // hide the 'continue' button
+            // Hide the 'continue' button
             continueButton.setVisibility(View.GONE);
         }
         else {

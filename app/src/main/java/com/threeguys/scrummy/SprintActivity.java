@@ -206,19 +206,11 @@ public class SprintActivity extends AppCompatActivity {
         isMuted = true;
         mp.pause();
 
-        clearFirebaseSession();
-
         // Go to MainActivity
         Intent mainIntent = new Intent(this, MainActivity.class);
         startActivity(mainIntent);
     }
 
-    /**
-     * Clears the session database to disable the join button
-     */
-    private void clearFirebaseSession() {
-        sessionDataRef.setValue("");
-    }
 
     /**
      * Pushes the user's session to the FireBase and updates continue key.
