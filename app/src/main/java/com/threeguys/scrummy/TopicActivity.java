@@ -454,6 +454,9 @@ public class TopicActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Resets the adapter to display the latest data.
+     */
     private void refreshAdapter() {
         childData = new HashMap<>();
 

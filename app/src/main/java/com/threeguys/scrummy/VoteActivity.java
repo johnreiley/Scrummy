@@ -295,6 +295,9 @@ public class VoteActivity extends AppCompatActivity {
         this.session = session;
     }
 
+    /**
+     * Resets the adapter to display the latest data.
+     */
     private void refreshAdapter() {
         childData = new HashMap<>();
 

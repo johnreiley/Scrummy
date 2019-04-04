@@ -111,6 +111,9 @@ public class LoadActivity extends AppCompatActivity {
         startActivity(viewIntent);
     }
 
+    /**
+     * Resets the adapter to display the latest data.
+     */
     public void refreshAdapter() {
         if(adapter == null) {
             adapter = new LoadSessionItemAdapter(this, sessions);
@@ -125,6 +128,10 @@ public class LoadActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Deletes the session at the given position.
+     * @param position the index number of the session clicked in the session list.
+     */
     public void onClickDelete(int position) {
         sessions.remove(position);
         if(loadCloud.isChecked()) {
@@ -137,6 +144,10 @@ public class LoadActivity extends AppCompatActivity {
         refreshAdapter();
     }
 
+    /**
+     * Renames the session at the given position.
+     * @param position the index number of the session clicked in the session list.
+     */
     public void onClickRename(final int position) {
         View v = (LayoutInflater.from(LoadActivity.this)).inflate(R.layout.title_dialog, null);
 
@@ -179,6 +190,11 @@ public class LoadActivity extends AppCompatActivity {
         titleDialog.show();
     }
 
+    /**
+     * Copies the session at the given position and adds it to the corresponding list.
+     * Copies both from local to cloud and from cloud to local.
+     * @param position the index number of the session clicked in the session list.
+     */
     public void onClickCopy(final int position) {
         Session copy = sessions.get(position);
 
@@ -203,6 +219,10 @@ public class LoadActivity extends AppCompatActivity {
         refreshAdapter();
     }
 
+    /**
+     * Toggles the loaded data to show cloud data.
+     * @param v the View representing the button clicked.
+     */
     public void loadCloudMethod(View v) {
         if (loadLocal.isChecked()) {
             loadLocal.setChecked(false);
@@ -219,6 +239,10 @@ public class LoadActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Toggles the loaded data to show local data.
+     * @param v the View representing the button clicked.
+     */
     public void loadLocalMethod(View v) {
         if (loadCloud.isChecked()) {
             loadCloud.setChecked(false);
