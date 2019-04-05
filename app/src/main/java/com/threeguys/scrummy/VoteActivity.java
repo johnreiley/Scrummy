@@ -163,7 +163,6 @@ public class VoteActivity extends AppCompatActivity {
 
     }
 
-
     /**
      * Starts the SprintActivity activity
      */

@@ -194,6 +194,30 @@ public class SprintActivity extends AppCompatActivity {
                 Log.w(SPRINT_TAG, "Failed to read value.", error.toException());
             }
         });
+
+    }
+
+    /**
+     * Disables all buttons and clock if not the host of the session
+     */
+    private void disableAll() {
+        // Actions
+        findViewById(R.id._actionsMultiAutoCompleteTextView).setVisibility(View.GONE);
+        findViewById(R.id._actionsTextView).setVisibility(View.GONE);
+
+        // Buttons
+        findViewById(R.id._nextTopicButton).setVisibility(View.GONE);
+        findViewById(R.id._prevTopicButton).setVisibility(View.GONE);
+
+        // Clock
+        findViewById(R.id._timeValueTextView).setVisibility(View.GONE);
+        findViewById(R.id._playPauseTimeButton).setVisibility(View.GONE);
+        findViewById(R.id._resetTimeButton).setVisibility(View.GONE);
+        findViewById(R.id._stopTimeButton).setVisibility(View.GONE);
+        findViewById(R.id._alarmButton).setVisibility(View.GONE);
+        if(timer != null) timer.cancel();
+        if(mp != null) mp.stop();
+        isMuted = true;
     }
 
     /**
@@ -207,13 +231,12 @@ public class SprintActivity extends AppCompatActivity {
 
         if(timer != null) timer.cancel();
         isMuted = true;
-        mp.pause();
+        if(mp != null) mp.stop();
 
         // Go to MainActivity
         Intent mainIntent = new Intent(this, MainActivity.class);
         startActivity(mainIntent);
     }
-
 
     /**
      * Pushes the user's session to the FireBase and updates continue key.

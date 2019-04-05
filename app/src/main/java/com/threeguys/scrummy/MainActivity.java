@@ -81,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
         final SharedPreferences.Editor edit = spTemp.edit();
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         // Session database
-        DatabaseReference sessionDataRef = database.getReference().child("users").child(userID).child("session");
+        final DatabaseReference sessionDataRef = database.getReference().child("users").child(userID).child("session");
         sessionDataRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -110,6 +110,7 @@ public class MainActivity extends AppCompatActivity {
                 } else {
                     continueButton.setVisibility(View.VISIBLE);
                 }
+
                 edit.putString(ACTIVITY_KEY, value);
                 edit.apply();
             }
