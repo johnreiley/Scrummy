@@ -1,10 +1,13 @@
 package com.threeguys.scrummy;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.MediaPlayer;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.CountDownTimer;
 import android.preference.PreferenceManager;
@@ -402,17 +405,17 @@ public class SprintActivity extends AppCompatActivity {
 
         Log.i(SPRINT_TAG, "Temporary files cleared");
 
-        if(saveLocal) {
+        if(saveLocal || (saveCloud && !isConnected())) {
             Save save = new SaveLocal(this);
             save.save(session);
             Log.i(SPRINT_TAG, "SaveAndQuit: Saved to Device");
         }
 
-        if(saveCloud) {
+        if(saveCloud && isConnected()) {
             Save save = new SaveCloud(new WeakReference<>(this), userID);
             save.save(session);
             Log.i(SPRINT_TAG, "SaveAndQuit: Saved to Cloud");
-        } else {
+        }else {
             Log.i(SPRINT_TAG, "Session saved");
             activityDataRef.setValue("MainActivity");
         }
@@ -548,6 +551,23 @@ public class SprintActivity extends AppCompatActivity {
                 }
             }
         }.start();
+    }
+
+    /**
+     * Checks to see if the device is connected to the internet via wifi or mobile data
+     * @return true if connected, false if not connected
+     */
+    public boolean isConnected() {
+        ConnectivityManager connectivityManager = (ConnectivityManager)getApplicationContext()
+                .getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo wifiInfo = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+        NetworkInfo mobileInfo = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+
+        if ((wifiInfo != null && wifiInfo.isConnected()) || (mobileInfo != null && mobileInfo.isConnected())) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }
 

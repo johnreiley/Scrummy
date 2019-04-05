@@ -2,9 +2,12 @@ package com.threeguys.scrummy;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -73,7 +76,7 @@ public class LoadActivity extends AppCompatActivity {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         loadMethod = Integer.valueOf(preferences.getString("load_method", "0"));
 
-        if (loadMethod == 0) {
+        if (loadMethod == 0 && isConnected()) {
             loadCloud.setChecked(true);
             loadLocal.setChecked(false);
             loadCloudMethod(null);
@@ -81,6 +84,10 @@ public class LoadActivity extends AppCompatActivity {
             loadCloud.setChecked(false);
             loadLocal.setChecked(true);
             loadLocalMethod(null);
+        }
+
+        if (!isConnected()) {
+            loadCloud.setEnabled(false);
         }
     }
 
@@ -266,6 +273,23 @@ public class LoadActivity extends AppCompatActivity {
         } else {
             sessions = new ArrayList<>();
             refreshAdapter();
+        }
+    }
+
+    /**
+     * Checks to see if the device is connected to the internet via wifi or mobile data
+     * @return true if connected, false if not connected
+     */
+    public boolean isConnected() {
+        ConnectivityManager connectivityManager = (ConnectivityManager)getApplicationContext()
+                .getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo wifiInfo = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+        NetworkInfo mobileInfo = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+
+        if ((wifiInfo != null && wifiInfo.isConnected()) || (mobileInfo != null && mobileInfo.isConnected())) {
+            return true;
+        } else {
+            return false;
         }
     }
 }
