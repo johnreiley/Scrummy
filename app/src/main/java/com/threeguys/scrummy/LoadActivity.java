@@ -260,6 +260,7 @@ public class LoadActivity extends AppCompatActivity {
                         "No local data found.",
                         Toast.LENGTH_SHORT).show();
             } else {
+                orderSessionsByDate();
                 refreshAdapter();
             }
         } else {
