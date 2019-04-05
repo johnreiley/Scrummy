@@ -3,6 +3,9 @@ package com.threeguys.scrummy;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This class simply holds a list of Sessions and is used for gson encoding and decoding.
+ */
 public class SessionList {
 
     private List<Session> list;

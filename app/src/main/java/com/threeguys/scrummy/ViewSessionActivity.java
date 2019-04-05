@@ -37,8 +37,4 @@ public class ViewSessionActivity extends AppCompatActivity {
         sessionTitleHolder = findViewById(R.id._viewSessionTextView);
         sessionTitleHolder.setText(session.getTitle());
     }
-
-    public void display() {
-
-    }
 }

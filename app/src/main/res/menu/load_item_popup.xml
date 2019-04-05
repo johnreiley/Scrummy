@@ -12,4 +12,9 @@
         tools:onClick="onClickDelete"
         android:id="@+id/_deletePopUpItem"/>
 
+    <item
+        android:id="@+id/_copyPopUpItem"
+        android:title="@string/copy_to_local"
+        tools:onClick="onClickDelete" />
+
 </menu>

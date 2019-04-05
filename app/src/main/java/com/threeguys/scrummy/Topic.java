@@ -15,7 +15,7 @@ public class Topic {
     private int votes;
 
     /**
-     *
+     * Defines three possible categories representing emotion.
      */
     public enum Category {GOOD, NEUTRAL, BAD}
 

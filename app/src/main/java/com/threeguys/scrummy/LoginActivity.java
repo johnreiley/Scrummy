@@ -66,6 +66,12 @@ public class LoginActivity extends AppCompatActivity {
                 }
             }
         };
+
+        if(getSupportActionBar() == null) {
+            Log.d(LOGIN_ACTIVITY_TAG, "Uh oh, the action bar is null!");
+        } else {
+            getSupportActionBar().setTitle(getString(R.string.action_sign_in_short));
+        }
     }
 
     @Override

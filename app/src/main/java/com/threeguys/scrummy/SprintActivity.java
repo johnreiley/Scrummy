@@ -206,19 +206,11 @@ public class SprintActivity extends AppCompatActivity {
         isMuted = true;
         mp.pause();
 
-        clearFirebaseSession();
-
         // Go to MainActivity
         Intent mainIntent = new Intent(this, MainActivity.class);
         startActivity(mainIntent);
     }
 
-    /**
-     * Clears the session database to disable the join button
-     */
-    private void clearFirebaseSession() {
-        sessionDataRef.setValue("");
-    }
 
     /**
      * Pushes the user's session to the FireBase and updates continue key.
@@ -255,6 +247,9 @@ public class SprintActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Displays a dialogue to enable the user to edit the duration of the timer.
+     */
     private void onClickTimerDuration() {
         Log.d(SPRINT_TAG, "entered onclick Timer Duration");
         View v = (LayoutInflater.from(this)).inflate(R.layout.change_timer_duration_dialog, null);
@@ -287,6 +282,11 @@ public class SprintActivity extends AppCompatActivity {
                 });
     }
 
+    /**
+     * Changes the timer duration to match the given minutes and seconds values.
+     * @param minutes the number of minutes left on the timer.
+     * @param seconds the number of seconds left on the timer.
+     */
     private void onClickUpdateTime(int minutes, int seconds) {
         timerDuration = 0;
         timerDuration += minutes * 60000;
@@ -327,7 +327,10 @@ public class SprintActivity extends AppCompatActivity {
         }
     }
 
-
+    /**
+     * Changes the current topic to the previous one in the list. This effectively serves as a back button.
+     * @param view the View that represents the button that is clicked.
+     */
     public void onClickPrevTopic(View view) {
         saveTopicActions();
 
@@ -345,7 +348,10 @@ public class SprintActivity extends AppCompatActivity {
         currentTopicDataRef.setValue(topicNumber);
     }
 
-
+    /**
+     * Changes the current topic to the next one in the list. This effectively serves as a continue button.
+     * @param view the View that represents the button that is clicked.
+     */
     public void onClickNextTopic(View view) {
         // add the actions to the session topic
         saveTopicActions();
@@ -363,6 +369,9 @@ public class SprintActivity extends AppCompatActivity {
         currentTopicDataRef.setValue(topicNumber);
     }
 
+    /**
+     * Saves all of the session data and starts the Main Activity.
+     */
     private void saveAndQuit() {
         Log.d(SPRINT_TAG, "Topic # == " + topicNumber +
                 "| getTopics.size() == " + session.getTopics().size());
@@ -437,12 +446,19 @@ public class SprintActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Saves the data in the text box as the actions of the topic.
+     */
     private void saveTopicActions() {
         EditText actionsTextView = findViewById(R.id._actionsMultiAutoCompleteTextView);
         session.getTopics().get(topicNumber).setActions(actionsTextView.getText().toString());
         actionsTextView.setText("");
     }
 
+    /**
+     * Toggles play and pause for the countdown timer.
+     * @param v the View representing the button that was clicked.
+     */
     public void playPause(View v) {
         if(!isPaused) {
             playPause.setImageResource(android.R.drawable.ic_media_play);
@@ -457,6 +473,10 @@ public class SprintActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Resets the countdown timer to the starting time.
+     * @param v the View representing the button that was clicked.
+     */
     public void rewind(View v) {
         timeRemaining = timerDuration + 1000;
         refreshTimer();
@@ -465,6 +485,10 @@ public class SprintActivity extends AppCompatActivity {
         time.setText(String.format("%01d:%02d", minutes, seconds));
     }
 
+    /**
+     * Sets the remaining time of the countdown timer to zero and stops it.
+     * @param v the View representing the button that was clicked.
+     */
     public void fastForward(View v) {
         timer.onFinish();
         timer.cancel();
@@ -472,6 +496,10 @@ public class SprintActivity extends AppCompatActivity {
         time.setText("0:00");
     }
 
+    /**
+     * Toggles the alarm between muted and not muted.
+     * @param v the View representing the button that was clicked.
+     */
     public void toggleAlarm(View v) {
         if(!isMuted) {
             toggleAlarm.setImageResource(android.R.drawable.ic_lock_silent_mode);
@@ -485,6 +513,9 @@ public class SprintActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Stops the previous countdown timer and replaces it with a new one which has the desired values.
+     */
     private void refreshTimer() {
         if (timer != null) {
             timer.cancel();
