@@ -404,7 +404,7 @@ public class SprintActivity extends AppCompatActivity {
 
         // get the date
         Date date = new Date();
-        String strDateFormat = "yyyy/MM/dd a hh:mm:ss";
+        String strDateFormat = "yyyy/MM/dd HH:mm:ss"; // I changed 'hh' to 'HH' and removed the 'a'
         DateFormat dateFormat = new SimpleDateFormat(strDateFormat);
         String formattedDate= dateFormat.format(date);
 
@@ -425,6 +425,10 @@ public class SprintActivity extends AppCompatActivity {
         // clear the temp file
         SharedPreferences sp = this.getSharedPreferences(TEMP_SAVE_PREF, MODE_PRIVATE);
         sp.edit().clear().apply();
+
+        // check to make sure it was cleared
+        String sessionJson = sp.getString(CONTINUE_KEY, "no session");
+        Log.d(SPRINT_TAG, "sessionJson === " + sessionJson);
 
         Log.i(SPRINT_TAG, "Temporary files cleared");
 

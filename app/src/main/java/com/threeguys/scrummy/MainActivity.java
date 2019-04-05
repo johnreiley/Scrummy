@@ -142,8 +142,10 @@ public class MainActivity extends AppCompatActivity {
 
         // Check if there is a session in progress
         String sessionJson = spTemp.getString(CONTINUE_KEY, "no session");
-        Log.i(MAIN_TAG, "Session Json is: " + sessionJson);
-        if (sessionJson.equals("no session") || sessionJson.equals(" ")) {
+        String activityJson = spTemp.getString(ACTIVITY_KEY, "no activity");
+        Log.d(MAIN_TAG, "Session Json is: " + sessionJson);
+        if (sessionJson.equals("no session") || sessionJson.equals(" ")
+                || activityJson.equals("no activity")) {
             // Hide the 'continue' button
             continueButton.setVisibility(View.GONE);
         }
@@ -272,6 +274,10 @@ public class MainActivity extends AppCompatActivity {
         // turn the string into a Session object with Gson
         Gson gson = new Gson();
         Session continueSession = gson.fromJson(sessionJson, Session.class);
+
+        Log.d(MAIN_TAG,"Session Data === " + sessionJson +
+                "|| Activity === " + activityString);
+
         // check to make sure there is data
         if (continueSession != null && activityString != null) {
             //Which activity?
