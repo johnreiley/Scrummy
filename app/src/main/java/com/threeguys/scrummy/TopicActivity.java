@@ -148,9 +148,6 @@ public class TopicActivity extends AppCompatActivity {
             }
         });
 
-//        if (sessionTitle != null) {
-//            session.setTitle(sessionTitle);
-//        }
         sessionTitleHolder.setText(session.getTitle());
 
         updateFirebaseSession();

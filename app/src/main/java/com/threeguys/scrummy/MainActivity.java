@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 String value = dataSnapshot.getValue(String.class);
 
-                edit.putString(CONTINUE_KEY, value);
+                edit.putString(CONTINUE_KEY, value).apply();
 
                 Log.d(MAIN_TAG, "FirebaseDatabase value is: " + value);
             }
