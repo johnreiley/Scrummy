@@ -95,12 +95,17 @@ public class LoginActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
+        mAuth.addAuthStateListener(mAuthStateListener);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
         toggleUiVisibility(true);
         if(!isConnected()) {
             Log.i(LOGIN_ACTIVITY_TAG, "No internet connection");
         }
-
-        mAuth.addAuthStateListener(mAuthStateListener);
     }
 
     /**
@@ -256,10 +261,17 @@ public class LoginActivity extends AppCompatActivity {
                 })
                 .setNegativeButton("Quit", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        finish();
+                        dialog.dismiss();
+                        LoginActivity.this.finishAffinity();
                     }
                 });
         AlertDialog alert = builder.create();
         alert.show();
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        // do nothing
     }
 }

@@ -87,7 +87,7 @@ public class Session {
         List<Topic> tl = new ArrayList<>();
         for (Topic t : topics ) {
             if (t.getCategory() == Topic.Category.GOOD) {
-                Log.d(SESSION_TAG, "GoodTopics found: " + t.getTitle());
+                //Log.d(SESSION_TAG, "GoodTopics found: " + t.getTitle());
                 tl.add(t);
             }
         }
@@ -103,7 +103,7 @@ public class Session {
         List<Topic> tl = new ArrayList<>();
         for (Topic t : topics ) {
             if (t.getCategory() == Topic.Category.NEUTRAL) {
-                Log.d(SESSION_TAG, "NeutralTopics found: " + t.getTitle());
+                //Log.d(SESSION_TAG, "NeutralTopics found: " + t.getTitle());
                 tl.add(t);
             }
         }
@@ -119,7 +119,7 @@ public class Session {
         List<Topic> tl = new ArrayList<>();
         for (Topic t : topics ) {
             if (t.getCategory() == Topic.Category.BAD) {
-                Log.d(SESSION_TAG, "BadTopics found: " + t.getTitle());
+                //Log.d(SESSION_TAG, "BadTopics found: " + t.getTitle());
                 tl.add(t);
             }
         }

@@ -106,10 +106,10 @@ public class VoteActivityUnitTest {
         activity.setSession(session);
 
         //Add votes to each topic
-        activity.onClickAddVote(0);
-        activity.onClickAddVote(1);
-        activity.onClickAddVote(2);
-        activity.onClickAddVote(2);
+//        activity.onClickAddVote(0);
+//        activity.onClickAddVote(1);
+//        activity.onClickAddVote(2);
+//        activity.onClickAddVote(2);
 
         Session activitySession = activity.getSession();
         List<Topic> activityTopics = activitySession.getTopics();
@@ -158,13 +158,13 @@ public class VoteActivityUnitTest {
         activity.setSession(session);
 
         //Subtract votes from each topic
-        activity.onClickSubVote(0);
-        activity.onClickSubVote(0);
-        activity.onClickSubVote(0);
-        activity.onClickSubVote(0);
-        activity.onClickSubVote(1);
-        activity.onClickSubVote(1);
-        activity.onClickSubVote(2);
+//        activity.onClickSubVote(0);
+//        activity.onClickSubVote(0);
+//        activity.onClickSubVote(0);
+//        activity.onClickSubVote(0);
+//        activity.onClickSubVote(1);
+//        activity.onClickSubVote(1);
+//        activity.onClickSubVote(2);
 
         Session activitySession = activity.getSession();
         List<Topic> activityTopics = activitySession.getTopics();
@@ -203,7 +203,7 @@ public class VoteActivityUnitTest {
 
         //This should start the next activity
         //And sort the list in order by highest vote
-        activity.onClickStart();
+        activity.onClickStart(null);
 
         Session activitySession = activity.getSession();
         List<Topic> activityTopics = activitySession.getTopics();

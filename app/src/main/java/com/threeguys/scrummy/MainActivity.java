@@ -3,12 +3,15 @@ package com.threeguys.scrummy;
 import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -62,6 +65,13 @@ public class MainActivity extends AppCompatActivity {
         Log.i(MAIN_TAG, "MainActivity Started");
 
         mAuth = FirebaseAuth.getInstance();
+
+        // check to make sure the user is still logged in
+        if (mAuth == null) {
+            Log.d(MAIN_TAG, "mAuth ======= NULL");
+            finishAffinity();
+        }
+
         userID = mAuth.getCurrentUser().getUid();
 
         final Button continueButton = findViewById(R.id._continueSessionButton);
@@ -95,9 +105,11 @@ public class MainActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 String value = dataSnapshot.getValue(String.class);
 
-                if(value.equals("MainActivity")) continueButton.setVisibility(View.GONE);
-                else continueButton.setVisibility(View.VISIBLE);
-
+                if(value.equals("MainActivity")) {
+                    continueButton.setVisibility(View.GONE);
+                } else {
+                    continueButton.setVisibility(View.VISIBLE);
+                }
                 edit.putString(ACTIVITY_KEY, value);
                 edit.apply();
             }
@@ -326,5 +338,22 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         // do nothing
+    }
+
+    /**
+     * Checks to see if the device is connected to the internet via wifi or mobile data
+     * @return true if connected, false if not connected
+     */
+    public boolean isConnected() {
+        ConnectivityManager connectivityManager = (ConnectivityManager)getApplicationContext()
+                .getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo wifiInfo = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+        NetworkInfo mobileInfo = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+
+        if ((wifiInfo != null && wifiInfo.isConnected()) || (mobileInfo != null && mobileInfo.isConnected())) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

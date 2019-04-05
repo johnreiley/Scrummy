@@ -27,6 +27,14 @@ public class Topic {
         category = Category.NEUTRAL;
     }
 
+    Topic(String title, String username, int votes, String actions, Category category) {
+        this.title = title;
+        this.username = username;
+        this.votes = votes;
+        this.actions = actions;
+        this.category = category;
+    }
+
     public String getTitle() {
         return title;
     }
@@ -69,14 +77,14 @@ public class Topic {
 
     public void addVote() {
         this.votes += 1;
-        Log.i("Topic addVote", "Vote added");
+        //Log.i("Topic addVote", "Vote added");
     }
 
     public void subVote() {
         if (votes > 0) {
             this.votes -= 1;
-            Log.i("Topic subVote", "Vote subtracted");
+            //Log.i("Topic subVote", "Vote subtracted");
         }
-        Log.i("Topic subVote", "Votes already at 0");
+        //Log.i("Topic subVote", "Votes already at 0");
     }
 }
