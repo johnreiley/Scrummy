@@ -46,9 +46,15 @@ public class MainActivity extends AppCompatActivity {
     static final String CONTINUE_KEY = "continue_key"; // used for accessing temp session
     static final String ACTIVITY_KEY = "activity_key"; // used for accessing temp session activity
     static final String INDEX_KEY = "index_key"; // used for loading correct topic in sprint activity
+    static final String HOST_KEY = "host_key"; // used for loading correct topic in sprint activity
     public static final String MAIN_TAG = MainActivity.class.getSimpleName();
 
     private DatabaseReference activityRef;
+    private ValueEventListener activityVEL;
+    private DatabaseReference sessionDataRef;
+    private ValueEventListener sessionVEL;
+    private DatabaseReference indexRef;
+    private ValueEventListener indexVEL;
 
     // ------- TEST STRINGS ------- //
     static final String USERNAME = "username"; // used for fetching and saving the user's data file
@@ -81,8 +87,8 @@ public class MainActivity extends AppCompatActivity {
         final SharedPreferences.Editor edit = spTemp.edit();
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         // Session database
-        final DatabaseReference sessionDataRef = database.getReference().child("users").child(userID).child("session");
-        sessionDataRef.addValueEventListener(new ValueEventListener() {
+        sessionDataRef = database.getReference().child("users").child(userID).child("session");
+        sessionDataRef.addValueEventListener(sessionVEL = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 String value = dataSnapshot.getValue(String.class);
@@ -100,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
         });
         // Activity database
         activityRef = database.getReference().child("users").child(userID).child("activity");
-        activityRef.addValueEventListener(new ValueEventListener() {
+        activityVEL = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 String value = dataSnapshot.getValue(String.class);
@@ -120,10 +126,11 @@ public class MainActivity extends AppCompatActivity {
                 // Failed to read value
                 Log.w(MAIN_TAG, "Failed to read value.", error.toException());
             }
-        });
+        };
+        activityRef.addValueEventListener(activityVEL);
         // Update index in the case of a sprint activity
-        DatabaseReference indexRef = database.getReference().child("users").child(userID).child("currentTopic");
-        indexRef.addValueEventListener(new ValueEventListener() {
+        indexRef = database.getReference().child("users").child(userID).child("currentTopic");
+        indexRef.addValueEventListener(indexVEL = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Integer value = dataSnapshot.getValue(Integer.class);
@@ -161,16 +168,28 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    public void finish() {
+        activityRef.removeEventListener(activityVEL);
+        sessionDataRef.removeEventListener(sessionVEL);
+        indexRef.removeEventListener(indexVEL);
+
+        super.finish();
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id._helpMenuItem:
                 startActivity(new Intent(MainActivity.this, HelpActivity.class));
+                finish();
                 return true;
             case R.id._aboutMenuItem:
                 startActivity(new Intent(MainActivity.this, AboutActivity.class));
+                finish();
                 return true;
             case R.id._settingsMenuItem:
                 startActivity(new Intent(MainActivity.this, SettingsActivity.class));
+                finish();
                 return true;
             case R.id._signOutMenuItem:
                 onClickSignOut(null);
@@ -192,6 +211,7 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
         startActivity(new Intent(this, LoginActivity.class));
+        finish();
     }
 
     /**
@@ -255,6 +275,7 @@ public class MainActivity extends AppCompatActivity {
                     String sessionJson = gson.toJson(session, Session.class);
                     newIntent.putExtra(SESSION_KEY, sessionJson);
                     startActivity(newIntent);
+                    finish();
                     titleDialog.dismiss();
                 }
             }
@@ -287,12 +308,14 @@ public class MainActivity extends AppCompatActivity {
                     Intent topicIntent = new Intent(this, TopicActivity.class);
                     topicIntent.putExtra(SESSION_KEY, sessionJson);
                     startActivity(topicIntent);
+                    finish();
                     break;
                 case "VoteActivity":
                     // if there is data, call the Sprint activity and pass the session string
                     Intent voteIntent = new Intent(this, VoteActivity.class);
                     voteIntent.putExtra(SESSION_KEY, sessionJson);
                     startActivity(voteIntent);
+                    finish();
                     break;
                 case "SprintActivity":
                     // if there is data, call the Sprint activity and pass the session string
@@ -300,6 +323,7 @@ public class MainActivity extends AppCompatActivity {
                     sprintIntent.putExtra(SESSION_KEY, sessionJson);
                     sprintIntent.putExtra(INDEX_KEY, index);
                     startActivity(sprintIntent);
+                    finish();
                     break;
                 default:
                     Toast.makeText(this,
@@ -339,6 +363,7 @@ public class MainActivity extends AppCompatActivity {
 
         Intent loadIntent = new Intent(this, LoadActivity.class);
         startActivity(loadIntent);
+        finish();
 
     }
 
@@ -362,5 +387,12 @@ public class MainActivity extends AppCompatActivity {
         } else {
             return false;
         }
+    }
+
+    @Override
+    public void onStop() {
+        finish();
+
+        super.onStop();
     }
 }

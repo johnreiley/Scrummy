@@ -43,6 +43,7 @@ import java.util.Date;
 
 import static com.threeguys.scrummy.MainActivity.ACTIVITY_KEY;
 import static com.threeguys.scrummy.MainActivity.CONTINUE_KEY;
+import static com.threeguys.scrummy.MainActivity.HOST_KEY;
 import static com.threeguys.scrummy.MainActivity.INDEX_KEY;
 import static com.threeguys.scrummy.MainActivity.SESSION_KEY;
 import static com.threeguys.scrummy.MainActivity.TEMP_SAVE_PREF;
@@ -63,10 +64,15 @@ public class SprintActivity extends AppCompatActivity {
     private TextView time;
     private MediaPlayer mp;
     private boolean isMenuDisabled, saveCloud, saveLocal;
-    private DatabaseReference sessionDataRef;
-    public DatabaseReference activityDataRef;
-    private DatabaseReference currentTopicDataRef;
     private String userID;
+    private boolean isHost;
+
+    private DatabaseReference sessionDataRef;
+    private ValueEventListener sessionVEL;
+    public DatabaseReference activityDataRef;
+    private ValueEventListener activityVEL;
+    private DatabaseReference currentTopicDataRef;
+    private ValueEventListener currentTopicVEL;
 
     AlertDialog changeTimeDialogue;
 
@@ -126,7 +132,7 @@ public class SprintActivity extends AppCompatActivity {
         // Setup activity Firebase
         activityDataRef = database.getReference().child("users").child(userID).child("activity");
         activityDataRef.setValue("SprintActivity");
-        activityDataRef.addValueEventListener(new ValueEventListener() {
+        activityDataRef.addValueEventListener(activityVEL = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 String activity = dataSnapshot.getValue(String.class);
@@ -156,7 +162,7 @@ public class SprintActivity extends AppCompatActivity {
         // Setup session Firebase
         sessionDataRef = database.getReference().child("users").child(userID).child("session");
         updateFirebaseSession();
-        sessionDataRef.addValueEventListener(new ValueEventListener() {
+        sessionDataRef.addValueEventListener(sessionVEL = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 String value = dataSnapshot.getValue(String.class);
@@ -176,7 +182,7 @@ public class SprintActivity extends AppCompatActivity {
         // Setup current topic Firebase
         currentTopicDataRef = database.getReference().child("users").child(userID).child("currentTopic");
         currentTopicDataRef.setValue(topicNumber);
-        currentTopicDataRef.addValueEventListener(new ValueEventListener() {
+        currentTopicDataRef.addValueEventListener(currentTopicVEL = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Integer value = dataSnapshot.getValue(Integer.class);
@@ -195,6 +201,20 @@ public class SprintActivity extends AppCompatActivity {
             }
         });
 
+        isHost = getIntent().getBooleanExtra(HOST_KEY, false);
+
+        Log.d(SPRINT_TAG, "Host value is: " + isHost);
+
+        if(!isHost) disableAll();
+    }
+
+    @Override
+    public void finish() {
+        sessionDataRef.removeEventListener(sessionVEL);
+        activityDataRef.removeEventListener(activityVEL);
+        currentTopicDataRef.removeEventListener(currentTopicVEL);
+
+        super.finish();
     }
 
     /**
@@ -236,6 +256,7 @@ public class SprintActivity extends AppCompatActivity {
         // Go to MainActivity
         Intent mainIntent = new Intent(this, MainActivity.class);
         startActivity(mainIntent);
+        finish();
     }
 
     /**
@@ -343,6 +364,8 @@ public class SprintActivity extends AppCompatActivity {
             editor.putString(INDEX_KEY, String.valueOf(topicNumber));
             editor.apply();
         }
+
+        finish();
     }
 
     @Override

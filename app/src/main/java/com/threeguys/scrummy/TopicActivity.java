@@ -50,9 +50,12 @@ public class TopicActivity extends AppCompatActivity {
     private List<String> groupData;
     private String username;
     private String userID;
+    private boolean clickedVote = false;
 
     private DatabaseReference sessionDataRef;
+    private ValueEventListener sessionVEL;
     private DatabaseReference activityDataRef;
+    private ValueEventListener activityVEL;
 
     AlertDialog addTopicDialogue;
 
@@ -92,7 +95,7 @@ public class TopicActivity extends AppCompatActivity {
         // Setup activity Firebase
         activityDataRef = database.getReference().child("users").child(userID).child("activity");
         activityDataRef.setValue("TopicActivity");
-        activityDataRef.addValueEventListener(new ValueEventListener() {
+        activityDataRef.addValueEventListener(activityVEL = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 String activity = dataSnapshot.getValue(String.class);
@@ -101,13 +104,16 @@ public class TopicActivity extends AppCompatActivity {
                     case "TopicActivity":
                         break;
                     case "VoteActivity":
-                        onClickVote(getCurrentFocus());
+                        if(!clickedVote)
+                            onClickVote(getCurrentFocus());
                         break;
                     case "SprintActivity":
-                        onClickVote(getCurrentFocus());
+                        if(!clickedVote)
+                            onClickVote(getCurrentFocus());
                         break;
                     case "MainActivity":
-                        onClickVote(getCurrentFocus());
+                        if(!clickedVote)
+                            onClickVote(getCurrentFocus());
                         break;
                     default:
                         Log.wtf(TOPIC_TAG, "The activity in database is: " + activity);
@@ -123,7 +129,7 @@ public class TopicActivity extends AppCompatActivity {
         });
         // Setup session Firebase
         sessionDataRef = database.getReference().child("users").child(userID).child("session");
-        sessionDataRef.addValueEventListener(new ValueEventListener() {
+        sessionDataRef.addValueEventListener(sessionVEL = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 String value = dataSnapshot.getValue(String.class);
@@ -170,6 +176,8 @@ public class TopicActivity extends AppCompatActivity {
         editor.putString(CONTINUE_KEY, sessionJson);
         editor.putString(ACTIVITY_KEY, activityJson);
         editor.apply();
+
+        finish();
     }
 
     /**
@@ -228,6 +236,7 @@ public class TopicActivity extends AppCompatActivity {
      * @param view The "vote" button clicked
      */
     public void onClickVote(View view) {
+        clickedVote = true;
 
         Log.d(TOPIC_TAG, "session.getTopics().size() == " + session.getTopics().size());
 
@@ -241,11 +250,20 @@ public class TopicActivity extends AppCompatActivity {
             // add the session string to the intent
             voteIntent.putExtra(MainActivity.SESSION_KEY, sessionJson);
             startActivity(voteIntent);
+            finish();
 
         } else {
             Toast.makeText(this,
                     "Please enter at least one topic before voting", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    @Override
+    public void finish() {
+        activityDataRef.removeEventListener(activityVEL);
+        sessionDataRef.removeEventListener(sessionVEL);
+
+        super.finish();
     }
 
     /**

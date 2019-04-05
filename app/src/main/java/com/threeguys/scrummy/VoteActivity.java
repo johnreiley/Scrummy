@@ -26,6 +26,7 @@ import java.util.List;
 
 import static com.threeguys.scrummy.MainActivity.ACTIVITY_KEY;
 import static com.threeguys.scrummy.MainActivity.CONTINUE_KEY;
+import static com.threeguys.scrummy.MainActivity.HOST_KEY;
 import static com.threeguys.scrummy.MainActivity.INDEX_KEY;
 import static com.threeguys.scrummy.MainActivity.SESSION_KEY;
 import static com.threeguys.scrummy.MainActivity.TEMP_SAVE_PREF;
@@ -40,9 +41,12 @@ public class VoteActivity extends AppCompatActivity {
     private List<String> groupData;
     private TextView sessionTitleHolder;
     private String userID;
+    private boolean clickedStart = false;
 
     private DatabaseReference sessionDataRef;
+    private ValueEventListener sessionVEL;
     private DatabaseReference activityDataRef;
+    private ValueEventListener acivityVEL;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,7 +72,7 @@ public class VoteActivity extends AppCompatActivity {
         // Setup activity Firebase
         activityDataRef = database.getReference().child("users").child(userID).child("activity");
         activityDataRef.setValue("VoteActivity");
-        activityDataRef.addValueEventListener(new ValueEventListener() {
+        activityDataRef.addValueEventListener(acivityVEL = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 String activity = dataSnapshot.getValue(String.class);
@@ -79,10 +83,12 @@ public class VoteActivity extends AppCompatActivity {
                     case "VoteActivity":
                         break;
                     case "SprintActivity":
-                        onClickStart(getCurrentFocus());
+                        if(!clickedStart)
+                            joinSprint();
                         break;
                     case "MainActivity":
-                        onClickStart(getCurrentFocus());
+                        if(!clickedStart)
+                            joinSprint();
                         break;
                     default:
                         Log.wtf(VOTE_TAG, "The activity in database is: " + activity);
@@ -99,7 +105,7 @@ public class VoteActivity extends AppCompatActivity {
         // Setup session Firebase
         sessionDataRef = database.getReference().child("users").child(userID).child("session");
         updateFirebaseSession();
-        sessionDataRef.addValueEventListener(new ValueEventListener() {
+        sessionDataRef.addValueEventListener(sessionVEL = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 String value = dataSnapshot.getValue(String.class);
@@ -141,6 +147,8 @@ public class VoteActivity extends AppCompatActivity {
         editor.putString(CONTINUE_KEY, sessionJson);
         editor.putString(ACTIVITY_KEY, activityJson);
         editor.apply();
+
+        finish();
     }
 
     /**
@@ -164,9 +172,10 @@ public class VoteActivity extends AppCompatActivity {
     }
 
     /**
-     * Starts the SprintActivity activity
+     * Starts the SprintActivity activity as non-Host
      */
-    public void onClickStart(View view) {
+    public void joinSprint() {
+        if(clickedStart) return;
         // start the sprint activity
         Intent sprintIntent = new Intent(this, SprintActivity.class);
         // turn the session into a string
@@ -176,8 +185,30 @@ public class VoteActivity extends AppCompatActivity {
         // add the session string to the intent
         sprintIntent.putExtra(SESSION_KEY, sessionJson);
         sprintIntent.putExtra(INDEX_KEY, "0");
+        sprintIntent.putExtra(HOST_KEY, false);
 
         startActivity(sprintIntent);
+        finish();
+    }
+
+    /**
+     * Starts the SprintActivity activity as Host
+     */
+    public void onClickStart(View view) {
+        clickedStart = true;
+        // start the sprint activity
+        Intent sprintIntent = new Intent(this, SprintActivity.class);
+        // turn the session into a string
+        Gson gson = new Gson();
+        String sessionJson = gson.toJson(session);
+
+        // add the session string to the intent
+        sprintIntent.putExtra(SESSION_KEY, sessionJson);
+        sprintIntent.putExtra(INDEX_KEY, "0");
+        sprintIntent.putExtra(HOST_KEY, true);
+
+        startActivity(sprintIntent);
+        finish();
     }
 
     /**
@@ -321,5 +352,13 @@ public class VoteActivity extends AppCompatActivity {
 
             expandableListView.onRestoreInstanceState(recyclerViewState);
         }
+    }
+
+    @Override
+    public void finish() {
+        activityDataRef.removeEventListener(acivityVEL);
+        sessionDataRef.removeEventListener(sessionVEL);
+
+        super.finish();
     }
 }
