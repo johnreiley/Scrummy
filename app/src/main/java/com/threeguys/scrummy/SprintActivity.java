@@ -409,6 +409,11 @@ public class SprintActivity extends AppCompatActivity {
             Save save = new SaveLocal(this);
             save.save(session);
             Log.i(SPRINT_TAG, "SaveAndQuit: Saved to Device");
+            if (saveCloud && !saveLocal){
+                Toast.makeText(getApplicationContext(),
+                        "No internet connection. Saved to local device instead of cloud.",
+                        Toast.LENGTH_LONG).show();
+            }
         }
 
         if(saveCloud && isConnected()) {
