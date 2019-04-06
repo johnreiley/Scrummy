@@ -111,10 +111,12 @@ public class MainActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 String value = dataSnapshot.getValue(String.class);
 
-                if(value.equals("MainActivity")) {
-                    continueButton.setVisibility(View.GONE);
-                } else {
-                    continueButton.setVisibility(View.VISIBLE);
+                if(value != null) {
+                    if (value.equals("MainActivity")) {
+                        continueButton.setVisibility(View.GONE);
+                    } else {
+                        continueButton.setVisibility(View.VISIBLE);
+                    }
                 }
 
                 edit.putString(ACTIVITY_KEY, value);
@@ -135,7 +137,8 @@ public class MainActivity extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Integer value = dataSnapshot.getValue(Integer.class);
 
-                edit.putString(INDEX_KEY, value.toString()).apply();
+                if (value != null)
+                    edit.putString(INDEX_KEY, value.toString()).apply();
 
                 Log.d(MAIN_TAG, "FirebaseDatabase value is: " + value);
             }
