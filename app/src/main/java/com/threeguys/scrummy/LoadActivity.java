@@ -217,11 +217,17 @@ public class LoadActivity extends AppCompatActivity {
                     "Saved to local device.",
                     Toast.LENGTH_SHORT).show();
         } else if (loadLocal.isChecked()) {
-            SaveCloud save = new SaveCloud(mAuth.getUid());
-            save.add(copy);
-            Toast.makeText(getApplicationContext(),
-                    "Saved to cloud.",
-                    Toast.LENGTH_SHORT).show();
+            if (isConnected()) {
+                SaveCloud save = new SaveCloud(mAuth.getUid());
+                save.add(copy);
+                Toast.makeText(getApplicationContext(),
+                        "Saved to cloud.",
+                        Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(getApplicationContext(),
+                        "No internet. Unable to copy to cloud.",
+                        Toast.LENGTH_LONG).show();
+            }
         }
         refreshAdapter();
     }
