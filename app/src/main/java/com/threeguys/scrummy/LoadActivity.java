@@ -91,6 +91,20 @@ public class LoadActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (!isConnected()) {
+            loadCloud.setEnabled(false);
+            loadCloud.setChecked(false);
+            loadLocal.setChecked(true);
+            loadLocalMethod(null);
+        } else {
+            loadCloud.setEnabled(true);
+        }
+    }
+
     /**
      * Orders by year, month, day, am/pm, hour, then minutes.
      */
