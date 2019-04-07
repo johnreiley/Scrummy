@@ -66,6 +66,7 @@
         <activity
             android:name=".SprintActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
+            android:windowSoftInputMode="stateHidden"
             android:label="@string/title_activity_sprint"
             android:screenOrientation="portrait" />
         <activity
