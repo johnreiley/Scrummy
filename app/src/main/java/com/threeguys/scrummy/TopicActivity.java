@@ -227,6 +227,7 @@ public class TopicActivity extends AppCompatActivity {
             topics.remove(position);
             session.setTopics(topics);
 
+            updateFirebaseSession();
             refreshAdapter();
         }
     }
