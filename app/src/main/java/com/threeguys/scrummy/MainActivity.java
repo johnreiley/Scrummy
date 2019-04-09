@@ -37,6 +37,8 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.gson.Gson;
 
+import org.w3c.dom.Text;
+
 public class MainActivity extends AppCompatActivity {
 
     static final String SESSION_KEY =  "SESSION_KEY"; // used for passing sessions between activities
@@ -81,6 +83,7 @@ public class MainActivity extends AppCompatActivity {
         userID = mAuth.getCurrentUser().getUid();
 
         final Button continueButton = findViewById(R.id._continueSessionButton);
+        continueButton.setVisibility(View.GONE);
 
         // Setup firebase database and update the sharedPreferences
         SharedPreferences spTemp = getSharedPreferences(TEMP_SAVE_PREF, MODE_PRIVATE);
@@ -112,10 +115,10 @@ public class MainActivity extends AppCompatActivity {
                 String value = dataSnapshot.getValue(String.class);
 
                 if(value != null) {
-                    if (value.equals("MainActivity")) {
-                        continueButton.setVisibility(View.GONE);
-                    } else {
+                    if (!value.equals("MainActivity")) {
                         continueButton.setVisibility(View.VISIBLE);
+                    } else {
+                        continueButton.setVisibility(View.GONE);
                     }
                 }
 
@@ -297,49 +300,52 @@ public class MainActivity extends AppCompatActivity {
         String activityString = spTemp.getString(ACTIVITY_KEY, "");
         // turn the string into a Session object with Gson
         Gson gson = new Gson();
-        Session continueSession = gson.fromJson(sessionJson, Session.class);
+        Session continueSession;
 
-        Log.d(MAIN_TAG,"Session Data === " + sessionJson +
-                "|| Activity === " + activityString);
+        if (sessionJson != "no session") {
+            continueSession = gson.fromJson(sessionJson, Session.class);
 
-        // check to make sure there is data
-        if (continueSession != null && activityString != null) {
-            //Which activity?
-            switch (activityString) {
-                case "TopicActivity":
-                    // if there is data, call the Sprint activity and pass the session string
-                    Intent topicIntent = new Intent(this, TopicActivity.class);
-                    topicIntent.putExtra(SESSION_KEY, sessionJson);
-                    startActivity(topicIntent);
-                    finish();
-                    break;
-                case "VoteActivity":
-                    // if there is data, call the Sprint activity and pass the session string
-                    Intent voteIntent = new Intent(this, VoteActivity.class);
-                    voteIntent.putExtra(SESSION_KEY, sessionJson);
-                    startActivity(voteIntent);
-                    finish();
-                    break;
-                case "SprintActivity":
-                    // if there is data, call the Sprint activity and pass the session string
-                    Intent sprintIntent = new Intent(this, SprintActivity.class);
-                    sprintIntent.putExtra(SESSION_KEY, sessionJson);
-                    sprintIntent.putExtra(INDEX_KEY, index);
-                    startActivity(sprintIntent);
-                    finish();
-                    break;
-                default:
-                    Toast.makeText(this,
-                            "No active session", Toast.LENGTH_SHORT).show();
-                    break;
+            Log.d(MAIN_TAG, "Session Data === " + sessionJson +
+                    "|| Activity === " + activityString);
+
+            // check to make sure there is data
+            if (continueSession != null && !activityString.equals("")) {
+                //Which activity?
+                switch (activityString) {
+                    case "TopicActivity":
+                        // if there is data, call the Sprint activity and pass the session string
+                        Intent topicIntent = new Intent(this, TopicActivity.class);
+                        topicIntent.putExtra(SESSION_KEY, sessionJson);
+                        startActivity(topicIntent);
+                        finish();
+                        break;
+                    case "VoteActivity":
+                        // if there is data, call the Sprint activity and pass the session string
+                        Intent voteIntent = new Intent(this, VoteActivity.class);
+                        voteIntent.putExtra(SESSION_KEY, sessionJson);
+                        startActivity(voteIntent);
+                        finish();
+                        break;
+                    case "SprintActivity":
+                        // if there is data, call the Sprint activity and pass the session string
+                        Intent sprintIntent = new Intent(this, SprintActivity.class);
+                        sprintIntent.putExtra(SESSION_KEY, sessionJson);
+                        sprintIntent.putExtra(INDEX_KEY, index);
+                        startActivity(sprintIntent);
+                        finish();
+                        break;
+                    default:
+                        Toast.makeText(this,
+                                "No active session", Toast.LENGTH_SHORT).show();
+                        break;
+                }
+            } else {
+                // if not, display text
+                Toast.makeText(this,
+                        "There are no topics in the session to continue", Toast.LENGTH_SHORT).show();
             }
-        } else {
-            // if not, display text
-            Toast.makeText(this,
-                    "There are no topics in the session to continue", Toast.LENGTH_SHORT).show();
         }
     }
-
     /**
      * Loads all previously completed sessions for viewing info
      * @param view the "load session" button

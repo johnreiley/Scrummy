@@ -482,7 +482,8 @@ public class SprintActivity extends AppCompatActivity {
     private void setupNextTopic() {
         // check whether or not to show the 'previous' button
         if (topicNumber > 0) {
-            findViewById(R.id._prevTopicButton).setVisibility(View.VISIBLE);
+            if(isHost)
+                findViewById(R.id._prevTopicButton).setVisibility(View.VISIBLE);
         } else {
             findViewById(R.id._prevTopicButton).setVisibility(View.GONE);
         }
